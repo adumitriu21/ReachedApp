@@ -1,4 +1,4 @@
-package com.example.reachedapp;
+package com.example.reachedapp.Models;
 
 public class Student {
     private int StudentHomeroom;
