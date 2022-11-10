@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav.xml"
+    app:startDestination="@id/teacherMainMenu">
+
+    <fragment
+        android:id="@+id/teacherAttendanceView"
+        android:name="com.example.reachedapp.Fragments.TeacherAttendanceView"
+        android:label="fragment_teacher_attendance_view"
+        tools:layout="@layout/fragment_teacher_attendance_view" >
+        <action
+            android:id="@+id/action_teacherAttendanceView_to_teacherMainMenu"
+            app:destination="@id/teacherMainMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/teacherMainMenu"
+        android:name="com.example.reachedapp.Fragments.TeacherMainMenu"
+        android:label="fragment_teacher_main_menu"
+        tools:layout="@layout/fragment_teacher_main_menu" >
+        <action
+            android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView"
+            app:destination="@id/teacherAttendanceView" />
+    </fragment>
+</navigation>
