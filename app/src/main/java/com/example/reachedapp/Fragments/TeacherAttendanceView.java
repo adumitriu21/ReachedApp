@@ -12,7 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import com.example.reachedapp.MainActivity;
+import com.example.reachedapp.Models.Student;
 import com.example.reachedapp.R;
+
+import java.util.ArrayList;
 
 
 public class TeacherAttendanceView extends Fragment {
@@ -24,10 +28,8 @@ public class TeacherAttendanceView extends Fragment {
                              Bundle savedInstanceState) {
 
 
-
         // Inflate the layout for this fragment
         String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
-
         View view = inflater.inflate(R.layout.fragment_teacher_attendance_view, container, false);
         //Creating the instance of ArrayAdapter containing list of fruit names
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.drpdown_item, fruits);
