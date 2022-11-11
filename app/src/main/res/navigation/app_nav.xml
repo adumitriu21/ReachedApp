@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav.xml"
-    app:startDestination="@id/teacherMainMenu">
+    app:startDestination="@id/homeFragment3">
 
     <fragment
         android:id="@+id/teacherAttendanceView"
@@ -22,5 +22,17 @@
         <action
             android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView"
             app:destination="@id/teacherAttendanceView" />
+        <action
+            android:id="@+id/action_teacherMainMenu_to_homeFragment3"
+            app:destination="@id/homeFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment3"
+        android:name="com.example.reachedapp.Fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment3_to_teacherMainMenu"
+            app:destination="@id/teacherMainMenu" />
     </fragment>
 </navigation>
