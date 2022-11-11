@@ -3,10 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/drpdown_item.xml" value="0.5098958333333333" />
-        <entry key="app/src/main/res/layout/fragment_teacher_attendance_view.xml" value="0.49583333333333335" />
-        <entry key="app/src/main/res/layout/item_day_selection.xml" value="0.5098958333333333" />
-        <entry key="app/src/main/res/layout/item_students_list.xml" value="0.5088541666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.16875" />
+        <entry key="app/src/main/res/layout/custom_student_row.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_teacher_attendance_view.xml" value="0.1046875" />
       </map>
     </option>
   </component>
