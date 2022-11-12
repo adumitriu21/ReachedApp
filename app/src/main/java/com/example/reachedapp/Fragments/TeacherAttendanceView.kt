@@ -17,10 +17,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class TeacherAttendanceView : Fragment() {
-
+    val studentList: MutableList<Student> = ArrayList<Student>()
     private val database = FirebaseDatabase.getInstance()
     val ref = database.getReference("Student")
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +52,7 @@ class TeacherAttendanceView : Fragment() {
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val studentList: MutableList<Student> = ArrayList<Student>()
+
                 for (dsp in dataSnapshot.children) {
                     val s = dsp.getValue(Student::class.java)
                     if (s != null) {
@@ -69,8 +68,8 @@ class TeacherAttendanceView : Fragment() {
             }
         })
 
-
-
+        studentRecyclerView.setOnClickListener {  }
         return view
     }
+
 }
