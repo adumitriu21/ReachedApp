@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TeacherAttendanceView : Fragment() {
@@ -23,6 +29,11 @@ class TeacherAttendanceView : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     val ref = database.getReference("Student")
     val teacherRef = database.getReference("Teacher")
+    private lateinit var dateTimeDisplay: TextView
+    private lateinit var dayOfWeek: TextView
+    private lateinit var calendar: Calendar
+    private lateinit var dateFormat: SimpleDateFormat
+    private lateinit var date: String
 
     val homeroom = arrayOf("107", "108")
     override fun onCreateView(
@@ -32,7 +43,6 @@ class TeacherAttendanceView : Fragment() {
 
 
         // Inflate the layout for this fragment
-        val fruits = arrayOf("Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear")
         val view = inflater.inflate(R.layout.fragment_teacher_attendance_view, container, false)
 
         //Creating the instance of ArrayAdapter containing list of fruit names
@@ -40,14 +50,19 @@ class TeacherAttendanceView : Fragment() {
 
         //Getting the instance of AutoCompleteTextView
         val grades = view.findViewById<AutoCompleteTextView>(R.id.gradesAutoComplete)
-
         grades.threshold = 1 //will start working from first character
-
         grades.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
 
-        val mRecyclerView = view.findViewById<RecyclerView>(R.id.daySelector)
-        mRecyclerView.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, true)
+        //display date
+        dateTimeDisplay = view.findViewById(R.id.date)
+        calendar = Calendar.getInstance()
+        dateFormat = SimpleDateFormat("MM/dd/yyyy")
+        date = dateFormat.format(calendar.getTime())
+        dateTimeDisplay.setText(date)
+
+        //display day of the week
+        dayOfWeek = view.findViewById(R.id.day)
+        dayOfWeek.setText(LocalDate.now().dayOfWeek.name)
 
         val studentAdapter = StudentListAdapter()
         val studentRecyclerView = view.findViewById<RecyclerView>(R.id.studentsList)

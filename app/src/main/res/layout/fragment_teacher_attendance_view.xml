@@ -9,21 +9,12 @@
     tools:context=".Fragments.TeacherAttendanceView">
 
     <!-- TODO: Update blank fragment layout -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/daySelector"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_day_selection"
-                android:orientation="horizontal" />
 
 
             <LinearLayout
@@ -31,8 +22,6 @@
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="10dp"
                     android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search"
@@ -48,14 +37,20 @@
                 android:layout_width="match_parent"
                 style="@style/TextAppearance.Material3.LabelLarge"
                 android:layout_height="wrap_content"
-                android:text="Attendance Report" />
+                android:text="Attendance Report For:" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
-
+                <TextView
+                    android:textSize="16sp"
+                    android:id="@+id/day"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wednesday" />
 
                 <TextView
                     android:textSize="16sp"
@@ -65,13 +60,7 @@
                     android:layout_height="wrap_content"
                     android:text="2022-11-10" />
 
-                <TextView
-                    android:textSize="16sp"
-                    android:id="@+id/day"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Wednesday" />
+
 
 
             </LinearLayout>
@@ -116,6 +105,6 @@
         </LinearLayout>
 
 
-    </ScrollView>
+
 
 </LinearLayout>
