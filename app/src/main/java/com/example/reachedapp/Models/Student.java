@@ -1,6 +1,13 @@
 package com.example.reachedapp.Models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Student {
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
     private int StudentHomeroom;
     private String StudentName;
     private String StudentParent1;
