@@ -28,7 +28,7 @@ class TeacherAttendanceView : Fragment() {
 
     private val database = FirebaseDatabase.getInstance()
     val ref = database.getReference("Student")
-    val teacherRef = database.getReference("Teacher")
+    val attendanceRef = database.getReference("Attendance")
     private lateinit var dateTimeDisplay: TextView
     private lateinit var dayOfWeek: TextView
     private lateinit var calendar: Calendar
@@ -69,6 +69,10 @@ class TeacherAttendanceView : Fragment() {
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+
+        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val attendanceDate = Date()
+
         grades.setOnItemClickListener(OnItemClickListener { parent, arg1, position, arg3 ->
             val item = parent.getItemAtPosition(position)
             val studentList: MutableList<Student> = ArrayList<Student>()
@@ -79,6 +83,7 @@ class TeacherAttendanceView : Fragment() {
                         val s = dsp.getValue(Student::class.java)
                         if (s != null && s.studentHomeroom.toString() == item.toString()) {
                             studentList.add(s)
+                            attendanceRef.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString()).child(s.studentName).child("IsPresent").setValue(true)
                         }
                         studentAdapter.setData(studentList)
                     }
