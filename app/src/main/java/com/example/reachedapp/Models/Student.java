@@ -1,7 +1,7 @@
 package com.example.reachedapp.Models;
 
 public class Student {
-    private int StudentHomeroom;
+    private long StudentHomeroom;
     private String StudentName;
     private String StudentParent1;
     private String StudentParent1Phone;
@@ -12,7 +12,7 @@ public class Student {
 
     public Student() {}
 
-    public Student(int studentHomeroom,
+    public Student(long studentHomeroom,
                    String studentName,
                    String studentParent1,
                    String studentParent1Phone,
@@ -31,11 +31,11 @@ public class Student {
                 "\nParent: " + this.getStudentParent1();
     }
 
-    public int getStudentHomeroom() {
+    public long getStudentHomeroom() {
         return StudentHomeroom;
     }
 
-    public void setStudentHomeroom(int studentHomeroom) {
+    public void setStudentHomeroom(long studentHomeroom) {
         StudentHomeroom = studentHomeroom;
     }
 
