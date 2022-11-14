@@ -1,4 +1,4 @@
-package com.example.reachedapp.Fragments
+package com.example.reachedapp.Views
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList

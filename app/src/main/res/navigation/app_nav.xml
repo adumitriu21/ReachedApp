@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/teacherAttendanceView"
-        android:name="com.example.reachedapp.Fragments.TeacherAttendanceView"
+        android:name="com.example.reachedapp.Views.TeacherAttendanceView"
         android:label="fragment_teacher_attendance_view"
         tools:layout="@layout/fragment_teacher_attendance_view" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/teacherMainMenu"
-        android:name="com.example.reachedapp.Fragments.TeacherMainMenu"
+        android:name="com.example.reachedapp.Views.TeacherMainMenu"
         android:label="fragment_teacher_main_menu"
         tools:layout="@layout/fragment_teacher_main_menu" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment3"
-        android:name="com.example.reachedapp.Fragments.HomeFragment"
+        android:name="com.example.reachedapp.Views.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action

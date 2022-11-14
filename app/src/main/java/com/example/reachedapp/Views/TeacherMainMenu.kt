@@ -1,4 +1,4 @@
-package com.example.reachedapp.Fragments
+package com.example.reachedapp.Views
 
 import android.os.Bundle
 import android.view.LayoutInflater
