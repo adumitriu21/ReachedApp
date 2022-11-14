@@ -4,12 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -32,9 +36,24 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         val date = Date()
 
         holder.itemView.findViewById<TextView>(R.id.studentName).text = currentStudent.studentName
-
         var checkBox = holder.itemView.findViewById<RadioGroup>(R.id.radioGroup)
 
+        attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (dsp in dataSnapshot.children) {
+                    val s = dsp.getValue(Boolean::class.java)
+                    if (s != null && s == true) {
+                        checkBox.check(R.id.present)
+                    }
+                    else {
+                        checkBox.check(R.id.absent)
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("The read failed: " + databaseError.code)
+            }
+        })
 
         checkBox.setOnCheckedChangeListener{ _, isChecked ->
             if(isChecked == R.id.present)
