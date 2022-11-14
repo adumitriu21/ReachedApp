@@ -83,7 +83,6 @@ class TeacherAttendanceView : Fragment() {
                         val s = dsp.getValue(Student::class.java)
                         if (s != null && s.studentHomeroom.toString() == item.toString()) {
                             studentList.add(s)
-                            attendanceRef.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString()).child(s.studentName)
                             //attendanceRef.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString()).child(s.studentName).child("IsPresent").setValue(true)
                         }
                         studentAdapter.setData(studentList)
