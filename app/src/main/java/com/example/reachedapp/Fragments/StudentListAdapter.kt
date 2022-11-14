@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
@@ -22,7 +23,7 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
-        return StudentViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.custom_student_row, parent, false))
+        return StudentViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_students_list, parent, false))
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
@@ -30,12 +31,13 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val date = Date()
 
-        holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.studentName
+        holder.itemView.findViewById<TextView>(R.id.studentName).text = currentStudent.studentName
 
-        var checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
+        var checkBox = holder.itemView.findViewById<RadioGroup>(R.id.radioGroup)
+
 
         checkBox.setOnCheckedChangeListener{ _, isChecked ->
-            if(checkBox.isChecked)
+            if(isChecked == R.id.present)
             {
                 attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).child("IsPresent").setValue(true)
             } else {
@@ -43,7 +45,6 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
             }
 
         }
-
     }
 
     override fun getItemCount(): Int {
