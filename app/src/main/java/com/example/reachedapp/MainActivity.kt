@@ -18,13 +18,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("Student")
+        //val database = FirebaseDatabase.getInstance()
+        //val ref = database.getReference("Student")
 
 
         supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
 
-
+/*
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val studentList: MutableList<Student> = ArrayList<Student>()
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 println("The read failed: " + databaseError.code)
             }
         })
-
+*/
     }
 
 
