@@ -83,7 +83,7 @@
                       an auto complete text view
                         and make its input type to none-->
                 <AutoCompleteTextView
-                    android:id="@+id/gradesAutoComplete"
+                    android:id="@+id/homeroomSelect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

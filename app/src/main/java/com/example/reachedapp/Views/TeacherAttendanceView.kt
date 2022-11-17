@@ -48,9 +48,9 @@ class TeacherAttendanceView : Fragment() {
         val adapter = ArrayAdapter(requireActivity(), R.layout.drpdown_item, homeroom)
 
         //Getting the instance of AutoCompleteTextView
-        val grades = view.findViewById<AutoCompleteTextView>(R.id.gradesAutoComplete)
-        grades.threshold = 1 //will start working from first character
-        grades.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
+        val homeroomSelect = view.findViewById<AutoCompleteTextView>(R.id.homeroomSelect)
+        homeroomSelect.threshold = 1 //will start working from first character
+        homeroomSelect.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
 
         //display date
         dateTimeDisplay = view.findViewById(R.id.date)
@@ -72,17 +72,26 @@ class TeacherAttendanceView : Fragment() {
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val attendanceDate = Date()
 
-        grades.setOnItemClickListener(OnItemClickListener { parent, arg1, position, arg3 ->
-            val item = parent.getItemAtPosition(position)
+        homeroomSelect.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
+
+            val selectedHomeroom = parent.getItemAtPosition(position)
             val studentList: MutableList<Student> = ArrayList<Student>()
+
             ref.addValueEventListener(object : ValueEventListener {
+
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                     for (dsp in dataSnapshot.children) {
                         val s = dsp.getValue(Student::class.java)
-                        if (s != null && s.studentHomeroom.toString() == item.toString()) {
+                        if (s != null && s.studentHomeroom.toString() == selectedHomeroom.toString()) {
+
                             studentList.add(s)
-                            attendanceRef.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString()).child(s.studentName).child("IsPresent").setValue(true)
+
+                            attendanceRef.child(formatter.format(attendanceDate))
+                                .child(s.studentHomeroom.toString())
+                                .child(s.studentName)
+                                .child("IsPresent")
+                                .setValue(true)
                         }
                         studentAdapter.setData(studentList)
                     }
@@ -93,7 +102,7 @@ class TeacherAttendanceView : Fragment() {
                     println("The read failed: " + databaseError.code)
                 }
             })
-        })
+        }
 
 
 
