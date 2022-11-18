@@ -19,9 +19,14 @@ class HomeFragment : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_home, container, false)
 
         val teacherAppBtn = view.findViewById<Button>(R.id.teacher_app)
+        val parentAppBtn = view.findViewById<Button>(R.id.parent_app)
 
         teacherAppBtn.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment3_to_teacherMainMenu)
+        }
+
+        parentAppBtn.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment3_to_parentMainMenu)
         }
 
         return view
