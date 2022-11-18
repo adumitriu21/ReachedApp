@@ -34,5 +34,29 @@
         <action
             android:id="@+id/action_homeFragment3_to_teacherMainMenu"
             app:destination="@id/teacherMainMenu" />
+        <action
+            android:id="@+id/action_homeFragment3_to_parentMainMenu"
+            app:destination="@id/parentMainMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/parentMainMenu"
+        android:name="com.example.reachedapp.Views.ParentMainMenu"
+        android:label="fragment_parent_main_menu"
+        tools:layout="@layout/fragment_parent_main_menu" >
+        <action
+            android:id="@+id/action_parentMainMenu_to_parentAttendanceView"
+            app:destination="@id/parentAttendanceView" />
+        <action
+            android:id="@+id/action_parentMainMenu_to_homeFragment3"
+            app:destination="@id/homeFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/parentAttendanceView"
+        android:name="com.example.reachedapp.Views.ParentAttendanceView"
+        android:label="fragment_parent_attendance_view"
+        tools:layout="@layout/fragment_parent_attendance_view" >
+        <action
+            android:id="@+id/action_parentAttendanceView_to_parentMainMenu"
+            app:destination="@id/parentMainMenu" />
     </fragment>
 </navigation>
