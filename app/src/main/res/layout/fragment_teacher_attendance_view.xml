@@ -6,7 +6,8 @@
     android:id="@+id/teacher_attendance_view"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".Views.TeacherAttendanceView">
+    tools:context=".Views.TeacherAttendanceView"
+   >
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -88,12 +89,28 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:inputType="none"
-                    android:text="Grade and Section Selection ..."
+            
+                    android:hint="Grade and Section Selection ..."
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
+
         </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Submit Attendance"
+                    android:id="@+id/submitAttendance"
+                    android:layout_centerInParent="true">
+                </Button>
+            </RelativeLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/studentsList"
@@ -102,7 +119,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+
+
         </LinearLayout>
+
 
 
 
