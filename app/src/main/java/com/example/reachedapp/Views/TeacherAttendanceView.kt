@@ -1,14 +1,14 @@
 package com.example.reachedapp.Views
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
@@ -52,6 +52,8 @@ class TeacherAttendanceView : Fragment() {
         homeroomSelect.threshold = 1 //will start working from first character
         homeroomSelect.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
 
+
+
         //display date
         dateTimeDisplay = view.findViewById(R.id.date)
         calendar = Calendar.getInstance()
@@ -92,7 +94,10 @@ class TeacherAttendanceView : Fragment() {
                                 .child(s.studentName)
                                 .child("IsPresent")
                                 .setValue(true)
+
                         }
+                        attendanceRef.child(formatter.format(attendanceDate))
+                            .child("IsSubmitted").setValue(false)
                         studentAdapter.setData(studentList)
                     }
                 }
@@ -103,6 +108,48 @@ class TeacherAttendanceView : Fragment() {
                 }
             })
         }
+
+        val submitBtn = view.findViewById<Button>(R.id.submitAttendance)
+
+        submitBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(R.string.dialogTitle)
+            //set message for alert dialog
+            builder.setMessage(R.string.dialogMessage)
+            builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+            //performing positive action
+            builder.setPositiveButton("Yes"){dialogInterface, which ->
+
+                ref.addValueEventListener(object : ValueEventListener {
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                            attendanceRef.child(formatter.format(attendanceDate))
+                                .child("IsSubmitted")
+                                .setValue(true)
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        println("The read failed: " + databaseError.code)
+                    }
+                })
+
+
+                Toast.makeText(requireContext(),"Attendance Submitted",Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
+            }
+            //performing negative action
+            builder.setNegativeButton("No"){dialogInterface, which ->
+                Toast.makeText(requireContext(),"Cancelled Submit",Toast.LENGTH_LONG).show()
+            }
+            // Create the AlertDialog
+            val alertDialog: AlertDialog = builder.create()
+            // Set other dialog properties
+            alertDialog.setCancelable(false)
+            alertDialog.show()
+        }
+
 
 
 
