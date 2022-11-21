@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.R
@@ -20,7 +21,7 @@ class TeacherMainMenu : Fragment() {
 
     private val database = FirebaseDatabase.getInstance()
 
-    val attendanceRef = database.getReference("Attendance")
+    private val attendanceRef = database.getReference("Attendance")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,7 +35,32 @@ class TeacherMainMenu : Fragment() {
 
         attendanceBtn.setOnClickListener{
 
-            findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
+            attendanceRef.addValueEventListener(object : ValueEventListener {
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    for (dsp in dataSnapshot.children) {
+
+                        if(dsp.key == formatter.format(attendanceDate)){
+                            val checkSubmitted = dsp.child("IsSubmitted")
+
+                            if(checkSubmitted.value == true){
+                                Toast.makeText(requireContext(), "Attendance already submitted, come back tomorrow!", Toast.LENGTH_LONG).show()
+                            }
+                            else{
+                                findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
+                            }
+                        }
+
+                    }
+
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    println("The read failed: " + databaseError.code)
+                }
+            })
+
         }
 
         return view
