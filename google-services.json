@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "487593424698",
+    "firebase_url": "https://reached-e29bb-default-rtdb.firebaseio.com",
+    "project_id": "reached-e29bb",
+    "storage_bucket": "reached-e29bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487593424698:android:116f2da9d50845717f0203",
+        "android_client_info": {
+          "package_name": "com.example.reachedapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487593424698-jp579g2uc7prqors1ji6j8m3i5of6c08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgdN4SpKoaJmNCNeE_wH3exXjPcY8qCl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487593424698-jp579g2uc7prqors1ji6j8m3i5of6c08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
