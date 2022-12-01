@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ReachedApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_for_student">Search for student &#8230;</string>
+    <string name="dialogTitle">Confirm Submit</string>
+    <string name="dialogMessage">Attendance cannot be modified once submitted! Continue?</string>
 </resources>

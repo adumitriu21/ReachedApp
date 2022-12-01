@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav.xml"
+    app:startDestination="@id/homeFragment3">
+
+    <fragment
+        android:id="@+id/teacherAttendanceView"
+        android:name="com.example.reachedapp.Views.TeacherAttendanceView"
+        android:label="fragment_teacher_attendance_view"
+        tools:layout="@layout/fragment_teacher_attendance_view" >
+        <action
+            android:id="@+id/action_teacherAttendanceView_to_teacherMainMenu"
+            app:destination="@id/teacherMainMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/teacherMainMenu"
+        android:name="com.example.reachedapp.Views.TeacherMainMenu"
+        android:label="fragment_teacher_main_menu"
+        tools:layout="@layout/fragment_teacher_main_menu" >
+        <action
+            android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView"
+            app:destination="@id/teacherAttendanceView" />
+        <action
+            android:id="@+id/action_teacherMainMenu_to_homeFragment3"
+            app:destination="@id/homeFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment3"
+        android:name="com.example.reachedapp.Views.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment3_to_teacherMainMenu"
+            app:destination="@id/teacherMainMenu" />
+        <action
+            android:id="@+id/action_homeFragment3_to_parentMainMenu"
+            app:destination="@id/parentMainMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/parentMainMenu"
+        android:name="com.example.reachedapp.Views.ParentMainMenu"
+        android:label="fragment_parent_main_menu"
+        tools:layout="@layout/fragment_parent_main_menu" >
+        <action
+            android:id="@+id/action_parentMainMenu_to_parentAttendanceView"
+            app:destination="@id/parentAttendanceView" />
+        <action
+            android:id="@+id/action_parentMainMenu_to_homeFragment3"
+            app:destination="@id/homeFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/parentAttendanceView"
+        android:name="com.example.reachedapp.Views.ParentAttendanceView"
+        android:label="fragment_parent_attendance_view"
+        tools:layout="@layout/fragment_parent_attendance_view" >
+        <action
+            android:id="@+id/action_parentAttendanceView_to_parentMainMenu"
+            app:destination="@id/parentMainMenu" />
+    </fragment>
+</navigation>
