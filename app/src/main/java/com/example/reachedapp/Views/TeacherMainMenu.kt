@@ -34,6 +34,11 @@ class TeacherMainMenu : Fragment() {
 
         attendanceBtn.setOnClickListener{
 
+            /*verify if the attendance has previously been submitted. If it has been then a Toast
+            message indicating to the user to try again tomorrow will pop up.
+            In the even that there is no attendance entry with today's date, or that today's
+            attendance has not been submitted, the Teacher will be redirected to the Teacher
+            Attendance View screen*/
             attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {

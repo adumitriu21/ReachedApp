@@ -1,14 +1,13 @@
 package com.example.reachedapp.Views
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.TextView
+import android.widget.*
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
@@ -22,46 +21,39 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ParentAttendanceView.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ParentAttendanceView : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private val database = FirebaseDatabase.getInstance()
-    val ref = database.getReference("Student")
+    private val ref = database.getReference("Student")
     val attendanceRef = database.getReference("Attendance")
-    private lateinit var dateTimeDisplay: TextView
-    private lateinit var dayOfWeek: TextView
-    private lateinit var calendar: Calendar
-    private lateinit var dateFormat: SimpleDateFormat
-    private lateinit var date: String
+    lateinit var attendanceDate: Date
+    lateinit var dateTV: TextView
+    lateinit var calendarView: CalendarView
+
 
     val parentList: MutableList<String> = ArrayList<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         /*
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-        */
+        * Function checking for all parents names when first opening the view
+        * in order to populate the parent selection drop down menu.
+        * It takes into account if a parent has more than one child
+        * in the school so each name in the drop down is unique/
+        * It is only needed until Authentication is implemented
+        * */
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 for (dsp in dataSnapshot.children) {
                     val s = dsp.getValue(Student::class.java)
                     if (s != null) {
-                        parentList.add(s.studentParent1)
+                        if(!parentList.contains(s.studentParent1)){
+                            parentList.add(s.studentParent1)
+                        }
                     }
                 }
             }
@@ -74,26 +66,37 @@ class ParentAttendanceView : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_parent_attendance_view, container, false)
-
         val adapter = ArrayAdapter(requireActivity(), R.layout.drpdown_item, parentList)
-
         val allParentsList = view.findViewById<AutoCompleteTextView>(R.id.parentSelection)
 
         allParentsList.threshold = 1 //will start working from first character
         allParentsList.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
-        //display date
-        dateTimeDisplay = view.findViewById(R.id.date)
-        calendar = Calendar.getInstance()
-        dateFormat = SimpleDateFormat("MM/dd/yyyy")
-        date = dateFormat.format(calendar.getTime())
-        dateTimeDisplay.setText(date)
 
-        //display day of the week
-        dayOfWeek = view.findViewById(R.id.day)
-        dayOfWeek.setText(LocalDate.now().dayOfWeek.name)
+        // initializing variables for registering the selected date
+        dateTV = view.findViewById(R.id.idTVDate)
+        calendarView = view.findViewById(R.id.calendarView)
 
+        // on below line we are adding set on
+        // date change listener for calendar view.
+        calendarView
+            .setOnDateChangeListener { view, year, month, dayOfMonth ->
+                // In this Listener we are getting values
+                // such as year, month and day of month
+                // on below line we are creating a variable
+                // in which we are adding all the variables in it.
+                val Date = (dayOfMonth.toString() + "-"
+                        + (month + 1) + "-" + year)
+
+                // set this date in TextView for Display
+                dateTV.text = Date
+                // convert string representing the date to an actual Date object matchin
+                // the other entries in the DB
+                val inputFormat = SimpleDateFormat("dd-MM-yyyy")
+                attendanceDate = inputFormat.parse(dateTV.text as String)
+            }
 
 
         val studentAdapter = StudentListAdapter()
@@ -101,55 +104,67 @@ class ParentAttendanceView : Fragment() {
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-
         val formatter = SimpleDateFormat("dd MMMM yyyy")
-        val attendanceDate = Date()
 
-        allParentsList.setOnItemClickListener(AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
-            val item = parent.getItemAtPosition(position)
-            val studentList: MutableList<Student> = ArrayList<Student>()
 
-            ref.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
+        allParentsList.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
+                val item = parent.getItemAtPosition(position)
+                val studentList: MutableList<Student> = ArrayList<Student>()
 
-                    for (dsp in dataSnapshot.children) {
-                        val s = dsp.getValue(Student::class.java)
-                        if (s != null && s.studentParent1.toString() == item.toString()) {
-                            studentList.add(s)
-                            attendanceRef.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString()).child(s.studentName).child("IsPresent").setValue(true)
+                ref.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                        for (dsp in dataSnapshot.children) {
+                            val s = dsp.getValue(Student::class.java)
+                            if (s != null && s.studentParent1.toString() == item.toString()) {
+                                studentList.add(s)
+                                attendanceRef.child(formatter.format(attendanceDate))
+                                    .child("Reported Absences")
+                                    .child(s.studentHomeroom.toString())
+                                    .child(s.studentName)
+                                    .child("IsPresent")
+                                    .setValue(false)
+                            }
+                            studentAdapter.setData(studentList)
                         }
-                        studentAdapter.setData(studentList)
                     }
-                }
 
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    println("The read failed: " + databaseError.code)
-                }
-            })
-        })
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        println("The read failed: " + databaseError.code)
+                    }
+                })
+            }
         studentRecyclerView.setOnClickListener {  }
+
+        val submitBtn = view.findViewById<Button>(R.id.submitReport)
+        submitBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(R.string.dialogTitle)
+            //set message for alert dialog
+            builder.setMessage(R.string.reportAbsenceMsg)
+            builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+            //performing positive action
+            builder.setPositiveButton("Yes"){dialogInterface, which ->
+
+                Toast.makeText(requireContext(),"Absence Reported Successfully!",Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_parentAttendanceView_to_homeFragment3)
+            }
+            //performing negative action
+            builder.setNegativeButton("No"){dialogInterface, which ->
+                Toast.makeText(requireContext(),"Cancelled Submit",Toast.LENGTH_LONG).show()
+            }
+            // Create the AlertDialog
+            val alertDialog: AlertDialog = builder.create()
+            // Set other dialog properties
+            alertDialog.setCancelable(false)
+            alertDialog.show()
+        }
 
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ParentAttendanceView.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                ParentAttendanceView().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
-    }
+
 }

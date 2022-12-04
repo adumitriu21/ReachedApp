@@ -58,5 +58,8 @@
         <action
             android:id="@+id/action_parentAttendanceView_to_parentMainMenu"
             app:destination="@id/parentMainMenu" />
+        <action
+            android:id="@+id/action_parentAttendanceView_to_homeFragment3"
+            app:destination="@id/homeFragment3" />
     </fragment>
 </navigation>

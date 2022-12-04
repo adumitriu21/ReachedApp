@@ -52,18 +52,16 @@ class TeacherAttendanceView : Fragment() {
         homeroomSelect.threshold = 1 //will start working from first character
         homeroomSelect.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
 
-
-
         //display date
         dateTimeDisplay = view.findViewById(R.id.date)
         calendar = Calendar.getInstance()
         dateFormat = SimpleDateFormat("MM/dd/yyyy")
-        date = dateFormat.format(calendar.getTime())
-        dateTimeDisplay.setText(date)
+        date = dateFormat.format(calendar.time)
+        dateTimeDisplay.text = date
 
         //display day of the week
         dayOfWeek = view.findViewById(R.id.day)
-        dayOfWeek.setText(LocalDate.now().dayOfWeek.name)
+        dayOfWeek.text = LocalDate.now().dayOfWeek.name
 
         val studentAdapter = StudentListAdapter()
         val studentRecyclerView = view.findViewById<RecyclerView>(R.id.studentsList)
@@ -74,6 +72,16 @@ class TeacherAttendanceView : Fragment() {
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val attendanceDate = Date()
 
+        /*
+        * the Homeroom select drop down menu is a feature that will only exist
+        * until Authentication is implemented, at which point when a teacher logs
+        * into the application, it will automatically pull his/her homeroom student
+        * list.
+        *
+        * For now, as soon as a homeroom is selected, a recycler view with the students
+        * in the respective class is populated. At the same time a new Firebase Attendance
+        * entry is created with all the Student's attendance status defaulted to present
+        * */
         homeroomSelect.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
 
             val selectedHomeroom = parent.getItemAtPosition(position)
@@ -111,6 +119,14 @@ class TeacherAttendanceView : Fragment() {
 
         val submitBtn = view.findViewById<Button>(R.id.submitAttendance)
 
+        /*
+        * Logic for clicking the Attendance submit button
+        * Each attendance entry (Data) in Firebase has an IsSubmitted
+        * property that defaults to false. When this button is clicked
+        * and confirmed, the boolean value is changed to true, disabling
+        * the Teacher from accessing the Attendance screen for the remainder
+        * of the current day
+        * */
         submitBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.dialogTitle)
