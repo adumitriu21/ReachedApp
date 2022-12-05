@@ -2,11 +2,11 @@ package com.example.reachedapp.Views
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,9 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class ParentAttendanceView : Fragment() {
@@ -81,6 +79,10 @@ class ParentAttendanceView : Fragment() {
 
         // on below line we are adding set on
         // date change listener for calendar view.
+        val format = SimpleDateFormat("dd-MM-yyyy")
+        val currentDate  = Date()
+        calendarView.minDate = currentDate.time
+        dateTV.text = format.format(currentDate.time)
         calendarView
             .setOnDateChangeListener { view, year, month, dayOfMonth ->
                 // In this Listener we are getting values
@@ -104,15 +106,15 @@ class ParentAttendanceView : Fragment() {
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
 
+        val formatter = SimpleDateFormat("dd MMMM yyyy")
 
         allParentsList.onItemClickListener =
             AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
                 val item = parent.getItemAtPosition(position)
                 val studentList: MutableList<Student> = ArrayList<Student>()
 
-                ref.addValueEventListener(object : ValueEventListener {
+                ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                         for (dsp in dataSnapshot.children) {
