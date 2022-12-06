@@ -1,18 +1,25 @@
 package com.example.reachedapp.Views
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
+import com.example.reachedapp.sendNotification
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -24,7 +31,7 @@ import kotlin.collections.ArrayList
 
 
 class TeacherAttendanceView : Fragment() {
-
+    private lateinit var notificationManager: NotificationManager
     private val database = FirebaseDatabase.getInstance()
     val ref = database.getReference("Student")
     val attendanceRef = database.getReference("Attendance")
@@ -153,6 +160,19 @@ class TeacherAttendanceView : Fragment() {
 
 
                 Toast.makeText(requireContext(),"Attendance Submitted",Toast.LENGTH_LONG).show()
+
+                createChannel(getString(R.string.comment_notification_channel_id),
+                        "1234")
+
+                val title = "REACHED"
+                val message = "Absence report has been transmitted successfully to notify parents."
+
+                notificationManager.sendNotification(
+                        title,
+                        message,
+                        getString(R.string.comment_notification_channel_id),
+                        requireContext()
+                )
                 findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
             }
             //performing negative action
@@ -171,6 +191,22 @@ class TeacherAttendanceView : Fragment() {
 
         studentRecyclerView.setOnClickListener {  }
         return view
+    }
+
+    private fun createChannel(channelId : String, channelName : String){
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O){
+            val notificationChannel = NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                enableLights(true)
+                enableVibration(true)
+                lightColor = Color.GREEN
+            }
+
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
     }
 
 }

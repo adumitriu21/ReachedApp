@@ -1,17 +1,26 @@
 package com.example.reachedapp.Views
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
+import com.example.reachedapp.sendNotification
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -21,6 +30,8 @@ import java.util.*
 
 
 class ParentAttendanceView : Fragment() {
+
+    private lateinit var notificationManager: NotificationManager
 
     private val database = FirebaseDatabase.getInstance()
     private val ref = database.getReference("Student")
@@ -36,6 +47,9 @@ class ParentAttendanceView : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        notificationManager = ContextCompat.getSystemService(requireContext(),
+                NotificationManager::class.java) as NotificationManager
         /*
         * Function checking for all parents names when first opening the view
         * in order to populate the parent selection drop down menu.
@@ -62,8 +76,27 @@ class ParentAttendanceView : Fragment() {
         })
     }
 
+    private fun createChannel(channelId : String, channelName : String){
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O){
+            val notificationChannel = NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                enableLights(true)
+                enableVibration(true)
+                lightColor = Color.GREEN
+            }
+
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+
+
 
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_parent_attendance_view, container, false)
@@ -140,6 +173,7 @@ class ParentAttendanceView : Fragment() {
             }
         studentRecyclerView.setOnClickListener {  }
 
+
         val submitBtn = view.findViewById<Button>(R.id.submitReport)
         submitBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -150,6 +184,21 @@ class ParentAttendanceView : Fragment() {
 
             //performing positive action
             builder.setPositiveButton("Yes"){dialogInterface, which ->
+
+
+
+                createChannel(getString(R.string.comment_notification_channel_id),
+                        "123")
+
+                val title = "REACHED"
+                val message = "Absence report has been transmitted successfully to school secretary and teachers."
+
+                notificationManager.sendNotification(
+                        title,
+                        message,
+                        getString(R.string.comment_notification_channel_id),
+                        requireContext()
+                )
 
                 Toast.makeText(requireContext(),"Absence Reported Successfully!",Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_parentAttendanceView_to_homeFragment3)
