@@ -201,6 +201,7 @@ class TeacherAttendanceView : Fragment() {
         super.onCreate(savedInstanceState)
 
 
+
         notificationManager = ContextCompat.getSystemService(requireContext(),
                 NotificationManager::class.java) as NotificationManager
 
