@@ -42,21 +42,25 @@ class TeacherMainMenu : Fragment() {
             attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-
+                    val datesList = arrayListOf<String>()
+                    val currentDate = formatter.format(attendanceDate)
                     for (dsp in dataSnapshot.children) {
+                        dsp.key?.let { it1 -> datesList.add(it1) }
+                    }
 
-                        if(dsp.key == formatter.format(attendanceDate)){
-                            val checkSubmitted = dsp.child("IsSubmitted")
+                    if(datesList.contains(currentDate)){
+                            val checkSubmitted = dataSnapshot.child(currentDate).child("IsSubmitted")
+
                             if(checkSubmitted.value == true){
                                 Toast.makeText(requireContext(), "Attendance already submitted, come back tomorrow!", Toast.LENGTH_LONG).show()
 
-                            }
-                            else{
-                                findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
-                            }
-
                         }
+                        else{
+                            findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
+                        }
+
                     }
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
