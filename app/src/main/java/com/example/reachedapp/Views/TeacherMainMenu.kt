@@ -60,7 +60,9 @@ class TeacherMainMenu : Fragment() {
                         }
 
                     }
-
+                    else {
+                        findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
+                    }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
