@@ -95,9 +95,6 @@ class ParentAttendanceView : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-
-
-
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_parent_attendance_view, container, false)
         val adapter = ArrayAdapter(requireActivity(), R.layout.drpdown_item, parentList)
@@ -114,7 +111,12 @@ class ParentAttendanceView : Fragment() {
         // date change listener for calendar view.
         val format = SimpleDateFormat("dd-MM-yyyy")
         val currentDate  = Date()
+
+        //default attendance date to today's date
+        attendanceDate = currentDate
         calendarView.minDate = currentDate.time
+
+        //display today's date in the top left text box
         dateTV.text = format.format(currentDate.time)
         calendarView
             .setOnDateChangeListener { view, year, month, dayOfMonth ->

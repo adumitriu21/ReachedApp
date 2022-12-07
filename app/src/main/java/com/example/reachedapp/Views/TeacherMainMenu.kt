@@ -22,8 +22,10 @@ class TeacherMainMenu : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     private val attendanceRef = database.getReference("Attendance")
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
 
@@ -32,7 +34,7 @@ class TeacherMainMenu : Fragment() {
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val attendanceDate = Date()
 
-        attendanceBtn.setOnClickListener{
+        attendanceBtn.setOnClickListener {
 
             /*verify if the attendance has previously been submitted. If it has been then a Toast
             message indicating to the user to try again tomorrow will pop up.
@@ -48,20 +50,26 @@ class TeacherMainMenu : Fragment() {
                         dsp.key?.let { it1 -> datesList.add(it1) }
                     }
 
-                    if(datesList.contains(currentDate)){
-                            val checkSubmitted = dataSnapshot.child(currentDate).child("IsSubmitted")
+                    if (datesList.contains(currentDate)) {
+                        val checkSubmitted = dataSnapshot.child(currentDate).child("IsSubmitted")
 
-                            if(checkSubmitted.value == true){
-                                Toast.makeText(requireContext(), "Attendance already submitted, come back tomorrow!", Toast.LENGTH_LONG).show()
+                        if (checkSubmitted.value == true) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Attendance already submitted, come back tomorrow!",
+                                Toast.LENGTH_LONG
+                            ).show()
 
                         }
                         else{
                             findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
                         }
-
+                    } else {
+                        findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
                     }
 
                 }
+
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     println("The read failed: " + databaseError.code)
@@ -69,13 +77,10 @@ class TeacherMainMenu : Fragment() {
             })
 
 
-
-
         }
 
         return view
     }
-
 
 
 }
