@@ -13,6 +13,7 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -159,10 +160,8 @@ class TeacherAttendanceView : Fragment() {
                 })
 
 
-                Toast.makeText(requireContext(),"Attendance Submitted",Toast.LENGTH_LONG).show()
-
                 createChannel(getString(R.string.comment_notification_channel_id),
-                        "1234")
+                        "12345")
 
                 val title = "REACHED"
                 val message = "Absence report has been transmitted successfully to notify parents."
@@ -173,6 +172,10 @@ class TeacherAttendanceView : Fragment() {
                         getString(R.string.comment_notification_channel_id),
                         requireContext()
                 )
+
+                Toast.makeText(requireContext(),"Attendance Submitted",Toast.LENGTH_LONG).show()
+
+
                 findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
             }
             //performing negative action
@@ -191,6 +194,16 @@ class TeacherAttendanceView : Fragment() {
 
         studentRecyclerView.setOnClickListener {  }
         return view
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+        notificationManager = ContextCompat.getSystemService(requireContext(),
+                NotificationManager::class.java) as NotificationManager
+
     }
 
     private fun createChannel(channelId : String, channelName : String){
