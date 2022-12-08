@@ -103,7 +103,6 @@ class TeacherAttendanceView : Fragment() {
                         if (s != null && s.studentHomeroom.toString() == selectedHomeroom.toString()) {
 
                             studentList.add(s)
-//aa
 
                             attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(attSnapshot: DataSnapshot) {
