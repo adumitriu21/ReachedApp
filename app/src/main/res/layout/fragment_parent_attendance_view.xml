@@ -35,9 +35,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:hint="Select Date"
                 android:padding="8dp"
                 android:text=""
-                android:hint="Select Date"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />

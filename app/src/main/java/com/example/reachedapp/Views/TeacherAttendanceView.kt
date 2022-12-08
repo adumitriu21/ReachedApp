@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
 import com.example.reachedapp.sendNotification
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -104,12 +103,23 @@ class TeacherAttendanceView : Fragment() {
                         if (s != null && s.studentHomeroom.toString() == selectedHomeroom.toString()) {
 
                             studentList.add(s)
+//aa
 
-                            attendanceRef.child(formatter.format(attendanceDate))
-                                .child(s.studentHomeroom.toString())
-                                .child(s.studentName)
-                                .child("IsPresent")
-                                .setValue(true)
+                            attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(attSnapshot: DataSnapshot) {
+                                    if (!attSnapshot.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString())
+                                                    .child(s.studentName).hasChild("IsPresent")) {
+                                        attendanceRef.child(formatter.format(attendanceDate))
+                                                .child(s.studentHomeroom.toString())
+                                                .child(s.studentName)
+                                                .child("IsPresent")
+                                                .setValue(true)
+                                    }
+                                }
+                                override fun onCancelled(attError: DatabaseError) {
+                                    println("The read failed: " + attError.code)
+                                }
+                            })
 
                         }
                         attendanceRef.child(formatter.format(attendanceDate))
