@@ -3,7 +3,6 @@ package com.example.reachedapp.Views
 import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,9 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,22 +29,16 @@ import java.util.*
 class ParentAttendanceView : Fragment() {
 
     private lateinit var notificationManager: NotificationManager
-
     private val database = FirebaseDatabase.getInstance()
     private val ref = database.getReference("Student")
     val attendanceRef = database.getReference("Attendance")
     lateinit var attendanceDate: Date
     lateinit var dateTV: TextView
     lateinit var calendarView: CalendarView
-
-
     val parentList: MutableList<String> = ArrayList<String>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         notificationManager = ContextCompat.getSystemService(requireContext(),
                 NotificationManager::class.java) as NotificationManager
         /*
@@ -59,7 +50,6 @@ class ParentAttendanceView : Fragment() {
         * */
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                 for (dsp in dataSnapshot.children) {
                     val s = dsp.getValue(Student::class.java)
                     if (s != null) {
@@ -69,7 +59,6 @@ class ParentAttendanceView : Fragment() {
                     }
                 }
             }
-
             override fun onCancelled(databaseError: DatabaseError) {
                 println("The read failed: " + databaseError.code)
             }
@@ -87,7 +76,6 @@ class ParentAttendanceView : Fragment() {
                 enableVibration(true)
                 lightColor = Color.GREEN
             }
-
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }

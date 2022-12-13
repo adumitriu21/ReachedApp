@@ -49,17 +49,14 @@ class TeacherMainMenu : Fragment() {
                     for (dsp in dataSnapshot.children) {
                         dsp.key?.let { it1 -> datesList.add(it1) }
                     }
-
                     if (datesList.contains(currentDate)) {
                         val checkSubmitted = dataSnapshot.child(currentDate).child("IsSubmitted")
-
                         if (checkSubmitted.value == true) {
                             Toast.makeText(
                                 requireContext(),
                                 "Attendance already submitted, come back tomorrow!",
                                 Toast.LENGTH_LONG
                             ).show()
-
                         }
                         else{
                             findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
@@ -67,18 +64,12 @@ class TeacherMainMenu : Fragment() {
                     } else {
                         findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
                     }
-
                 }
-
-
                 override fun onCancelled(databaseError: DatabaseError) {
                     println("The read failed: " + databaseError.code)
                 }
             })
-
-
         }
-
         return view
     }
 

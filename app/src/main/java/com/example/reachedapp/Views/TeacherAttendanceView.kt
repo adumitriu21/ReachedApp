@@ -6,15 +6,11 @@ import android.app.NotificationManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -23,11 +19,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
 import com.example.reachedapp.sendNotification
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TeacherAttendanceView : Fragment() {
@@ -65,7 +63,6 @@ class TeacherAttendanceView : Fragment() {
         dateFormat = SimpleDateFormat("MM/dd/yyyy")
         date = dateFormat.format(calendar.time)
         dateTimeDisplay.text = date
-
         //display day of the week
         dayOfWeek = view.findViewById(R.id.day)
         dayOfWeek.text = LocalDate.now().dayOfWeek.name
@@ -74,7 +71,6 @@ class TeacherAttendanceView : Fragment() {
         val studentRecyclerView = view.findViewById<RecyclerView>(R.id.studentsList)
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
 
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val attendanceDate = Date()
@@ -90,20 +86,14 @@ class TeacherAttendanceView : Fragment() {
         * entry is created with all the Student's attendance status defaulted to present
         * */
         homeroomSelect.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
-
             val selectedHomeroom = parent.getItemAtPosition(position)
             val studentList: MutableList<Student> = ArrayList<Student>()
-
             ref.addValueEventListener(object : ValueEventListener {
-
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                     for (dsp in dataSnapshot.children) {
                         val s = dsp.getValue(Student::class.java)
                         if (s != null && s.studentHomeroom.toString() == selectedHomeroom.toString()) {
-
                             studentList.add(s)
-
                             attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(attSnapshot: DataSnapshot) {
                                     if (!attSnapshot.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString())
@@ -126,8 +116,6 @@ class TeacherAttendanceView : Fragment() {
                         studentAdapter.setData(studentList)
                     }
                 }
-
-
                 override fun onCancelled(databaseError: DatabaseError) {
                     println("The read failed: " + databaseError.code)
                 }
@@ -153,28 +141,20 @@ class TeacherAttendanceView : Fragment() {
 
             //performing positive action
             builder.setPositiveButton("Yes"){dialogInterface, which ->
-
                 ref.addValueEventListener(object : ValueEventListener {
-
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                             attendanceRef.child(formatter.format(attendanceDate))
                                 .child("IsSubmitted")
                                 .setValue(true)
                     }
-
                     override fun onCancelled(databaseError: DatabaseError) {
                         println("The read failed: " + databaseError.code)
                     }
                 })
-
-
                 createChannel(getString(R.string.comment_notification_channel_id),
                         "12345")
-
                 val title = "REACHED"
                 val message = "Absence report has been transmitted successfully to notify parents."
-
                 notificationManager.sendNotification(
                         title,
                         message,
@@ -183,8 +163,6 @@ class TeacherAttendanceView : Fragment() {
                 )
 
                 Toast.makeText(requireContext(),"Attendance Submitted",Toast.LENGTH_LONG).show()
-
-
                 findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
             }
             //performing negative action
@@ -197,23 +175,14 @@ class TeacherAttendanceView : Fragment() {
             alertDialog.setCancelable(false)
             alertDialog.show()
         }
-
-
-
-
         studentRecyclerView.setOnClickListener {  }
         return view
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
         notificationManager = ContextCompat.getSystemService(requireContext(),
                 NotificationManager::class.java) as NotificationManager
-
     }
 
     private fun createChannel(channelId : String, channelName : String){
@@ -227,7 +196,6 @@ class TeacherAttendanceView : Fragment() {
                 enableVibration(true)
                 lightColor = Color.GREEN
             }
-
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }

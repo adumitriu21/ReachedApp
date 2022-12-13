@@ -1,6 +1,5 @@
 package com.example.reachedapp.Views
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +14,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.CountDownLatch
 
 class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHolder>() {
 
     private var studentList = emptyList<Student>()
     private val database = FirebaseDatabase.getInstance()
-    val attendanceRef = database.getReference("Attendance")
+    private val attendanceRef = database.getReference("Attendance")
     class StudentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
@@ -36,25 +34,20 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
 
         holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.studentName
 
-        var checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
+        val checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
 
         attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(attSnapshot: DataSnapshot) {
                 val attStat = attSnapshot.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString())
-                        .child(currentStudent.studentName).child("IsPresent").getValue()
-                if ( attStat == true || attStat == null) {
-                    checkBox.isChecked = true
-                }
-                else {
-                    checkBox.isChecked = false
-                }
+                        .child(currentStudent.studentName).child("IsPresent").value
+                checkBox.isChecked = attStat == true || attStat == null
             }
             override fun onCancelled(attError: DatabaseError) {
                 println("The read failed: " + attError.code)
             }
         })
 
-        checkBox.setOnCheckedChangeListener{ _, isChecked ->
+        checkBox.setOnCheckedChangeListener{ _, _ ->
             if(checkBox.isChecked)
             {
                 attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).child("IsPresent").setValue(true)

@@ -2,6 +2,17 @@ package com.example.reachedapp.data
 
 import com.example.reachedapp.Models.Student
 
+/*
+* Class where all the hard coded student data resides
+* this was done to test out integration with the Firebase
+* Realtime DB and to ensure that the objects inserted in
+* the DB had the desired structure
+*
+* Additionally, this class acts as a backup in case the DB
+* date gets deleted, which can be easily done by mistake in
+* Firebase
+*
+* */
 class StudentList {
 
     private val studentList = ArrayList<Student>()
@@ -9,52 +20,52 @@ class StudentList {
 
     fun intializeStudentList(): ArrayList<Student> {
 
-        var student = Student(108,"Gianny Montana",
+        val student = Student(108,"Gianny Montana",
             "Al Montana","brapbrap@gunshots.com",
             "416 187 1870")
-        var student1 = Student(108,"Hannah Montana",
+        val student1 = Student(108,"Hannah Montana",
             "Al Montana","brapbrap@gunshots.com",
             "416 187 1870")
-        var student2 = Student(108,"Luka Milic",
+        val student2 = Student(108,"Luka Milic",
             "Mladina Milic","mlami@gmail.com.com",
             "416 123 3211")
-        var student3 = Student(108,"Francois Bernard",
+        val student3 = Student(108,"Francois Bernard",
             "Pierre Bernard","bernp@yahoo.com",
             "647 229 2211")
-        var student4 = Student(108,"Tyler Durk",
+        val student4 = Student(108,"Tyler Durk",
             "Mandy Durk","md@gmail.com",
             "416 994 2123")
-        var student5 = Student(108,"Rita Faucci",
+        val student5 = Student(108,"Rita Faucci",
             "Tony Faucci","tonyF31@gmail.com.com",
             "647 998 9876")
-        var student6 = Student(108,"Jose Calderon",
+        val student6 = Student(108,"Jose Calderon",
             "Maria Calderon","mariaC@yahoo.com",
             "416 432 1321")
-        var student7 = Student(108,"Peter Maclean",
+        val student7 = Student(108,"Peter Maclean",
             "Janice Maclean","theMacs123@gmail.com",
             "416 165 3456")
-        var student8 = Student(108,"Douglas Wilson",
+        val student8 = Student(108,"Douglas Wilson",
             "Sarah Wilson","Swizzie22@aol.com",
             "416 327 1990")
-        var student9 = Student(107,"Marco Carolla",
+        val student9 = Student(107,"Marco Carolla",
             "Deborah Carolla","caroll123@gmail.com",
             "416 543 3256")
-        var student10 = Student(107,"Boris Breijcha",
+        val student10 = Student(107,"Boris Breijcha",
             "Svetlana Breijcha","darkPlanet@gmail.com",
             "416 187 1870")
-        var student11 = Student(107,"Reinner Zonnenveld",
+        val student11 = Student(107,"Reinner Zonnenveld",
             "Myira Zonnenveld","mzonnie@gmail.com.com",
             "416 187 1870")
-        var student12 = Student(108,"Carlo Lio",
+        val student12 = Student(108,"Carlo Lio",
             "Maggie Leo","lioM556@gunshots.com",
             "416 177 1820")
-        var student13 = Student(107,"Markus Schulz",
+        val student13 = Student(107,"Markus Schulz",
             "Alice Schulz","trancegod@gmail.com",
             "416 187 1870")
-        var student14 = Student(107,"Ann Clue",
+        val student14 = Student(107,"Ann Clue",
             "Martha Clue","anyClue33@aol.com",
             "416 187 1870")
-        var student15 = Student(107,"Charlotte De Witte",
+        val student15 = Student(107,"Charlotte De Witte",
             "Kris De Witte","techno4life@gmail.com",
             "416 187 1870")
 

@@ -12,7 +12,7 @@ class AddStudentsToDbTest {
     private lateinit var studentList: com.example.reachedapp.data.StudentList
     private lateinit var students: ArrayList<Student>
 
-
+    //function that runs before any tests begin
     @Before
     fun setUp(){
         //FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -20,6 +20,8 @@ class AddStudentsToDbTest {
         students = studentList.intializeStudentList()
     }
 
+    //test that uses the data initialized in the StudentList class and inserts in
+    //in the Firebase DB
     @Test
     fun addNewUser(){
         val taskMap: MutableMap<String, Any> = HashMap()
@@ -28,9 +30,6 @@ class AddStudentsToDbTest {
             taskMap["StudentNumber$count"] = student
         }
         dbRef.child("Student").setValue(taskMap)
-
-            //dbRef.child("Student").push().setValue(students)
-        val num = 0
 
     }
 }
