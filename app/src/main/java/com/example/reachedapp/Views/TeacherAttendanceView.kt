@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +40,11 @@ class TeacherAttendanceView : Fragment() {
     private lateinit var calendar: Calendar
     private lateinit var dateFormat: SimpleDateFormat
     private lateinit var date: String
+    private var studentList: MutableList<Student> = ArrayList<Student>()
+    private var studentAdapter = StudentListAdapter()
+    private lateinit var studentRecyclerView : RecyclerView
+    private val homeroom = arrayOf("107", "108")
 
-    val homeroom = arrayOf("107", "108")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,8 +72,9 @@ class TeacherAttendanceView : Fragment() {
         dayOfWeek = view.findViewById(R.id.day)
         dayOfWeek.text = LocalDate.now().dayOfWeek.name
 
-        val studentAdapter = StudentListAdapter()
-        val studentRecyclerView = view.findViewById<RecyclerView>(R.id.studentsList)
+        val searchBar = view.findViewById<EditText>(R.id.searchByName)
+
+        studentRecyclerView = view.findViewById<RecyclerView>(R.id.studentsList)
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -87,7 +93,7 @@ class TeacherAttendanceView : Fragment() {
         * */
         homeroomSelect.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
             val selectedHomeroom = parent.getItemAtPosition(position)
-            val studentList: MutableList<Student> = ArrayList<Student>()
+
             ref.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (dsp in dataSnapshot.children) {
@@ -121,6 +127,21 @@ class TeacherAttendanceView : Fragment() {
                 }
             })
         }
+
+        searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                filter(p0.toString())
+
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+
+            }
+        })
 
         val submitBtn = view.findViewById<Button>(R.id.submitAttendance)
 
@@ -198,6 +219,20 @@ class TeacherAttendanceView : Fragment() {
             }
             notificationManager.createNotificationChannel(notificationChannel)
         }
+    }
+
+    private  fun filter(e: String) {
+        //Declare the array list that holds the filtered values
+        val filteredStudents = ArrayList<Student>()
+        // loop through the array list to obtain the required value
+        for (student in studentList) {
+            if (student.studentName.lowercase().contains(e.lowercase())) {
+                filteredStudents.add(student)
+            }
+        }
+        // add the filtered value to adapter
+        studentAdapter.setData(filteredStudents)
+
     }
 
 }
