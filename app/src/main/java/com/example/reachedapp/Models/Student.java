@@ -12,16 +12,16 @@ public class Student {
 
     public Student() {}
 
-    public Student(long studentHomeroom,
-                   String studentName,
-                   String studentParent1,
-                   String studentParent1Phone,
-                   String studentParent1Email){
-        this.StudentHomeroom = studentHomeroom;
-        this.StudentName = studentName;
-        this.StudentParent1 = studentParent1;
-        this.StudentParent1Phone = studentParent1Phone;
-        this.StudentParent1Email = studentParent1Email;
+    public Student(long StudentHomeroom,
+                   String StudentName,
+                   String StudentParent1,
+                   String StudentParent1Phone,
+                   String StudentParent1Email){
+        this.StudentHomeroom = StudentHomeroom;
+        this.StudentName = StudentName;
+        this.StudentParent1 = StudentParent1;
+        this.StudentParent1Phone = StudentParent1Phone;
+        this.StudentParent1Email = StudentParent1Email;
     }
 
     @Override
