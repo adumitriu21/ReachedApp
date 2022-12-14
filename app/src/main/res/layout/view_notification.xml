@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
  <TextView
@@ -40,6 +41,7 @@ android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtnotification"
         android:text="Mark as Read"
+        android:backgroundTint="@color/gold"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
