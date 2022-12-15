@@ -93,7 +93,7 @@ class TeacherAttendanceView : Fragment() {
         * */
         homeroomSelect.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
             val selectedHomeroom = parent.getItemAtPosition(position)
-
+            studentList.clear()
             ref.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (dsp in dataSnapshot.children) {

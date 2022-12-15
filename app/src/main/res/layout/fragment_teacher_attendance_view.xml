@@ -97,7 +97,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Submit Attendance"></Button>
+                    android:text="Submit Attendance"
+                    android:backgroundTint="@color/gold"/>
 
                 <EditText
                     android:id="@+id/searchByName"
