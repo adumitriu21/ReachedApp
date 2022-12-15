@@ -20,6 +20,8 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
     private var studentList = emptyList<Student>()
     private val database = FirebaseDatabase.getInstance()
     private val attendanceRef = database.getReference("Attendance")
+    private var absentStudents: MutableList<String> = ArrayList<String>()
+
     class StudentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
@@ -41,6 +43,9 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
                 val attStat = attSnapshot.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString())
                         .child(currentStudent.studentName).child("IsPresent").value
                 checkBox.isChecked = attStat == true || attStat == null
+                if (!checkBox.isChecked) {
+                    absentStudents.add(currentStudent.studentName)
+                }
             }
             override fun onCancelled(attError: DatabaseError) {
                 println("The read failed: " + attError.code)
@@ -51,8 +56,14 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
             if(checkBox.isChecked)
             {
                 attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).child("IsPresent").setValue(true)
+                if(absentStudents.contains(currentStudent.studentName)) {
+                    absentStudents.remove(currentStudent.studentName)
+                }
             } else {
                 attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).child("IsPresent").setValue(false)
+                if(!absentStudents.contains(currentStudent.studentName)) {
+                    absentStudents.add(currentStudent.studentName)
+                }
             }
 
         }
@@ -67,5 +78,9 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         this.studentList = student
         notifyDataSetChanged()
 
+    }
+
+    fun getSelectedStudents(): List<String?>? {
+        return absentStudents
     }
 }

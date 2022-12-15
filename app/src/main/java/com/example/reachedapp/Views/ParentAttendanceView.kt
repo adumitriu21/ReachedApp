@@ -144,12 +144,12 @@ class ParentAttendanceView : Fragment() {
                             val s = dsp.getValue(Student::class.java)
                             if (s != null && s.studentParent1.toString() == item.toString()) {
                                 studentList.add(s)
-                                attendanceRef.child(formatter.format(attendanceDate))
+ /*                               attendanceRef.child(formatter.format(attendanceDate))
                                     .child("Reported Absences")
                                     .child(s.studentHomeroom.toString())
                                     .child(s.studentName)
                                     .child("IsPresent")
-                                    .setValue(false)
+                                    .setValue(false)*/
                             }
                             studentAdapter.setData(studentList)
                         }
@@ -175,6 +175,32 @@ class ParentAttendanceView : Fragment() {
             //performing positive action
             builder.setPositiveButton("Yes"){dialogInterface, which ->
 
+                val selectedStud = studentAdapter.getSelectedStudents()
+                if (selectedStud != null) {
+                    for (std in selectedStud) {
+                        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                                for (dsp in dataSnapshot.children) {
+                                    val s = dsp.getValue(Student::class.java)
+                                    if (s != null && s.studentName.toString() == std) {
+                                        attendanceRef.child(formatter.format(attendanceDate))
+                                                .child("Reported Absences")
+                                                .child(s.studentHomeroom.toString())
+                                                .child(s.studentName)
+                                                .child("IsPresent")
+                                                .setValue(false)
+                                    }
+                                }
+                            }
+
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                println("The read failed: " + databaseError.code)
+                            }
+                        })
+                    }
+                }
 
 
                 createChannel(getString(R.string.comment_notification_channel_id),
