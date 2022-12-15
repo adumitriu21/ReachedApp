@@ -83,4 +83,8 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
     fun getSelectedStudents(): List<String?>? {
         return absentStudents
     }
+
+    fun resetSelectedStudents() {
+        absentStudents.clear()
+    }
 }

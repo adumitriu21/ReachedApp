@@ -136,7 +136,7 @@ class ParentAttendanceView : Fragment() {
             AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
                 val item = parent.getItemAtPosition(position)
                 val studentList: MutableList<Student> = ArrayList<Student>()
-
+                studentAdapter.resetSelectedStudents()
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
 
@@ -144,12 +144,6 @@ class ParentAttendanceView : Fragment() {
                             val s = dsp.getValue(Student::class.java)
                             if (s != null && s.studentParent1.toString() == item.toString()) {
                                 studentList.add(s)
- /*                               attendanceRef.child(formatter.format(attendanceDate))
-                                    .child("Reported Absences")
-                                    .child(s.studentHomeroom.toString())
-                                    .child(s.studentName)
-                                    .child("IsPresent")
-                                    .setValue(false)*/
                             }
                             studentAdapter.setData(studentList)
                         }
