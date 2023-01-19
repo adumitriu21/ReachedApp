@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "487593424698",
-    "firebase_url": "https://reached-e29bb-default-rtdb.firebaseio.com",
-    "project_id": "reached-e29bb",
-    "storage_bucket": "reached-e29bb.appspot.com"
+    "project_number": "751603004409",
+    "firebase_url": "https://reachedapp-64503-default-rtdb.firebaseio.com",
+    "project_id": "reachedapp-64503",
+    "storage_bucket": "reachedapp-64503.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:487593424698:android:116f2da9d50845717f0203",
+        "mobilesdk_app_id": "1:751603004409:android:29aabe46e132071556c328",
         "android_client_info": {
           "package_name": "com.example.reachedapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "487593424698-jp579g2uc7prqors1ji6j8m3i5of6c08.apps.googleusercontent.com",
+          "client_id": "751603004409-pf5lknabvnr0m5qcrtc1i6huvv4m9d7v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBgdN4SpKoaJmNCNeE_wH3exXjPcY8qCl8"
+          "current_key": "AIzaSyAH5ou2FBVIeT5udJA-ZfObZJUUmCxnCro"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "487593424698-jp579g2uc7prqors1ji6j8m3i5of6c08.apps.googleusercontent.com",
+              "client_id": "751603004409-pf5lknabvnr0m5qcrtc1i6huvv4m9d7v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
