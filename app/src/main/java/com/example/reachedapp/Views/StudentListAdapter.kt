@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reachedapp.Models.Admin
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
 import com.google.firebase.database.DataSnapshot
@@ -33,7 +34,6 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         val currentStudent = studentList[position]
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val date = Date()
-
         holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.studentName
 
         val checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
