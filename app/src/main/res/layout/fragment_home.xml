@@ -17,25 +17,32 @@
         app:srcCompat="@drawable/reached"
         android:contentDescription="app logo"/>
 
-    <Button
-        android:id="@+id/teacher_app"
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:width="200dp"
-        android:text="Teacher App"
-        android:backgroundTint="@color/gold"
+        android:text="Select User Type:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-      />
 
-    <Button
-        android:id="@+id/parent_app"
-        android:width="200dp"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/user_type_radio_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Parent App"
-        app:layout_constraintEnd_toStartOf="@+id/teacher_app"
-        android:backgroundTint="@color/gold"
-         />
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/parent_radio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parent" />
+
+        <RadioButton
+            android:id="@+id/teacher_radio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Teacher" />
+
+    </RadioGroup>
 
     <TextView
         android:id="@+id/other_login_text"

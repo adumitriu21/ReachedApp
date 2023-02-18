@@ -7,4 +7,5 @@
     <string name="comment_notification_channel_id">Notification</string>
     <string name="dialogMessage">Attendance cannot be modified once submitted! Continue?</string>
     <string name="reportAbsenceMsg">Once reported, the absence cannot be modified. Proceed?</string>
+    <string name="user_type_key">user</string>
 </resources>
