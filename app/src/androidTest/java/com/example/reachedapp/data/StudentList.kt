@@ -32,7 +32,7 @@ class StudentList {
             ),
             Student(
                 "S003",
-                "Charlie Chaplin",
+                "Charlie Dylan",
                 "C001",
                 "P002"
             ),
@@ -50,7 +50,7 @@ class StudentList {
             ),
             Student(
                 "S006",
-                "Frank Sinatra",
+                "Frank Dickinson",
                 "C003",
                 "P004"
             ),
@@ -74,7 +74,7 @@ class StudentList {
             ),
             Student(
                 "S010",
-                "Jessica Alba",
+                "Jessica Newton",
                 "C001",
                 "P007"
             )
