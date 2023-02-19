@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reachedapp.Models.Admin
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
 import com.google.firebase.database.DataSnapshot
@@ -34,17 +33,17 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         val currentStudent = studentList[position]
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val date = Date()
-        holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.studentName
+        holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.name
 
         val checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
 
         attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(attSnapshot: DataSnapshot) {
-                val attStat = attSnapshot.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString())
-                        .child(currentStudent.studentName).child("IsPresent").value
+                val attStat = attSnapshot.child(formatter.format(date)).child(currentStudent.classId)
+                        .child(currentStudent.name).child("IsPresent").value
                 checkBox.isChecked = attStat == true || attStat == null
                 if (!checkBox.isChecked) {
-                    absentStudents.add(currentStudent.studentName)
+                    absentStudents.add(currentStudent.name)
                 }
             }
             override fun onCancelled(attError: DatabaseError) {
@@ -55,14 +54,14 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         checkBox.setOnCheckedChangeListener{ _, _ ->
             if(checkBox.isChecked)
             {
-                attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).child("IsPresent").setValue(true)
-                if(absentStudents.contains(currentStudent.studentName)) {
-                    absentStudents.remove(currentStudent.studentName)
+                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.name).child("IsPresent").setValue(true)
+                if(absentStudents.contains(currentStudent.name)) {
+                    absentStudents.remove(currentStudent.name)
                 }
             } else {
-                attendanceRef.child(formatter.format(date)).child(currentStudent.studentHomeroom.toString()).child(currentStudent.studentName).child("IsPresent").setValue(false)
-                if(!absentStudents.contains(currentStudent.studentName)) {
-                    absentStudents.add(currentStudent.studentName)
+                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.name).child("IsPresent").setValue(false)
+                if(!absentStudents.contains(currentStudent.name)) {
+                    absentStudents.add(currentStudent.name)
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.example.reachedapp.Views
 
+import android.util.Log
 import com.example.reachedapp.Models.Student
 import com.google.firebase.database.FirebaseDatabase
 import org.junit.Before
@@ -17,7 +18,7 @@ class AddStudentsToDbTest {
     fun setUp(){
         //FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().targetContext)
         studentList = com.example.reachedapp.data.StudentList()
-        students = studentList.intializeStudentList()
+        students = studentList.initializeStudentList()
     }
 
     //test that uses the data initialized in the StudentList class and inserts in
@@ -26,10 +27,16 @@ class AddStudentsToDbTest {
     fun addNewUser(){
         val taskMap: MutableMap<String, Any> = HashMap()
 
-        for((count, student) in students.withIndex()){
-            taskMap["StudentNumber$count"] = student
+        for(student in students){
+            taskMap[student.studentId] = student
         }
-        dbRef.child("Student").setValue(taskMap)
-
+        dbRef.child("Student").setValue(taskMap
+        ) { error, ref ->
+            if (error != null) {
+                Log.d("TAG", "Data could not be saved: " + error.message)
+            } else {
+                Log.d("TAG", "Data saved successfully.")
+            }
+        }
     }
 }
