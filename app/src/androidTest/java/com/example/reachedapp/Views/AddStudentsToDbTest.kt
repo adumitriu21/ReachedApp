@@ -1,9 +1,12 @@
 package com.example.reachedapp.Views
 
+import android.util.Log
 import com.example.reachedapp.Models.Student
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.FirebaseDatabase
 import org.junit.Before
 import org.junit.Test
+import kotlin.coroutines.cancellation.CancellationException
 
 class AddStudentsToDbTest {
 
@@ -29,7 +32,12 @@ class AddStudentsToDbTest {
         for((count, student) in students.withIndex()){
             taskMap["StudentNumber$count"] = student
         }
-        dbRef.child("Student").setValue(taskMap)
+        try{
+            val task = dbRef.child("Student").setValue(taskMap)
+            Tasks.await(task)
+        }catch (e: CancellationException) {
+            Log.d( "TAG", "Could not push data because error: $e")
+        }
 
     }
 }
