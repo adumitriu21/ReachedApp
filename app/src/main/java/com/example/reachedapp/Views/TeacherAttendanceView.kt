@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.AdapterView.OnItemClickListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -98,15 +97,15 @@ class TeacherAttendanceView : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (dsp in dataSnapshot.children) {
                         val s = dsp.getValue(Student::class.java)
-                        if (s != null && s.studentHomeroom.toString() == selectedHomeroom.toString()) {
+                        if (s != null && s.classId == selectedHomeroom.toString()) {
                             studentList.add(s)
                             attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(attSnapshot: DataSnapshot) {
-                                    if (!attSnapshot.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString())
-                                                    .child(s.studentName).hasChild("IsPresent")) {
+                                    if (!attSnapshot.child(formatter.format(attendanceDate)).child(s.classId.toString())
+                                                    .child(s.name).hasChild("IsPresent")) {
                                         attendanceRef.child(formatter.format(attendanceDate))
-                                                .child(s.studentHomeroom.toString())
-                                                .child(s.studentName)
+                                                .child(s.classId.toString())
+                                                .child(s.classId)
                                                 .child("IsPresent")
                                                 .setValue(true)
                                     }
@@ -226,7 +225,7 @@ class TeacherAttendanceView : Fragment() {
         val filteredStudents = ArrayList<Student>()
         // loop through the array list to obtain the required value
         for (student in studentList) {
-            if (student.studentName.lowercase().contains(e.lowercase())) {
+            if (student.name.lowercase().contains(e.lowercase())) {
                 filteredStudents.add(student)
             }
         }
