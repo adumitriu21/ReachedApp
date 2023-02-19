@@ -1,26 +1,27 @@
 package com.example.reachedapp.Views
 
 import android.util.Log
-import com.example.reachedapp.Models.Student
+import com.example.reachedapp.Models.Teacher
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.FirebaseDatabase
 import org.junit.Before
 import org.junit.Test
 import kotlin.coroutines.cancellation.CancellationException
 
-class AddStudentsToDbTest {
+class AddTeachersToDbTest {
+
 
     private val database = FirebaseDatabase.getInstance()
     private val dbRef= database.reference
-    private lateinit var studentList: com.example.reachedapp.data.StudentList
-    private lateinit var students: ArrayList<Student>
+    private lateinit var teacherList: com.example.reachedapp.data.TeacherList
+    private lateinit var teachers: ArrayList<Teacher>
 
     //function that runs before any tests begin
     @Before
     fun setUp(){
         //FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().targetContext)
-        studentList = com.example.reachedapp.data.StudentList()
-        students = studentList.initializeStudentList()
+        teacherList = com.example.reachedapp.data.TeacherList()
+        teachers = teacherList.initializeTeacherList()
     }
 
     //test that uses the data initialized in the StudentList class and inserts in
@@ -29,14 +30,14 @@ class AddStudentsToDbTest {
     fun addNewUser(){
         val taskMap: MutableMap<String, Any> = HashMap()
 
-        for(student in students){
-            taskMap[student.studentId] = student
+        for(teacher in teachers){
+            taskMap[teacher.userId] = teacher
         }
         try{
-            val task = dbRef.child("Student").setValue(taskMap)
+            val task = dbRef.child("Teacher").setValue(taskMap)
             Tasks.await(task)
         } catch (e: CancellationException) {
-           Log.d("TAG", "Could not push data to DB. Error: $e")
+            Log.d("TAG", "Could not push data to DB. Error: $e")
         }
     }
 }
