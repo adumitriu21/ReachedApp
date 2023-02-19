@@ -17,6 +17,48 @@
         app:srcCompat="@drawable/reached"
         android:contentDescription="app logo"/>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_email"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email"
+            android:ems="10"
+            android:layout_margin="@dimen/margins"
+            android:autofillHints="emailAddress" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_password"
+            android:inputType="textPassword"
+            android:hint="@string/pwd"
+            android:ems="10"
+            android:layout_margin="@dimen/margins"
+            android:autofillHints="password" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="@dimen/btn_width"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margins"
+        android:backgroundTint="@color/gold"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

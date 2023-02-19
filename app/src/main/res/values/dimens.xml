@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="btn_width">200dp</dimen>
+    <dimen name="regTextSize">25sp</dimen>
+    <dimen name="titles">40sp</dimen>
+    <dimen name="btn_size">75dp</dimen>
+    <dimen name="table_height">500dp</dimen>
+    <dimen name="margins">10dp</dimen>
+    <dimen name="btn_margins">20dp</dimen>
+    <dimen name="logo_height">190dp</dimen>
+    <dimen name="logo_paddingTop_loginFragment">20dp</dimen>
+    <dimen name="companyLogo_height_loginFrag">250dp</dimen>
+    <dimen name="paddingRight_not_aMember">4dp</dimen>
+    <dimen name="fullName_layout_width">200dp</dimen>
+    <dimen name="padding_relativeLayoutDetails">5dp</dimen>
+    <dimen name="width_salaryAndDate_Layout">200dp</dimen>
+    <dimen name="height_texViewFields_details">30dp</dimen>
+    <dimen name="cardCornerRadius">20dp</dimen>
+    <dimen name="cardElevation_default">10dp</dimen>
+    <dimen name="cardMaxElevation_default">12dp</dimen>
+    <dimen name="cardView_layoutMargin_default">15dp</dimen>
+</resources>
