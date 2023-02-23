@@ -3,6 +3,7 @@ package com.example.reachedapp.Views
 import android.util.Log
 import com.example.reachedapp.Models.Teacher
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +11,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class AddTeachersToDbTest {
 
-
+    private lateinit var auth: FirebaseAuth
     private val database = FirebaseDatabase.getInstance()
     private val dbRef= database.reference
     private lateinit var teacherList: com.example.reachedapp.data.TeacherList
@@ -19,6 +20,7 @@ class AddTeachersToDbTest {
     //function that runs before any tests begin
     @Before
     fun setUp(){
+        auth = FirebaseAuth.getInstance()
         //FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().targetContext)
         teacherList = com.example.reachedapp.data.TeacherList()
         teachers = teacherList.initializeTeacherList()
@@ -31,6 +33,14 @@ class AddTeachersToDbTest {
         val taskMap: MutableMap<String, Any> = HashMap()
 
         for(teacher in teachers){
+            auth.createUserWithEmailAndPassword(teacher.email, teacher.password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("Test", "User created successfully")
+                    } else {
+                        Log.e("Test", "Error creating user", task.exception)
+                    }
+                }
             taskMap[teacher.userId] = teacher
         }
         try{

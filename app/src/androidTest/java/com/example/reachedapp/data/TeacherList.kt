@@ -8,6 +8,13 @@ class TeacherList {
 
         val teachers = listOf(
             Teacher(
+                "T004",
+                "Adi Das",
+                "adumitriu21@gmail.com",
+                "password",
+                "C004"
+            ),
+            Teacher(
                 "T001",
                 "John Doe",
                 "johndoe@example.com",
