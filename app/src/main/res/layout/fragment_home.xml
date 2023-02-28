@@ -59,32 +59,6 @@
         android:layout_margin="@dimen/margins"
         android:backgroundTint="@color/gold"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select User Type:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
-    <RadioGroup
-        android:id="@+id/user_type_radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/parent_radio_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Parent" />
-
-        <RadioButton
-            android:id="@+id/teacher_radio_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Teacher" />
-
-    </RadioGroup>
 
     <TextView
         android:id="@+id/other_login_text"

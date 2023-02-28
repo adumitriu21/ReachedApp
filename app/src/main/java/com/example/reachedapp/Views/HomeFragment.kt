@@ -32,7 +32,6 @@ class HomeFragment : Fragment() {
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var googleBtn: ImageView
-    private lateinit var userTypeRadioGroup: RadioGroup
     private lateinit var auth: FirebaseAuth
     private var database = FirebaseDatabase.getInstance()
 
@@ -62,15 +61,8 @@ class HomeFragment : Fragment() {
         }
 
         googleBtn.setOnClickListener {
-            if (userTypeRadioGroup.checkedRadioButtonId == R.id.parent_radio_btn) {
-                setUserType(0)
-            } else {
-                setUserType(1)
-            }
             signIn()
         }
-
-        userTypeRadioGroup = view.findViewById(R.id.user_type_radio_group)
 
         return view
     }
@@ -160,7 +152,7 @@ class HomeFragment : Fragment() {
                                 override fun onCancelled(error: DatabaseError) {
                                     Toast.makeText(activity,
                                         "DB Error",
-                                        Toast.LENGTH_SHORT)
+                                        Toast.LENGTH_SHORT).show()
                                 }
                             })
                     }
@@ -168,7 +160,7 @@ class HomeFragment : Fragment() {
                         override fun onCancelled(error: DatabaseError) {
                             Toast.makeText(activity,
                                 "DB Error",
-                                Toast.LENGTH_SHORT)
+                                Toast.LENGTH_SHORT).show()
                         }
                     })
             }
@@ -189,13 +181,13 @@ class HomeFragment : Fragment() {
         return userType == 0
     }
 
-    private fun setUserType(userType: Int) {
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            putInt(getString(R.string.user_type_key), userType)
-            apply()
-        }
-    }
+//    private fun setUserType(userType: Int) {
+//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+//        with(sharedPref.edit()) {
+//            putInt(getString(R.string.user_type_key), userType)
+//            apply()
+//        }
+//    }
 
     private fun signIn() {
         val signInIntent = gsc.signInIntent
