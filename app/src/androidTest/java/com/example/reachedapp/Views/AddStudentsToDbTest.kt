@@ -20,7 +20,7 @@ class AddStudentsToDbTest {
     fun setUp(){
         //FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().targetContext)
         studentList = com.example.reachedapp.data.StudentList()
-        students = studentList.intializeStudentList()
+        students = studentList.initializeStudentList()
     }
 
     //test that uses the data initialized in the StudentList class and inserts in
@@ -29,15 +29,14 @@ class AddStudentsToDbTest {
     fun addNewUser(){
         val taskMap: MutableMap<String, Any> = HashMap()
 
-        for((count, student) in students.withIndex()){
-            taskMap["StudentNumber$count"] = student
+        for(student in students){
+            taskMap[student.studentId] = student
         }
         try{
             val task = dbRef.child("Student").setValue(taskMap)
             Tasks.await(task)
-        }catch (e: CancellationException) {
-            Log.d( "TAG", "Could not push data because error: $e")
+        } catch (e: CancellationException) {
+           Log.d("TAG", "Could not push data to DB. Error: $e")
         }
-
     }
 }

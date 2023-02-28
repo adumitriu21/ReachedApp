@@ -53,8 +53,8 @@ class ParentAttendanceView : Fragment() {
                 for (dsp in dataSnapshot.children) {
                     val s = dsp.getValue(Student::class.java)
                     if (s != null) {
-                        if(!parentList.contains(s.studentParent1)){
-                            parentList.add(s.studentParent1)
+                        if(!parentList.contains(s.parentId)){
+                            parentList.add(s.parentId)
                         }
                     }
                 }
@@ -142,7 +142,7 @@ class ParentAttendanceView : Fragment() {
 
                         for (dsp in dataSnapshot.children) {
                             val s = dsp.getValue(Student::class.java)
-                            if (s != null && s.studentParent1.toString() == item.toString()) {
+                            if (s != null && s.parentId == item.toString()) {
                                 studentList.add(s)
                             }
                             studentAdapter.setData(studentList)
@@ -177,11 +177,11 @@ class ParentAttendanceView : Fragment() {
 
                                 for (dsp in dataSnapshot.children) {
                                     val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.studentName.toString() == std) {
+                                    if (s != null && s.name.toString() == std) {
                                         attendanceRef.child(formatter.format(attendanceDate))
                                                 .child("Reported Absences")
-                                                .child(s.studentHomeroom.toString())
-                                                .child(s.studentName)
+                                                .child(s.classId.toString())
+                                                .child(s.name)
                                                 .child("IsPresent")
                                                 .setValue(false)
                                     }

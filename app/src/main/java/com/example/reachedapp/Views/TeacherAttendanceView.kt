@@ -91,42 +91,48 @@ class TeacherAttendanceView : Fragment() {
         * in the respective class is populated. At the same time a new Firebase Attendance
         * entry is created with all the Student's attendance status defaulted to present
         * */
-        homeroomSelect.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
-            val selectedHomeroom = parent.getItemAtPosition(position)
-            studentList.clear()
-            ref.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (dsp in dataSnapshot.children) {
-                        val s = dsp.getValue(Student::class.java)
-                        if (s != null && s.studentHomeroom.toString() == selectedHomeroom.toString()) {
-                            studentList.add(s)
-                            attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(attSnapshot: DataSnapshot) {
-                                    if (!attSnapshot.child(formatter.format(attendanceDate)).child(s.studentHomeroom.toString())
-                                                    .child(s.studentName).hasChild("IsPresent")) {
-                                        attendanceRef.child(formatter.format(attendanceDate))
-                                                .child(s.studentHomeroom.toString())
-                                                .child(s.studentName)
+        homeroomSelect.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val selectedHomeroom = parent.getItemAtPosition(position)
+                studentList.clear()
+                ref.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        for (dsp in dataSnapshot.children) {
+                            val s = dsp.getValue(Student::class.java)
+                            if (s != null && s.classId == selectedHomeroom.toString()) {
+                                studentList.add(s)
+                                attendanceRef.addListenerForSingleValueEvent(object :
+                                    ValueEventListener {
+                                    override fun onDataChange(attSnapshot: DataSnapshot) {
+                                        if (!attSnapshot.child(formatter.format(attendanceDate))
+                                                .child(s.classId.toString())
+                                                .child(s.name).hasChild("IsPresent")
+                                        ) {
+                                            attendanceRef.child(formatter.format(attendanceDate))
+                                                .child(s.classId.toString())
+                                                .child(s.classId)
                                                 .child("IsPresent")
                                                 .setValue(true)
+                                        }
                                     }
-                                }
-                                override fun onCancelled(attError: DatabaseError) {
-                                    println("The read failed: " + attError.code)
-                                }
-                            })
 
+                                    override fun onCancelled(attError: DatabaseError) {
+                                        println("The read failed: " + attError.code)
+                                    }
+                                })
+
+                            }
+                            attendanceRef.child(formatter.format(attendanceDate))
+                                .child("IsSubmitted").setValue(false)
+                            studentAdapter.setData(studentList)
                         }
-                        attendanceRef.child(formatter.format(attendanceDate))
-                            .child("IsSubmitted").setValue(false)
-                        studentAdapter.setData(studentList)
                     }
-                }
-                override fun onCancelled(databaseError: DatabaseError) {
-                    println("The read failed: " + databaseError.code)
-                }
-            })
-        }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        println("The read failed: " + databaseError.code)
+                    }
+                })
+            }
 
         searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -226,7 +232,7 @@ class TeacherAttendanceView : Fragment() {
         val filteredStudents = ArrayList<Student>()
         // loop through the array list to obtain the required value
         for (student in studentList) {
-            if (student.studentName.lowercase().contains(e.lowercase())) {
+            if (student.name.lowercase().contains(e.lowercase())) {
                 filteredStudents.add(student)
             }
         }
