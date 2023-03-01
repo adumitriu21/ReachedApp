@@ -54,7 +54,15 @@ class ParentList {
                 "gNew@example.com",
                 "password123",
                 listOf("S009", "S010")
-            )
+            ),
+            Parent("P008", "John Smith", "john.smith@example.com", "password", listOf("S011")),
+            Parent("P009", "Karen Johnson", "karen.johnson@example.com", "password", listOf("S012")),
+            Parent("P010", "Mike Brown", "mike.brown@example.com", "password", listOf("S013","S014","S015")),
+            Parent("P011", "Lisa Wang", "lisa.lee@example.com", "password", listOf("S016")),
+            Parent("P012", "Benjamin Kim", "benjamin.k@example.com", "password", listOf("S017")),
+            Parent("P013", "Rachel Liu", "rachel.liu@example.com", "password", listOf("S018","S19")),
+            Parent("P014", "Steven Nguyen", "steven.liu@example.com", "password", listOf("S020"))
+
         )
 
         return ArrayList(parents)

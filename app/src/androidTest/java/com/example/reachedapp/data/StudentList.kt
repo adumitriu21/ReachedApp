@@ -16,7 +16,6 @@ import com.example.reachedapp.Models.Student
 class StudentList {
 
     fun initializeStudentList(): ArrayList<Student> {
-
         val students = listOf(
             Student(
                 "S001",
@@ -77,7 +76,18 @@ class StudentList {
                 "Jessica Newton",
                 "C001",
                 "P007"
-            )
+            ),
+            Student("S011", "Alice Smith", "C004", "P008"),
+            Student("S012", "Bob Johnson", "C004", "P009"),
+            Student("S013", "Charlie Brown", "C004", "P010"),
+            Student("S014", "David Brown", "C004", "P010"),
+            Student("S015", "Emily Brown", "C004", "P010"),
+            Student("S016", "Frank Wang", "C004", "011"),
+            Student("S017", "Grace Kim", "C004", "P012"),
+            Student("S018", "Henry Liu", "C004", "P013"),
+            Student("S019", "Isabel Liu", "C004", "P013"),
+            Student("S020", "Jackie Nguyen", "C004", "P014")
+
         )
 
         return ArrayList(students)
