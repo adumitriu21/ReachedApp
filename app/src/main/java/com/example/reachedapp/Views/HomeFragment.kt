@@ -94,7 +94,9 @@ class HomeFragment : Fragment() {
                                     auth.signInWithEmailAndPassword(email, password)
                                         .addOnCompleteListener(requireActivity()) { task ->
                                             if (task.isSuccessful) {
-                                                    navigateToTeacherMainMenu()
+                                                val action = HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(teacher)
+                                                findNavController().navigate(action)
+
                                             } else {
                                                 // Login failed, display an error message
                                                 Toast.makeText(
@@ -208,6 +210,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToTeacherMainMenu() {
+
         findNavController().navigate(R.id.action_homeFragment3_to_teacherMainMenu)
     }
 

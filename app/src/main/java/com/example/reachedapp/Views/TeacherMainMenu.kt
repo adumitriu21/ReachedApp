@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
+import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -39,6 +40,7 @@ class TeacherMainMenu : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
+        val teacher = arguments?.getParcelable<Teacher>("teacher")
 
         val attendanceBtn = view.findViewById<Button>(R.id.take_attendance_btn)
 

@@ -19,6 +19,9 @@
         android:name="com.example.reachedapp.Views.TeacherMainMenu"
         android:label="fragment_teacher_main_menu"
         tools:layout="@layout/fragment_teacher_main_menu" >
+        <argument
+            android:name="teacher"
+            app:argType="com.example.reachedapp.Models.Teacher" />
         <action
             android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView"
             app:destination="@id/teacherAttendanceView" />
