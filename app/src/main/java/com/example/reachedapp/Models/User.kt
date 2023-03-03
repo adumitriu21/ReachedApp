@@ -60,18 +60,19 @@ class Parent(
 
 
 class Teacher(
-    userId: String,
-    name: String,
-    email: String,
-    password: String,
-    private val homeroomNumber: String
-    ) : User(userId, name, email, password, UserRole.TEACHER), Parcelable {
+        userId: String = "",
+        name: String = "",
+        email: String = "",
+        password: String = "",
+        private val homeroomNumber: String = "" )
+
+    : User(userId, name, email, password, UserRole.TEACHER), Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
