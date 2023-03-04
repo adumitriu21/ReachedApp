@@ -110,18 +110,22 @@ class TeacherMainMenu : Fragment() {
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
                     // Navigate to home
+                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
                     true
                 }
                 R.id.navigation_report -> {
                     // Navigate to report
+                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView2)
                     true
                 }
                 R.id.navigation_messages -> {
                     // Navigate to messages
+                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherMessaging)
                     true
                 }
                 R.id.navigation_profile -> {
                     // Navigate to profile
+                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherProfileView)
                     true
                 }
                 else -> false

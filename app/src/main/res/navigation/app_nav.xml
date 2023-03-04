@@ -28,6 +28,15 @@
         <action
             android:id="@+id/action_teacherMainMenu_to_homeFragment3"
             app:destination="@id/homeFragment3" />
+        <action
+            android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView2"
+            app:destination="@id/teacherAttendanceView" />
+        <action
+            android:id="@+id/action_teacherMainMenu_to_teacherProfileView"
+            app:destination="@id/teacherProfileView" />
+        <action
+            android:id="@+id/action_teacherMainMenu_to_teacherMessaging"
+            app:destination="@id/teacherMessaging" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment3"
@@ -65,4 +74,30 @@
             android:id="@+id/action_parentAttendanceView_to_homeFragment3"
             app:destination="@id/homeFragment3" />
     </fragment>
+    <fragment
+        android:id="@+id/teacherMessaging"
+        android:name="com.example.reachedapp.Views.TeacherMessaging"
+        android:label="fragment_teacher_messaging"
+        tools:layout="@layout/fragment_teacher_messaging" >
+        <action
+            android:id="@+id/action_teacherMessaging_to_teacherMainMenu"
+            app:destination="@id/teacherMainMenu" />
+        <action
+            android:id="@+id/action_teacherMessaging_to_teacherProfileView"
+            app:destination="@id/teacherProfileView" />
+        <action
+            android:id="@+id/action_teacherMessaging_to_teacherAttendanceView"
+            app:destination="@id/teacherAttendanceView" />
+        <action
+            android:id="@+id/action_teacherMessaging_self"
+            app:destination="@id/teacherMessaging" />
+        <action
+            android:id="@+id/action_teacherMessaging_to_teacherMainMenu2"
+            app:destination="@id/teacherMainMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/teacherProfileView"
+        android:name="com.example.reachedapp.Views.TeacherProfileView"
+        android:label="fragment_teacher_profile_view"
+        tools:layout="@layout/fragment_teacher_profile_view" />
 </navigation>
