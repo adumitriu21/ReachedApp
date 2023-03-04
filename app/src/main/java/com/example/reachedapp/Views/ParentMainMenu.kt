@@ -14,6 +14,7 @@ import com.example.reachedapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.FirebaseDatabase
 
 
@@ -25,6 +26,7 @@ class ParentMainMenu : Fragment() {
     private lateinit var name: TextView
     private lateinit var email: TextView
     private lateinit var signOutBtn: Button
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,6 +54,30 @@ class ParentMainMenu : Fragment() {
 
         signOutBtn.setOnClickListener {
             signOut()
+        }
+
+
+        bottomNavigationView = view.findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    // Navigate to home
+                    true
+                }
+                R.id.navigation_report -> {
+                    // Navigate to report
+                    true
+                }
+                R.id.navigation_messages -> {
+                    // Navigate to messages
+                    true
+                }
+                R.id.navigation_profile -> {
+                    // Navigate to profile
+                    true
+                }
+                else -> false
+            }
         }
         return view
     }
