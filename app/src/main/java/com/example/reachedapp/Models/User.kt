@@ -74,6 +74,7 @@ class Teacher(
             parcel.readString()!!,
             parcel.readString()!!
     )
+    constructor() : this("", "", "", "")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
