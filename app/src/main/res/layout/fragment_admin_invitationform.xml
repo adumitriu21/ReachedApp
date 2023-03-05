@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Views.TeacherMainMenu"
+    android:background="#fcde9c">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_admin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parent Invitation Form"
+        android:textColor="@color/black"
+        android:textSize="29sp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="75dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parent Email :"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:layout_marginTop="115dp"
+        android:layout_marginLeft="40dp"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/parentEmail"
+        android:layout_width="309dp"
+        android:layout_height="36dp"
+        android:hint="Please enter the email here"
+        android:layout_marginTop="185dp"
+        android:layout_marginLeft="40dp"
+        android:textSize="19sp"
+        android:layout_marginBottom="@color/black"
+        android:background="@drawable/bg_button"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grade :"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:layout_marginTop="255dp"
+        android:layout_marginLeft="40dp" />
+
+    <Spinner
+        android:id="@+id/gradeSpinner"
+        android:layout_width="309dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="325dp"
+        android:layout_marginLeft="40dp"
+        android:spinnerMode="dropdown"
+        android:background="@drawable/bg_button"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student :"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:layout_marginTop="390dp"
+        android:layout_marginLeft="40dp" />
+
+    <Spinner
+        android:id="@+id/studentSpinner"
+        android:layout_width="309dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="455dp"
+        android:layout_marginLeft="40dp"
+        android:spinnerMode="dropdown"
+        android:background="@drawable/bg_button"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="An email will be sent to parent's email address with registration link."
+        android:layout_marginTop="530dp"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/sendInviteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="615dp"
+        android:text="SEND INVITE" />
+
+</RelativeLayout>

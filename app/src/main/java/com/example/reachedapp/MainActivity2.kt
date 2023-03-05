@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.reachedapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -16,7 +17,7 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
     private lateinit var email: TextView
-    private lateinit var signOutBtn: Button
+    private lateinit var signOutBtn: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,6 @@ class MainActivity2 : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
 
         name = findViewById(R.id.name)
-        email = findViewById(R.id.email)
         signOutBtn = findViewById(R.id.signout)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()

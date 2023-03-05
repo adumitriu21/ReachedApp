@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -30,8 +31,7 @@ class TeacherMainMenu : Fragment() {
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
-    private lateinit var email: TextView
-    private lateinit var signOutBtn: Button
+    private lateinit var signOutBtn: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +40,7 @@ class TeacherMainMenu : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
 
-        val attendanceBtn = view.findViewById<Button>(R.id.take_attendance_btn)
+        val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
 
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val attendanceDate = Date()
@@ -83,7 +83,6 @@ class TeacherMainMenu : Fragment() {
         }
 
         name = view.findViewById(R.id.name)
-        email = view.findViewById(R.id.email)
         signOutBtn = view.findViewById(R.id.signout)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
@@ -94,7 +93,6 @@ class TeacherMainMenu : Fragment() {
             val personName = acct.displayName
             val personEmail = acct.email
             name.text = personName
-            email.text = personEmail
         }
 
         signOutBtn.setOnClickListener {
