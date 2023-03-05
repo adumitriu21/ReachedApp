@@ -6,17 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
-import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -32,9 +31,7 @@ class TeacherMainMenu : Fragment() {
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
-    private lateinit var email: TextView
-    private lateinit var signOutBtn: Button
-    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var signOutBtn: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +39,8 @@ class TeacherMainMenu : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
-        val teacher = arguments?.getParcelable<Teacher>("teacher")
 
-        val attendanceBtn = view.findViewById<Button>(R.id.take_attendance_btn)
+        val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
 
         val formatter = SimpleDateFormat("dd MMMM yyyy")
         val attendanceDate = Date()
@@ -87,7 +83,6 @@ class TeacherMainMenu : Fragment() {
         }
 
         name = view.findViewById(R.id.name)
-        email = view.findViewById(R.id.email)
         signOutBtn = view.findViewById(R.id.signout)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
@@ -98,38 +93,10 @@ class TeacherMainMenu : Fragment() {
             val personName = acct.displayName
             val personEmail = acct.email
             name.text = personName
-            email.text = personEmail
         }
 
         signOutBtn.setOnClickListener {
             signOut()
-        }
-
-        bottomNavigationView = view.findViewById(R.id.bottom_navigation)
-        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.navigation_home -> {
-                    // Navigate to home
-                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
-                    true
-                }
-                R.id.navigation_report -> {
-                    // Navigate to report
-                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView2)
-                    true
-                }
-                R.id.navigation_messages -> {
-                    // Navigate to messages
-                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherMessaging)
-                    true
-                }
-                R.id.navigation_profile -> {
-                    // Navigate to profile
-                    findNavController().navigate(R.id.action_teacherMainMenu_to_teacherProfileView)
-                    true
-                }
-                else -> false
-            }
         }
 
         return view

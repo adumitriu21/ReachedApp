@@ -5,4 +5,6 @@ class Student (
     val name: String,
     val classId: String,
     val parentId: String // Reference to the Parent entity by ID
-    )
+    ){
+    constructor() : this("", "", "", "")
+}
