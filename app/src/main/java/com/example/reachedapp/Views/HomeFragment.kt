@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
                             for (teacherSnapshot in dataSnapshot.children) {
                                 val teacher = teacherSnapshot.getValue(Teacher::class.java)
 
-                                if (teacher != null && teacher.password == password) {
+                                if (teacher != null && teacher.password == password && teacher.email == email) {
                                     // Authenticate the teacher with Firebase
                                     auth.signInWithEmailAndPassword(email, password)
                                         .addOnCompleteListener(requireActivity()) { task ->

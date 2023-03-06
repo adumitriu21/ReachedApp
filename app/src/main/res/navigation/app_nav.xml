@@ -37,6 +37,7 @@
         <action
             android:id="@+id/action_teacherMainMenu_to_teacherMessaging"
             app:destination="@id/teacherMessaging" />
+
     </fragment>
     <fragment
         android:id="@+id/homeFragment3"

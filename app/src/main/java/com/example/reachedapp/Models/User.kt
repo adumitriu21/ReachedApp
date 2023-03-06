@@ -64,7 +64,7 @@ class Teacher(
         name: String = "",
         email: String = "",
         password: String = "",
-        private val homeroomNumber: String = "" )
+        var homeroomNumber: String = "" )
 
     : User(userId, name, email, password, UserRole.TEACHER), Parcelable {
     constructor(parcel: Parcel) : this(
@@ -73,8 +73,9 @@ class Teacher(
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!
+
     )
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", "", "")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)

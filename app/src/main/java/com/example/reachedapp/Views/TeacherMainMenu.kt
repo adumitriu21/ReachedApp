@@ -9,9 +9,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
+import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -39,7 +41,7 @@ class TeacherMainMenu : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
-
+        val teacher = arguments?.getParcelable<Teacher>("teacher")
         val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
 
         val formatter = SimpleDateFormat("dd MMMM yyyy")
@@ -57,6 +59,7 @@ class TeacherMainMenu : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val datesList = arrayListOf<String>()
                     val currentDate = formatter.format(attendanceDate)
+                    val bundle = bundleOf("teacher" to teacher)
                     for (dsp in dataSnapshot.children) {
                         dsp.key?.let { it1 -> datesList.add(it1) }
                     }
@@ -70,10 +73,11 @@ class TeacherMainMenu : Fragment() {
                             ).show()
                         }
                         else{
-                            findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
+
+                            findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
                         }
                     } else {
-                        findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView)
+                        findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
                     }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -82,17 +86,19 @@ class TeacherMainMenu : Fragment() {
             })
         }
 
-        name = view.findViewById(R.id.name)
+        name = view.findViewById(R.id.teacherName)
         signOutBtn = view.findViewById(R.id.signout)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireContext(), gso)
-
+        if (teacher != null) {
+            name.text = teacher.name
+        }
         val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (acct != null) {
             val personName = acct.displayName
             val personEmail = acct.email
-            name.text = personName
+
         }
 
         signOutBtn.setOnClickListener {

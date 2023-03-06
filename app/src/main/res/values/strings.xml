@@ -55,4 +55,5 @@
     <string name="report">Report</string>
     <string name="messages">Messages</string>
     <string name="profile">Profile</string>
+    <string name="welcomeTeacher">"Welcome "</string>
 </resources>
