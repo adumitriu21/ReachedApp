@@ -9,12 +9,14 @@
     android:background="@drawable/gradient_background"
     tools:context=".Views.TeacherProfileView">
 
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_navigation" />
-
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="-217dp" />
 
     <TextView
         android:text="Teacher's Student View here"
