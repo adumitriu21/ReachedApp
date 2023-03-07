@@ -56,6 +56,9 @@
         android:name="com.example.reachedapp.Views.ParentMainMenu"
         android:label="fragment_parent_main_menu"
         tools:layout="@layout/fragment_parent_main_menu" >
+        <argument
+            android:name="parent"
+            app:argType="com.example.reachedapp.Models.Parent"/>
         <action
             android:id="@+id/action_parentMainMenu_to_parentAttendanceView"
             app:destination="@id/parentAttendanceView" />

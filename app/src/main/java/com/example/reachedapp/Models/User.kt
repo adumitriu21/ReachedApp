@@ -49,13 +49,45 @@ open class User(
 }
 
 class Parent(
-    userId: String,
-    name: String,
-    email: String,
-    password: String,
-    val children: List<String>
+        userId: String = "",
+        name: String = "",
+        email: String = "",
+        password: String = "",
+    var children: List<String> = emptyList()
     ) : User(userId, name, email, password, UserRole.PARENT){
+
+    constructor(parcel: Parcel) : this(
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.createStringArrayList()!!
+    )
+
     constructor() : this("", "", "", "", emptyList())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeString(userId)
+    }
+
+    companion object {
+        @JvmField val CREATOR = object : Parcelable.Creator<Parent> {
+            override fun createFromParcel(source: Parcel): Parent {
+                return Parent(
+                        source.readString()!!,
+                        source.readString()!!,
+                        source.readString()!!,
+                        source.readString()!!,
+                        source.createStringArrayList()!!
+                )
+            }
+
+            override fun newArray(size: Int): Array<Parent?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }
 
 

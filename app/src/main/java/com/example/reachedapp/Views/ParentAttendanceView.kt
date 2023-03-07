@@ -11,10 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reachedapp.Models.Parent
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.R
 import com.example.reachedapp.sendNotification
@@ -35,34 +37,14 @@ class ParentAttendanceView : Fragment() {
     lateinit var attendanceDate: Date
     lateinit var dateTV: TextView
     lateinit var calendarView: CalendarView
-    val parentList: MutableList<String> = ArrayList<String>()
+    private var studentList: MutableList<Student> = ArrayList<Student>()
+    private var studentAdapter = StudentListAdapter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         notificationManager = ContextCompat.getSystemService(requireContext(),
                 NotificationManager::class.java) as NotificationManager
-        /*
-        * Function checking for all parents names when first opening the view
-        * in order to populate the parent selection drop down menu.
-        * It takes into account if a parent has more than one child
-        * in the school so each name in the drop down is unique/
-        * It is only needed until Authentication is implemented
-        * */
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (dsp in dataSnapshot.children) {
-                    val s = dsp.getValue(Student::class.java)
-                    if (s != null) {
-                        if(!parentList.contains(s.parentId)){
-                            parentList.add(s.parentId)
-                        }
-                    }
-                }
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("The read failed: " + databaseError.code)
-            }
-        })
     }
 
     private fun createChannel(channelId : String, channelName : String){
@@ -85,11 +67,10 @@ class ParentAttendanceView : Fragment() {
 
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_parent_attendance_view, container, false)
-        val adapter = ArrayAdapter(requireActivity(), R.layout.drpdown_item, parentList)
-        val allParentsList = view.findViewById<AutoCompleteTextView>(R.id.parentSelection)
 
-        allParentsList.threshold = 1 //will start working from first character
-        allParentsList.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
+        // get parent
+        val parent = arguments?.getParcelable<Parent>("parent")
+        val parentId = parent?.userId
 
         // initializing variables for registering the selected date
         dateTV = view.findViewById(R.id.idTVDate)
@@ -97,7 +78,7 @@ class ParentAttendanceView : Fragment() {
 
         // on below line we are adding set on
         // date change listener for calendar view.
-        val format = SimpleDateFormat("dd-MM-yyyy", Locale.CANADA)
+        val format = SimpleDateFormat("dd-MM-yyyy")
         val currentDate  = Date()
 
         //default attendance date to today's date
@@ -107,7 +88,7 @@ class ParentAttendanceView : Fragment() {
         //display today's date in the top left text box
         dateTV.text = format.format(currentDate.time)
         calendarView
-            .setOnDateChangeListener { viewlocal, year, month, dayOfMonth ->
+            .setOnDateChangeListener { view, year, month, dayOfMonth ->
                 // In this Listener we are getting values
                 // such as year, month and day of month
                 // on below line we are creating a variable
@@ -117,44 +98,36 @@ class ParentAttendanceView : Fragment() {
 
                 // set this date in TextView for Display
                 dateTV.text = Date
-                // convert string representing the date to an actual Date object matching
+                // convert string representing the date to an actual Date object matchin
                 // the other entries in the DB
-                val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.CANADA)
+                val inputFormat = SimpleDateFormat("dd-MM-yyyy")
                 attendanceDate = inputFormat.parse(dateTV.text as String)
             }
 
 
-        val studentAdapter = StudentListAdapter()
         val studentRecyclerView = view.findViewById<RecyclerView>(R.id.pStudentsList)
+
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (dsp in dataSnapshot.children) {
+                    val s = dsp.getValue(Student::class.java)
+                    if (s != null && s.parentId == parentId) {
+                        studentList.add(s)
+                    }
+                    studentAdapter.setData(studentList)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("The read failed: " + databaseError.code)
+            }
+        })
+
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
-
-        allParentsList.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
-                val item = parent.getItemAtPosition(position)
-                val studentList: MutableList<Student> = ArrayList<Student>()
-                studentAdapter.resetSelectedStudents()
-                ref.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                        for (dsp in dataSnapshot.children) {
-                            val s = dsp.getValue(Student::class.java)
-                            if (s != null && s.parentId == item.toString()) {
-                                studentList.add(s)
-                            }
-                            studentAdapter.setData(studentList)
-                        }
-                    }
-
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        println("The read failed: " + databaseError.code)
-                    }
-                })
-            }
+        val formatter = SimpleDateFormat("dd MMMM yyyy")
         studentRecyclerView.setOnClickListener {  }
 
 
@@ -177,10 +150,10 @@ class ParentAttendanceView : Fragment() {
 
                                 for (dsp in dataSnapshot.children) {
                                     val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.name == std) {
+                                    if (s != null && s.name.toString() == std) {
                                         attendanceRef.child(formatter.format(attendanceDate))
                                                 .child("Reported Absences")
-                                                .child(s.classId)
+                                                .child(s.classId.toString())
                                                 .child(s.name)
                                                 .child("IsPresent")
                                                 .setValue(false)
@@ -211,7 +184,8 @@ class ParentAttendanceView : Fragment() {
                 )
 
                 Toast.makeText(requireContext(),"Absence Reported Successfully!",Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_parentAttendanceView_to_homeFragment3)
+                val bundle = bundleOf("parent" to parent)
+                findNavController().navigate(R.id.action_parentAttendanceView_to_homeFragment3, bundle)
             }
             //performing negative action
             builder.setNegativeButton("No"){dialogInterface, which ->
