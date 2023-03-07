@@ -3,10 +3,9 @@ package com.example.reachedapp
 
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 
-private val COMMENT_NOTIFICATION_ID = 100;
+private val COMMENT_NOTIFICATION_ID = 100
 fun NotificationManager.sendNotification(
         title: String,
         message: String,

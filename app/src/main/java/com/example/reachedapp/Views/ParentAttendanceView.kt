@@ -97,7 +97,7 @@ class ParentAttendanceView : Fragment() {
 
         // on below line we are adding set on
         // date change listener for calendar view.
-        val format = SimpleDateFormat("dd-MM-yyyy")
+        val format = SimpleDateFormat("dd-MM-yyyy", Locale.CANADA)
         val currentDate  = Date()
 
         //default attendance date to today's date
@@ -107,7 +107,7 @@ class ParentAttendanceView : Fragment() {
         //display today's date in the top left text box
         dateTV.text = format.format(currentDate.time)
         calendarView
-            .setOnDateChangeListener { view, year, month, dayOfMonth ->
+            .setOnDateChangeListener { viewlocal, year, month, dayOfMonth ->
                 // In this Listener we are getting values
                 // such as year, month and day of month
                 // on below line we are creating a variable
@@ -117,9 +117,9 @@ class ParentAttendanceView : Fragment() {
 
                 // set this date in TextView for Display
                 dateTV.text = Date
-                // convert string representing the date to an actual Date object matchin
+                // convert string representing the date to an actual Date object matching
                 // the other entries in the DB
-                val inputFormat = SimpleDateFormat("dd-MM-yyyy")
+                val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.CANADA)
                 attendanceDate = inputFormat.parse(dateTV.text as String)
             }
 
@@ -130,7 +130,7 @@ class ParentAttendanceView : Fragment() {
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
 
         allParentsList.onItemClickListener =
             AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
@@ -177,10 +177,10 @@ class ParentAttendanceView : Fragment() {
 
                                 for (dsp in dataSnapshot.children) {
                                     val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.name.toString() == std) {
+                                    if (s != null && s.name == std) {
                                         attendanceRef.child(formatter.format(attendanceDate))
                                                 .child("Reported Absences")
-                                                .child(s.classId.toString())
+                                                .child(s.classId)
                                                 .child(s.name)
                                                 .child("IsPresent")
                                                 .setValue(false)
