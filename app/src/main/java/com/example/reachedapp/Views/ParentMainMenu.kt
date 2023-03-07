@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
+import com.example.reachedapp.Models.Parent
 import com.example.reachedapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -19,8 +21,6 @@ import com.google.firebase.database.FirebaseDatabase
 
 
 class ParentMainMenu : Fragment() {
-    private val database = FirebaseDatabase.getInstance()
-    private val attendanceRef = database.getReference("Attendance")
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
@@ -30,24 +30,27 @@ class ParentMainMenu : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_parent_main_menu, container, false)
-        val markAttendanceBtn = view.findViewById<ImageView>(R.id.mark_attendance_btn)
-        markAttendanceBtn.setOnClickListener{
-            findNavController().navigate(R.id.action_parentMainMenu_to_parentAttendanceView)
-        }
+        val parent = arguments?.getParcelable<Parent>("parent")
 
         name = view.findViewById(R.id.name)
         signOutBtn = view.findViewById(R.id.signout)
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireContext(), gso)
-
+        if (parent != null) {
+            name.text = parent.name
+        }
         val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (acct != null) {
             val personName = acct.displayName
             val personEmail = acct.email
-            name.text = personName
-        }
 
+        }
+        val bundle = bundleOf("parent" to parent)
+        val markAttendanceBtn = view.findViewById<ImageView>(R.id.mark_attendance_btn)
+        markAttendanceBtn.setOnClickListener{
+            findNavController().navigate(R.id.action_parentMainMenu_to_parentAttendanceView, bundle)
+        }
         signOutBtn.setOnClickListener {
             signOut()
         }

@@ -3,6 +3,7 @@ package com.example.reachedapp.Views
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -111,22 +112,23 @@ class HomeFragment : Fragment() {
                             }
 
 
-                        // If the email is not found in the Teachers entity, check the Students entity
+                        // If the email is not found in the Teachers entity, check the Parents entity
                         usersRef.child("Parent").orderByChild("email").equalTo(email)
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     if (dataSnapshot.exists()) {
                                         // Loop through all the students with matching email
                                         for (studentSnapshot in dataSnapshot.children) {
-                                            val student =
+                                            val parent =
                                                 studentSnapshot.getValue(Parent::class.java)
 
-                                            if (student != null && student.password == password) {
+                                            if (parent != null && parent.password == password) {
                                                 // Authenticate the student with Firebase
                                                 auth.signInWithEmailAndPassword(email, password)
                                                     .addOnCompleteListener(requireActivity()) { task ->
                                                         if (task.isSuccessful) {
-                                                            navigateToParentMainMenu()
+                                                            val action = HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(parent)
+                                                            findNavController().navigate(action)
                                                         } else {
                                                             // Login failed, display an error message
                                                             Toast.makeText(
@@ -219,3 +221,5 @@ class HomeFragment : Fragment() {
     }
 
 }
+
+
