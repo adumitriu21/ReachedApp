@@ -115,7 +115,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="30dp"
-                    android:src="@drawable/ic_attendance" />
+                    android:src="@drawable/invite"/>
 
                 <TextView
                     android:id="@+id/textView2"
@@ -154,7 +154,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="30dp"
-                    android:src="@drawable/ic_attendance" />
+                    android:src="@drawable/search"/>
 
                 <TextView
                     android:id="@+id/textView3"
