@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/admin_main_menu_fragment"
-    tools:context=".AdminMainMenu"
+    tools:context="Views.AdminMainMenu"
     android:background="#f29559">
 
     <View
