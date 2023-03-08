@@ -31,7 +31,7 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
         val currentStudent = studentList[position]
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val date = Date()
         holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.name
 
@@ -79,7 +79,7 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
 
     }
 
-    fun getSelectedStudents(): List<String?>? {
+    fun getSelectedStudents(): List<String?> {
         return absentStudents
     }
 
