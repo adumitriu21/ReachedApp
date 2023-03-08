@@ -50,10 +50,4 @@
     <string name="update_failed">Update failed!</string>
     <string name="passwords_notMatching_errorHelper">Password fields are not the same</string>
     <string name="fill_all_fields">Please Fill All the fields</string>
-
-    <string name="home">Home</string>
-    <string name="report">Report</string>
-    <string name="messages">Messages</string>
-    <string name="profile">Profile</string>
-    <string name="welcomeTeacher">"Welcome "</string>
 </resources>
