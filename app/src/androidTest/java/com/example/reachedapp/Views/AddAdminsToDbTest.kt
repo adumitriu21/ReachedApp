@@ -1,6 +1,7 @@
 package com.example.reachedapp.Views
 
 import android.util.Log
+import com.example.reachedapp.Models.Admin
 import com.example.reachedapp.Models.Teacher
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -9,31 +10,31 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.coroutines.cancellation.CancellationException
 
-class AddTeachersToDbTest {
+class AddAdminsToDbTest {
 
     private lateinit var auth: FirebaseAuth
     private val database = FirebaseDatabase.getInstance()
     private val dbRef= database.reference
-    private lateinit var teacherList: com.example.reachedapp.data.TeacherList
-    private lateinit var teachers: ArrayList<Teacher>
+    private lateinit var adminList: com.example.reachedapp.data.AdminList
+    private lateinit var admins: ArrayList<Admin>
 
     //function that runs before any tests begin
     @Before
     fun setUp(){
         auth = FirebaseAuth.getInstance()
         //FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().targetContext)
-        teacherList = com.example.reachedapp.data.TeacherList()
-        teachers = teacherList.initializeTeacherList()
+        adminList = com.example.reachedapp.data.AdminList()
+        admins = adminList.initializeAdminList()
     }
 
     //test that uses the data initialized in the StudentList class and inserts in
     //in the Firebase DB
     @Test
-    fun addNewTeachers(){
+    fun addNewAdmins(){
         val taskMap: MutableMap<String, Any> = HashMap()
 
-        for(teacher in teachers){
-            auth.createUserWithEmailAndPassword(teacher.email, teacher.password)
+        for(admin in admins){
+            auth.createUserWithEmailAndPassword(admin.email, admin.password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("Test", "User created successfully")
@@ -41,10 +42,10 @@ class AddTeachersToDbTest {
                         Log.e("Test", "Error creating user", task.exception)
                     }
                 }
-            taskMap[teacher.userId] = teacher
+            taskMap[admin.userId] = admin
         }
         try{
-            val task = dbRef.child("Teacher").setValue(taskMap)
+            val task = dbRef.child("Admin").setValue(taskMap)
             Tasks.await(task)
         } catch (e: CancellationException) {
             Log.d("TAG", "Could not push data to DB. Error: $e")
