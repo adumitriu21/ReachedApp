@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.reachedapp.Models.Admin
 import com.example.reachedapp.Models.Parent
 import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
@@ -122,12 +123,53 @@ class HomeFragment : Fragment() {
                                             val parent =
                                                 studentSnapshot.getValue(Parent::class.java)
 
-                                            if (parent != null && parent.password == password) {
+                                            if (parent != null && parent.password == password && parent.email == email) {
                                                 // Authenticate the student with Firebase
                                                 auth.signInWithEmailAndPassword(email, password)
                                                     .addOnCompleteListener(requireActivity()) { task ->
                                                         if (task.isSuccessful) {
                                                             val action = HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(parent)
+                                                            findNavController().navigate(action)
+                                                        } else {
+                                                            // Login failed, display an error message
+                                                            Toast.makeText(
+                                                                activity,
+                                                                "Login failed. Please try again.",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
+                                                    }
+                                                return
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    Toast.makeText(activity,
+                                        "DB Error",
+                                        Toast.LENGTH_SHORT).show()
+                                }
+                            })
+
+
+
+                        usersRef.child("Admin").orderByChild("email").equalTo(email)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        // Loop through all the students with matching email
+                                        for (adminSnapshot in dataSnapshot.children) {
+                                            val admin =
+                                                adminSnapshot.getValue(Admin::class.java)
+
+                                            if (admin != null && admin.password == password && admin.email == email) {
+                                                // Authenticate the student with Firebase
+                                                auth.signInWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(requireActivity()) { task ->
+                                                        if (task.isSuccessful) {
+                                                            val action = HomeFragmentDirections.actionHomeFragment3ToAdminMainMenu22(admin)
                                                             findNavController().navigate(action)
                                                         } else {
                                                             // Login failed, display an error message

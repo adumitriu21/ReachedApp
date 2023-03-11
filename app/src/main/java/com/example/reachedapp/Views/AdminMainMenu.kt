@@ -39,7 +39,7 @@ class AdminMainMenu : Fragment() {
 
                 // Access the UI elements of the layout here and do whatever you want with them.
                 val textView = view.findViewById<TextView>(R.id.name)
-                textView.text = "Your name"
+                //textView.text = "Your name"
         }
 }
 
