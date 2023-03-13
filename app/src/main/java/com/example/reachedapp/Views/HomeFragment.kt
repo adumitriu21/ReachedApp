@@ -17,11 +17,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.Models.Parent
 import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GetTokenResult
+import com.google.firebase.auth.OAuthCredential
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -69,6 +73,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
         val loginBtn = view.findViewById<Button>(R.id.login_btn)
         val emailTxt = view.findViewById<EditText>(R.id.login_email)
@@ -95,6 +100,21 @@ class HomeFragment : Fragment() {
                                     auth.signInWithEmailAndPassword(email, password)
                                         .addOnCompleteListener(requireActivity()) { task ->
                                             if (task.isSuccessful) {
+
+                                                Session.startUserSession(requireContext(), 60)
+                                                task.result.user?.getIdToken(true)?.addOnCompleteListener { authTask ->
+                                                  run {
+                                                      if (authTask.isComplete) {
+                                                          Session.storeUserToken(
+                                                              requireContext(),
+                                                              authTask.result.token.toString()
+                                                          )
+                                                      }
+                                                  }
+                                              }
+
+                                                Session.storeUser(requireContext(), teacher)
+
                                                 val action = HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(teacher)
                                                 findNavController().navigate(action)
 
@@ -127,6 +147,24 @@ class HomeFragment : Fragment() {
                                                 auth.signInWithEmailAndPassword(email, password)
                                                     .addOnCompleteListener(requireActivity()) { task ->
                                                         if (task.isSuccessful) {
+
+                                                            //start a session
+                                                            Session.startUserSession(requireContext(), 60)
+                                                            // Get access token from Firebase
+                                                            task.result.user?.getIdToken(true)?.addOnCompleteListener { authTask ->
+                                                                run {
+                                                                    if (authTask.isComplete) {
+                                                                        // Store access Token to session
+                                                                        Session.storeUserToken(
+                                                                            requireContext(),
+                                                                            authTask.result.token.toString()
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }
+                                                            // Store user in session
+                                                            Session.storeUser(requireContext(), parent)
+
                                                             val action = HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(parent)
                                                             findNavController().navigate(action)
                                                         } else {

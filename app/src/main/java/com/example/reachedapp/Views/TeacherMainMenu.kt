@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -90,8 +91,10 @@ class TeacherMainMenu : Fragment() {
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireContext(), gso)
-        if (teacher != null) {
-            name.text = teacher.name
+
+        val user = Session.getUser(requireContext())
+        if (user != null) {
+            name.text = user.name
         }
         val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (acct != null) {
@@ -109,6 +112,7 @@ class TeacherMainMenu : Fragment() {
 
     private fun signOut() {
         gsc.signOut().addOnCompleteListener(requireActivity()) {
+            Session.endUserSession(requireContext())
             requireActivity().finish()
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }

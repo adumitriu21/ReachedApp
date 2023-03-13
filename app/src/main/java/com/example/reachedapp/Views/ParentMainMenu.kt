@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.Models.Parent
 import com.example.reachedapp.R
+import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -36,9 +37,13 @@ class ParentMainMenu : Fragment() {
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireContext(), gso)
-        if (parent != null) {
-            name.text = parent.name
+
+        // Getting user from session
+        val loggedInUser = Session.getUser(requireContext())
+        if (loggedInUser != null) {
+            name.text = loggedInUser.name
         }
+
         val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (acct != null) {
             val personName = acct.displayName
@@ -58,6 +63,8 @@ class ParentMainMenu : Fragment() {
 
     private fun signOut() {
         gsc.signOut().addOnCompleteListener(requireActivity()) {
+           // Clear the session
+            Session.endUserSession(requireContext())
             requireActivity().finish()
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }

@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.1.0'
     implementation 'com.google.firebase:firebase-auth:21.1.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
+    implementation 'com.google.code.gson:gson:2.8.8'
 
     //testing dependencies
     testImplementation 'junit:junit:4.13.2'
