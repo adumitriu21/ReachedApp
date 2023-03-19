@@ -265,13 +265,6 @@ class HomeFragment : Fragment() {
         return userType == 0
     }
 
-//    private fun setUserType(userType: Int) {
-//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-//        with(sharedPref.edit()) {
-//            putInt(getString(R.string.user_type_key), userType)
-//            apply()
-//        }
-//    }
 
     private fun signIn() {
         val signInIntent = gsc.signInIntent

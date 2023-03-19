@@ -185,7 +185,7 @@ class ParentAttendanceView : Fragment() {
 
                 Toast.makeText(requireContext(),"Absence Reported Successfully!",Toast.LENGTH_LONG).show()
                 val bundle = bundleOf("parent" to parent)
-                findNavController().navigate(R.id.action_parentAttendanceView_to_homeFragment3, bundle)
+                findNavController().navigate(R.id.action_parentAttendanceView_to_parentMainMenu, bundle)
             }
             //performing negative action
             builder.setNegativeButton("No"){dialogInterface, which ->

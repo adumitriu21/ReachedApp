@@ -186,10 +186,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/signout"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="80dp"
                     android:layout_height="80dp"

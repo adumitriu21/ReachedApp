@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.R
+import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -30,7 +31,17 @@ class AdminMainMenu : Fragment() {
                 savedInstanceState: Bundle?
         ): View? {
                 // Inflate the layout for this fragment
-                return inflater.inflate(R.layout.fragment_admin_main_menu, container, false)
+                val view = inflater.inflate(R.layout.fragment_admin_main_menu, container, false)
+                signOutBtn = view.findViewById(R.id.signout)
+                gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+                gsc = GoogleSignIn.getClient(requireContext(), gso)
+
+                signOutBtn.setOnClickListener {
+                        signOut()
+                }
+
+                return view
+
         }
 
         // This method is called after the view is created, so you can access the UI elements of the layout here.
@@ -39,7 +50,21 @@ class AdminMainMenu : Fragment() {
 
                 // Access the UI elements of the layout here and do whatever you want with them.
                 val textView = view.findViewById<TextView>(R.id.name)
+
                 //textView.text = "Your name"
+
+
+
+
+        }
+
+        private fun signOut() {
+                gsc.signOut().addOnCompleteListener(requireActivity()) {
+                        // Clear the session
+                        Session.endUserSession(requireContext())
+                        requireActivity().finish()
+                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                }
         }
 }
 
