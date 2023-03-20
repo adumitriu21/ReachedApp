@@ -14,10 +14,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.reachedapp.Models.Admin
-import com.example.reachedapp.Models.Parent
-import com.example.reachedapp.Models.Teacher
+import com.example.reachedapp.Models.*
 import com.example.reachedapp.R
 import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -28,10 +27,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import com.google.firebase.auth.OAuthCredential
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 class HomeFragment : Fragment() {
@@ -65,9 +65,6 @@ class HomeFragment : Fragment() {
         gsc = GoogleSignIn.getClient(requireActivity(), gso)
 
         val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
-        if (acct != null) {
-            navigateToAppropriateMainMenu()
-        }
 
         googleBtn.setOnClickListener {
             signIn()
@@ -89,242 +86,125 @@ class HomeFragment : Fragment() {
 
             // Check if email and password are not empty
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                val usersRef = database.reference
-                var userFound = false
-                var loginSuccess = false
-
-                Log.d(TAG, "TEST TEST TEST")
-                // Retrieve the user's login credentials from the database
-                usersRef.child("Teacher")
-                    .orderByChild("email")
-                    .equalTo(email)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            Log.d(TAG, "Parent onDataChange() triggered")
-                            // Loop through all the teachers with matching email
-                            for (teacherSnapshot in dataSnapshot.children) {
-                                val teacher = teacherSnapshot.getValue(Teacher::class.java)
-                                Log.d(TAG, "Teacher email: ${teacher?.email}")
-
-                                if (teacher != null && teacher.password == password) {
-                                    // Authenticate the teacher with Firebase
-
-                                    userFound = true
-                                    auth.signInWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener(requireActivity()) { task ->
-                                            if (task.isSuccessful) {
-                                                // Login successful, set the flag to true
-                                                loginSuccess = true
-
-                                                Session.startUserSession(requireContext(), 60)
-                                                task.result.user?.getIdToken(true)
-                                                    ?.addOnCompleteListener { authTask ->
-                                                        run {
-                                                            if (authTask.isComplete) {
-                                                                Session.storeUserToken(
-                                                                    requireContext(),
-                                                                    authTask.result.token.toString()
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-
-                                                Session.storeUser(requireContext(), teacher)
-
-                                                val action =
-                                                    HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(
-                                                        teacher
-                                                    )
-                                                findNavController().navigate(action)
 
 
-                                            } else {
-                                                // Login failed, display an error message
-                                                Toast.makeText(
-                                                    activity,
-                                                    "Login failed. Please try again.",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                    return
-                                }else {
-                                    // Login failed, display an error message
-                                    Toast.makeText(
-                                        activity,
-                                        "Invalid email or password. Please try again",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
+                // Launch a coroutine to wait for the database operation to complete
+                lifecycleScope.launch {
+                    val user = getUserFromDatabase( email)
+                    if (user == null) {
+                        // User not found, display an error message
+                        Toast.makeText(
+                            activity,
+                            "Invalid email or password. Please try again",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
 
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(
-                                activity,
-                                "DB Error",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    })
-
-                if (!userFound){
-                    // If the email is not found in the Teachers entity, check the Parents entity
-                    usersRef.child("Parent")
-                        .orderByChild("email")
-                        .equalTo(email)
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                                // Loop through all the students with matching email
-                                for (parentSnapshot in dataSnapshot.children) {
-                                    val parent =
-                                        parentSnapshot.getValue(Parent::class.java)
-
-                                    if (parent != null && parent.password == password && parent.email == email) {
-
-                                        userFound = true
-                                        // Authenticate the student with Firebase
-                                        auth.signInWithEmailAndPassword(email, password)
-                                            .addOnCompleteListener(requireActivity()) { task ->
-                                                if (task.isSuccessful) {
-                                                    loginSuccess = true
-                                                    //start a session
-                                                    Session.startUserSession(requireContext(), 60)
-                                                    // Get access token from Firebase
-                                                    task.result.user?.getIdToken(true)
-                                                        ?.addOnCompleteListener { authTask ->
-                                                            run {
-                                                                if (authTask.isComplete) {
-                                                                    // Store access Token to session
-                                                                    Session.storeUserToken(
-                                                                        requireContext(),
-                                                                        authTask.result.token.toString()
-                                                                    )
-                                                                }
-                                                            }
-                                                        }
-                                                    // Store user in session
-                                                    Session.storeUser(requireContext(), parent)
-
-                                                    val action =
-                                                        HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(
-                                                            parent
-                                                        )
-                                                    findNavController().navigate(action)
-
-
-                                                } else {
-                                                    // Login failed, display an error message
-                                                    Toast.makeText(
-                                                        activity,
-                                                        "Login failed. Please try again.",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                }
-                                            }
-                                        return
-                                    } else {
-                                        // Login failed, display an error message
-                                        Toast.makeText(
-                                            activity,
-                                            "Invalid email or password. Please try again",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            }
-
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Toast.makeText(
-                                    activity,
-                                    "DB Error",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        })
-
-
+                        // User found, proceed with login
+                        authenticateUser(user as User)
+                    }
                 }
-
-                if(!userFound){
-                    usersRef.child("Admin").orderByChild("email").equalTo(email)
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    // Loop through all the students with matching email
-                                    for (adminSnapshot in dataSnapshot.children) {
-                                        val admin =
-                                            adminSnapshot.getValue(Admin::class.java)
-
-                                        if (admin != null && admin.password == password && admin.email == email) {
-
-                                            userFound = true
-                                            // Authenticate the student with Firebase
-                                            auth.signInWithEmailAndPassword(email, password)
-                                                .addOnCompleteListener(requireActivity()) { task ->
-                                                    if (task.isSuccessful) {
-                                                        loginSuccess = true
-                                                        val action =
-                                                            HomeFragmentDirections.actionHomeFragment3ToAdminMainMenu22(
-                                                                admin
-                                                            )
-                                                        findNavController().navigate(action)
-
-                                                    } else {
-                                                        // Login failed, display an error message
-                                                        Toast.makeText(
-                                                            activity,
-                                                            "Login failed. Please try again.",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-
-                                                }
-
-                                            return
-                                        } else {
-                                            // Login failed, display an error message
-                                            Toast.makeText(
-                                                activity,
-                                                "Invalid email or password. Please try again",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-                                }
-
-
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Toast.makeText(
-                                    activity,
-                                    "DB Error",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        })
-                }
-
+            } else {
+                Toast.makeText(
+                    activity,
+                    "Please enter username and password",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun navigateToAppropriateMainMenu() {
-        if (isUserParent()) {
-            navigateToParentMainMenu()
-        } else {
-            navigateToTeacherMainMenu()
-        }
+    private fun authenticateUser(user: User) {
+        auth.signInWithEmailAndPassword(user.email, user.password)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    // Login successful, start a session
+                    Session.startUserSession(requireContext(), 60)
+                    task.result.user?.getIdToken(true)
+                        ?.addOnCompleteListener { authTask ->
+                            run {
+                                if (authTask.isComplete) {
+                                    Session.storeUserToken(
+                                        requireContext(),
+                                        authTask.result.token.toString()
+                                    )
+                                }
+                            }
+                        }
+
+                    // Store user in session
+                    Session.storeUser(requireContext(), user)
+
+                    // Redirect to appropriate menu based on user role
+                    when (user) {
+                        is Teacher -> {
+                            val action =
+                                HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(user)
+                            findNavController().navigate(action)
+                        }
+                        is Parent -> {
+                            val action =
+                                HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(user)
+                            findNavController().navigate(action)
+                        }
+                        is Admin -> {
+                            val action =
+                                HomeFragmentDirections.actionHomeFragment3ToAdminMainMenu22(user)
+                            findNavController().navigate(action)
+                        }
+                    }
+                } else {
+                    // Login failed, display an error message
+                    Toast.makeText(activity, "Login failed. Please try again.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
     }
 
-    private fun isUserParent(): Boolean {
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return true
-        val userType = sharedPref.getInt(getString(R.string.user_type_key), -1)
-        return userType == 0
+
+    private suspend fun getUserFromDatabase(
+
+        email: String
+
+    ): Any? = withContext(Dispatchers.IO) {
+        var user: Any? = null
+        val usersRef = database.reference
+        try {
+            val teacherSnapshot = usersRef.child("Teacher").orderByChild("email").equalTo(email).get().await()
+            for (snapshot in teacherSnapshot.children) {
+                val teacher = snapshot.getValue(Teacher::class.java)
+                if (teacher != null) {
+                    user = teacher
+                    break
+                }
+            }
+
+            if (user == null) {
+                val parentSnapshot = usersRef.child("Parent").orderByChild("email").equalTo(email).get().await()
+                for (snapshot in parentSnapshot.children) {
+                    val parent = snapshot.getValue(Parent::class.java)
+                    if (parent != null) {
+                        user = parent
+                        break
+                    }
+                }
+            }
+
+            if (user == null) {
+                val adminSnapshot = usersRef.child("Admin").orderByChild("email").equalTo(email).get().await()
+                for (snapshot in adminSnapshot.children) {
+                    val admin = snapshot.getValue(Admin::class.java)
+                    if (admin != null) {
+                        user = admin
+                        break
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Handle exception
+        }
+
+        user
     }
 
 
@@ -338,23 +218,51 @@ class HomeFragment : Fragment() {
         if (requestCode == 1000) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                task.getResult(ApiException::class.java)
-                navigateToAppropriateMainMenu()
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    val email = account.email
+                    if (email != null) {
+                        // Launch a coroutine to wait for the database operation to complete
+                        lifecycleScope.launch {
+                            val user = getUserFromDatabase(email)
+                            if (user == null) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "No user found for this Google account. Please try another account or log in with your email and password",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                // User found, proceed with login
+                                authenticateUser(user as User)
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to get email address from Google account. Please try another account or log in with your email and password",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to sign in with Google. Please try again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } catch (e: ApiException) {
-                Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to sign in with Google. Please try again",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun navigateToTeacherMainMenu() {
-
-        findNavController().navigate(R.id.action_homeFragment3_to_teacherMainMenu)
-    }
-
-    private fun navigateToParentMainMenu() {
-        findNavController().navigate(R.id.action_homeFragment3_to_parentMainMenu)
-    }
-
 }
+
+
+
 
 
