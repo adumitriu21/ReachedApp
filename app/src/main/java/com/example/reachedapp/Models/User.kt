@@ -15,7 +15,7 @@ open class User(
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readSerializable() as UserRole
+        UserRole.valueOf(parcel.readString()!!)
     )
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userId)

@@ -34,7 +34,7 @@ class ParentAttendanceView : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     private val ref = database.getReference("Student")
     val attendanceRef = database.getReference("Attendance")
-    lateinit var attendanceDate: Date
+    var attendanceDate: Date? = null
     lateinit var dateTV: TextView
     lateinit var calendarView: CalendarView
     private var studentList: MutableList<Student> = ArrayList<Student>()
@@ -47,11 +47,11 @@ class ParentAttendanceView : Fragment() {
                 NotificationManager::class.java) as NotificationManager
     }
 
-    private fun createChannel(channelId : String, channelName : String){
+    private fun createChannel(channelId : String){
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O){
             val notificationChannel = NotificationChannel(
                     channelId,
-                    channelName,
+                    "123",
                     NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 enableLights(true)
@@ -69,6 +69,7 @@ class ParentAttendanceView : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_parent_attendance_view, container, false)
 
         // get parent
+        @Suppress("DEPRECATION")
         val parent = arguments?.getParcelable<Parent>("parent")
         val parentId = parent?.userId
 
@@ -78,7 +79,7 @@ class ParentAttendanceView : Fragment() {
 
         // on below line we are adding set on
         // date change listener for calendar view.
-        val format = SimpleDateFormat("dd-MM-yyyy")
+        val format = SimpleDateFormat("dd-MM-yyyy", Locale.US)
         val currentDate  = Date()
 
         //default attendance date to today's date
@@ -88,7 +89,7 @@ class ParentAttendanceView : Fragment() {
         //display today's date in the top left text box
         dateTV.text = format.format(currentDate.time)
         calendarView
-            .setOnDateChangeListener { view, year, month, dayOfMonth ->
+            .setOnDateChangeListener { _: CalendarView, year, month, dayOfMonth ->
                 // In this Listener we are getting values
                 // such as year, month and day of month
                 // on below line we are creating a variable
@@ -100,7 +101,7 @@ class ParentAttendanceView : Fragment() {
                 dateTV.text = Date
                 // convert string representing the date to an actual Date object matchin
                 // the other entries in the DB
-                val inputFormat = SimpleDateFormat("dd-MM-yyyy")
+                val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
                 attendanceDate = inputFormat.parse(dateTV.text as String)
             }
 
@@ -127,7 +128,7 @@ class ParentAttendanceView : Fragment() {
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.US)
         studentRecyclerView.setOnClickListener {  }
 
 
@@ -143,7 +144,7 @@ class ParentAttendanceView : Fragment() {
             builder.setPositiveButton("Yes"){dialogInterface, which ->
 
                 val selectedStud = studentAdapter.getSelectedStudents()
-                if (selectedStud != null) {
+                //if (selectedStud != null) {
                     for (std in selectedStud) {
                         ref.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -167,11 +168,10 @@ class ParentAttendanceView : Fragment() {
                             }
                         })
                     }
-                }
+                //}
 
 
-                createChannel(getString(R.string.comment_notification_channel_id),
-                        "123")
+                createChannel(getString(R.string.comment_notification_channel_id))
 
                 val title = "REACHED"
                 val message = "Absence report has been transmitted successfully to school secretary and teachers."
