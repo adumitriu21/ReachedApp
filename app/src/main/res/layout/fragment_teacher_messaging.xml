@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:background="@drawable/gradient_background"
-    tools:context=".Views.TeacherMessaging">
+    tools:context=".views.TeacherMessaging">
 
 
     <TextView

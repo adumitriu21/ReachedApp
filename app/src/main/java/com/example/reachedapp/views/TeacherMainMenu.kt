@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.content.Intent
 import android.os.Bundle

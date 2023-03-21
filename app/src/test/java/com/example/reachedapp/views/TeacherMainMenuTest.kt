@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import com.example.reachedapp.data.FakeAttendance
 import org.junit.Assert.assertTrue

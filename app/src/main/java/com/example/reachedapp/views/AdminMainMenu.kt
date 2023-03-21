@@ -1,15 +1,13 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.R
 import com.example.reachedapp.Util.Session

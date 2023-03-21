@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.view.LayoutInflater
 import android.view.View

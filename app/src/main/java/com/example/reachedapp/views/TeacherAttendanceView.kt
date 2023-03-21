@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.app.AlertDialog
 import android.app.NotificationChannel
