@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.app.AlertDialog
 import android.app.NotificationChannel
@@ -34,9 +34,9 @@ class ParentAttendanceView : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     private val ref = database.getReference("Student")
     val attendanceRef = database.getReference("Attendance")
-    var attendanceDate: Date? = null
-    lateinit var dateTV: TextView
-    lateinit var calendarView: CalendarView
+    lateinit var attendanceDate: Date
+    private lateinit var dateTV: TextView
+    private lateinit var calendarView: CalendarView
     private var studentList: MutableList<Student> = ArrayList<Student>()
     private var studentAdapter = StudentListAdapter()
 
@@ -94,15 +94,16 @@ class ParentAttendanceView : Fragment() {
                 // such as year, month and day of month
                 // on below line we are creating a variable
                 // in which we are adding all the variables in it.
-                val Date = (dayOfMonth.toString() + "-"
+                val date = (dayOfMonth.toString() + "-"
                         + (month + 1) + "-" + year)
 
                 // set this date in TextView for Display
-                dateTV.text = Date
-                // convert string representing the date to an actual Date object matchin
+                dateTV.text = date
+                // convert string representing the date to an actual Date object matching
                 // the other entries in the DB
                 val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-                attendanceDate = inputFormat.parse(dateTV.text as String)
+                val parsedDate = inputFormat.parse(dateTV.text as String)
+                attendanceDate = parsedDate ?: currentDate
             }
 
 
@@ -141,7 +142,7 @@ class ParentAttendanceView : Fragment() {
             builder.setIcon(android.R.drawable.ic_dialog_alert)
 
             //performing positive action
-            builder.setPositiveButton("Yes"){dialogInterface, which ->
+            builder.setPositiveButton("Yes"){_, _ ->
 
                 val selectedStud = studentAdapter.getSelectedStudents()
                 //if (selectedStud != null) {
@@ -151,10 +152,10 @@ class ParentAttendanceView : Fragment() {
 
                                 for (dsp in dataSnapshot.children) {
                                     val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.name.toString() == std) {
+                                    if (s != null && s.name == std) {
                                         attendanceRef.child(formatter.format(attendanceDate))
                                                 .child("Reported Absences")
-                                                .child(s.classId.toString())
+                                                .child(s.classId)
                                                 .child(s.name)
                                                 .child("IsPresent")
                                                 .setValue(false)
@@ -188,7 +189,7 @@ class ParentAttendanceView : Fragment() {
                 findNavController().navigate(R.id.action_parentAttendanceView_to_parentMainMenu, bundle)
             }
             //performing negative action
-            builder.setNegativeButton("No"){dialogInterface, which ->
+            builder.setNegativeButton("No"){_, _ ->
                 Toast.makeText(requireContext(),"Cancelled Submit",Toast.LENGTH_LONG).show()
             }
             // Create the AlertDialog

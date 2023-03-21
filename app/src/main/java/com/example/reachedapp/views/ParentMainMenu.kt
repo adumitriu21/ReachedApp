@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +17,6 @@ import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.database.FirebaseDatabase
 
 
 class ParentMainMenu : Fragment() {

@@ -1,8 +1,7 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.util.Log
 import com.example.reachedapp.Models.Admin
-import com.example.reachedapp.Models.Teacher
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
