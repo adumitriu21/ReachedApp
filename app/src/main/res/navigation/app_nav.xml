@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/teacherAttendanceView"
-        android:name="com.example.reachedapp.Views.TeacherAttendanceView"
+        android:name="com.example.reachedapp.views.TeacherAttendanceView"
         android:label="fragment_teacher_attendance_view"
         tools:layout="@layout/fragment_teacher_attendance_view" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/teacherMainMenu"
-        android:name="com.example.reachedapp.Views.TeacherMainMenu"
+        android:name="com.example.reachedapp.views.TeacherMainMenu"
         android:label="fragment_teacher_main_menu"
         tools:layout="@layout/fragment_teacher_main_menu" >
         <argument
@@ -28,20 +28,10 @@
         <action
             android:id="@+id/action_teacherMainMenu_to_homeFragment3"
             app:destination="@id/homeFragment3" />
-        <action
-            android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView2"
-            app:destination="@id/teacherAttendanceView" />
-        <action
-            android:id="@+id/action_teacherMainMenu_to_teacherProfileView"
-            app:destination="@id/teacherProfileView" />
-        <action
-            android:id="@+id/action_teacherMainMenu_to_teacherMessaging"
-            app:destination="@id/teacherMessaging" />
-
     </fragment>
     <fragment
         android:id="@+id/homeFragment3"
-        android:name="com.example.reachedapp.Views.HomeFragment"
+        android:name="com.example.reachedapp.views.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -50,10 +40,14 @@
         <action
             android:id="@+id/action_homeFragment3_to_parentMainMenu"
             app:destination="@id/parentMainMenu" />
+        <action
+            android:id="@+id/action_homeFragment3_to_adminMainMenu22"
+            app:destination="@id/adminMainMenu2" />
+
     </fragment>
     <fragment
         android:id="@+id/parentMainMenu"
-        android:name="com.example.reachedapp.Views.ParentMainMenu"
+        android:name="com.example.reachedapp.views.ParentMainMenu"
         android:label="fragment_parent_main_menu"
         tools:layout="@layout/fragment_parent_main_menu" >
         <argument
@@ -68,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/parentAttendanceView"
-        android:name="com.example.reachedapp.Views.ParentAttendanceView"
+        android:name="com.example.reachedapp.views.ParentAttendanceView"
         android:label="fragment_parent_attendance_view"
         tools:layout="@layout/fragment_parent_attendance_view" >
         <action
@@ -80,28 +74,25 @@
     </fragment>
     <fragment
         android:id="@+id/teacherMessaging"
-        android:name="com.example.reachedapp.Views.TeacherMessaging"
+        android:name="com.example.reachedapp.views.TeacherMessaging"
         android:label="fragment_teacher_messaging"
         tools:layout="@layout/fragment_teacher_messaging" >
-        <action
-            android:id="@+id/action_teacherMessaging_to_teacherMainMenu"
-            app:destination="@id/teacherMainMenu" />
-        <action
-            android:id="@+id/action_teacherMessaging_to_teacherProfileView"
-            app:destination="@id/teacherProfileView" />
-        <action
-            android:id="@+id/action_teacherMessaging_to_teacherAttendanceView"
-            app:destination="@id/teacherAttendanceView" />
-        <action
-            android:id="@+id/action_teacherMessaging_self"
-            app:destination="@id/teacherMessaging" />
-        <action
-            android:id="@+id/action_teacherMessaging_to_teacherMainMenu2"
-            app:destination="@id/teacherMainMenu" />
     </fragment>
     <fragment
         android:id="@+id/teacherProfileView"
-        android:name="com.example.reachedapp.Views.TeacherProfileView"
+        android:name="com.example.reachedapp.views.TeacherProfileView"
         android:label="fragment_teacher_profile_view"
         tools:layout="@layout/fragment_teacher_profile_view" />
+    <fragment
+        android:id="@+id/adminMainMenu2"
+        android:name="com.example.reachedapp.views.AdminMainMenu"
+        android:label="fragment_admin_main_menu"
+        tools:layout="@layout/fragment_admin_main_menu" >
+        <argument
+            android:name="admin"
+            app:argType="com.example.reachedapp.Models.Admin"/>
+        <action
+            android:id="@+id/action_adminMainMenu2_to_homeFragment3"
+            app:destination="@id/homeFragment3" />
+    </fragment>
 </navigation>

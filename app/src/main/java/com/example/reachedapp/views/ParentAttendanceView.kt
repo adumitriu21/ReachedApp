@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.app.AlertDialog
 import android.app.NotificationChannel
@@ -35,8 +35,8 @@ class ParentAttendanceView : Fragment() {
     private val ref = database.getReference("Student")
     val attendanceRef = database.getReference("Attendance")
     lateinit var attendanceDate: Date
-    lateinit var dateTV: TextView
-    lateinit var calendarView: CalendarView
+    private lateinit var dateTV: TextView
+    private lateinit var calendarView: CalendarView
     private var studentList: MutableList<Student> = ArrayList<Student>()
     private var studentAdapter = StudentListAdapter()
 
@@ -47,11 +47,11 @@ class ParentAttendanceView : Fragment() {
                 NotificationManager::class.java) as NotificationManager
     }
 
-    private fun createChannel(channelId : String, channelName : String){
+    private fun createChannel(channelId : String){
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O){
             val notificationChannel = NotificationChannel(
                     channelId,
-                    channelName,
+                    "123",
                     NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 enableLights(true)
@@ -69,6 +69,7 @@ class ParentAttendanceView : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_parent_attendance_view, container, false)
 
         // get parent
+        @Suppress("DEPRECATION")
         val parent = arguments?.getParcelable<Parent>("parent")
         val parentId = parent?.userId
 
@@ -78,7 +79,7 @@ class ParentAttendanceView : Fragment() {
 
         // on below line we are adding set on
         // date change listener for calendar view.
-        val format = SimpleDateFormat("dd-MM-yyyy")
+        val format = SimpleDateFormat("dd-MM-yyyy", Locale.US)
         val currentDate  = Date()
 
         //default attendance date to today's date
@@ -88,20 +89,21 @@ class ParentAttendanceView : Fragment() {
         //display today's date in the top left text box
         dateTV.text = format.format(currentDate.time)
         calendarView
-            .setOnDateChangeListener { view, year, month, dayOfMonth ->
+            .setOnDateChangeListener { _: CalendarView, year, month, dayOfMonth ->
                 // In this Listener we are getting values
                 // such as year, month and day of month
                 // on below line we are creating a variable
                 // in which we are adding all the variables in it.
-                val Date = (dayOfMonth.toString() + "-"
+                val date = (dayOfMonth.toString() + "-"
                         + (month + 1) + "-" + year)
 
                 // set this date in TextView for Display
-                dateTV.text = Date
-                // convert string representing the date to an actual Date object matchin
+                dateTV.text = date
+                // convert string representing the date to an actual Date object matching
                 // the other entries in the DB
-                val inputFormat = SimpleDateFormat("dd-MM-yyyy")
-                attendanceDate = inputFormat.parse(dateTV.text as String)
+                val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                val parsedDate = inputFormat.parse(dateTV.text as String)
+                attendanceDate = parsedDate ?: currentDate
             }
 
 
@@ -127,7 +129,7 @@ class ParentAttendanceView : Fragment() {
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.US)
         studentRecyclerView.setOnClickListener {  }
 
 
@@ -140,20 +142,20 @@ class ParentAttendanceView : Fragment() {
             builder.setIcon(android.R.drawable.ic_dialog_alert)
 
             //performing positive action
-            builder.setPositiveButton("Yes"){dialogInterface, which ->
+            builder.setPositiveButton("Yes"){_, _ ->
 
                 val selectedStud = studentAdapter.getSelectedStudents()
-                if (selectedStud != null) {
+                //if (selectedStud != null) {
                     for (std in selectedStud) {
                         ref.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                                 for (dsp in dataSnapshot.children) {
                                     val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.name.toString() == std) {
+                                    if (s != null && s.name == std) {
                                         attendanceRef.child(formatter.format(attendanceDate))
                                                 .child("Reported Absences")
-                                                .child(s.classId.toString())
+                                                .child(s.classId)
                                                 .child(s.name)
                                                 .child("IsPresent")
                                                 .setValue(false)
@@ -167,11 +169,10 @@ class ParentAttendanceView : Fragment() {
                             }
                         })
                     }
-                }
+                //}
 
 
-                createChannel(getString(R.string.comment_notification_channel_id),
-                        "123")
+                createChannel(getString(R.string.comment_notification_channel_id))
 
                 val title = "REACHED"
                 val message = "Absence report has been transmitted successfully to school secretary and teachers."
@@ -185,10 +186,10 @@ class ParentAttendanceView : Fragment() {
 
                 Toast.makeText(requireContext(),"Absence Reported Successfully!",Toast.LENGTH_LONG).show()
                 val bundle = bundleOf("parent" to parent)
-                findNavController().navigate(R.id.action_parentAttendanceView_to_homeFragment3, bundle)
+                findNavController().navigate(R.id.action_parentAttendanceView_to_parentMainMenu, bundle)
             }
             //performing negative action
-            builder.setNegativeButton("No"){dialogInterface, which ->
+            builder.setNegativeButton("No"){_, _ ->
                 Toast.makeText(requireContext(),"Cancelled Submit",Toast.LENGTH_LONG).show()
             }
             // Create the AlertDialog

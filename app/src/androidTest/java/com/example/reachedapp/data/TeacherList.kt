@@ -1,6 +1,5 @@
 package com.example.reachedapp.data
 
-import com.example.reachedapp.Models.Student
 import com.example.reachedapp.Models.Teacher
 
 class TeacherList {

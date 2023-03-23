@@ -1,7 +1,5 @@
 package com.example.reachedapp.data
 
-import androidx.collection.arrayMapOf
-
 class FakeAttendance {
     private val att1 = HashMap<String,Boolean>()
     private val att2 = HashMap<String, Boolean>()

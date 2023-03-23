@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.util.Log
 import com.example.reachedapp.Models.Teacher
@@ -29,7 +29,7 @@ class AddTeachersToDbTest {
     //test that uses the data initialized in the StudentList class and inserts in
     //in the Firebase DB
     @Test
-    fun addNewUser(){
+    fun addNewTeachers(){
         val taskMap: MutableMap<String, Any> = HashMap()
 
         for(teacher in teachers){

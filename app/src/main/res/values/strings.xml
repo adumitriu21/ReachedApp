@@ -14,14 +14,8 @@
     <string name="reg_failed">"Registration Failed: "</string>
     <string name="login_failed">"Login failed: "</string>
     <string name="logout">Logout</string>
-    <string name="fullName">Full Name</string>
-    <string name="department">Department</string>
-    <string name="employmentDate">Start Date</string>
-    <string name="salary">Salary</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="addEmp">Add Employee</string>
     <string name="submit">Submit</string>
-    <string name="emp_added">Employee added successfully!</string>
     <string name="fields_missing">All fields must be filled out!</string>
     <string name="format_date">Date must be in dd/mm/yyyy format!!</string>
     <string name="date_not_valid">Please enter date in the following format: dd-mm-yyyy</string>
@@ -29,9 +23,6 @@
     <string name="alreadyRegistered">Go Back</string>
     <string name="login_successful">Logged in Successfully</string>
     <string name="register_successful">Registered Successfully</string>
-    <string name="empName">Employee Name</string>
-    <string name="user_logged">You are logged in</string>
-    <string name="updateEmp">Update Employee</string>
     <string name="sum_ting_wong">Something went wrong!</string>
     <string name="pwdConfirm">Confirm Password</string>
     <string name="password_match">Your Password needs to match in both password fields. Try Again!</string>
@@ -39,21 +30,9 @@
     <string name="icon_logout">Icon logout</string>
     <string name="welcome_user_dummyText">Welcome %User%</string>
     <string name="company_logo_contentDesc">Company Logo</string>
-    <string name="not_a_member_register_txt">Not a member? Register</string>
-    <string name="here_linkToSignUpText">Here</string>
-    <string name="already_a_member_txt">Already a Member?</string>
     <string name="cancel">Cancel</string>
     <string name="Alert_title_dialog">Alert</string>
-    <string name="yes">Yes</string>
-    <string name="supporting_text">Deleting is an irreversible action. Are you sure to continue?</string>
-    <string name="emp_updated">Employee updated successfully!</string>
-    <string name="update_failed">Update failed!</string>
     <string name="passwords_notMatching_errorHelper">Password fields are not the same</string>
     <string name="fill_all_fields">Please Fill All the fields</string>
-
-    <string name="home">Home</string>
-    <string name="report">Report</string>
-    <string name="messages">Messages</string>
-    <string name="profile">Profile</string>
     <string name="welcomeTeacher">"Welcome "</string>
 </resources>

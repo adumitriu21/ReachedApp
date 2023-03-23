@@ -1,16 +1,11 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import com.example.reachedapp.R
 import com.example.reachedapp.data.FakeAttendance
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.reflect.typeOf
 
 class TeacherMainMenuTest{
 

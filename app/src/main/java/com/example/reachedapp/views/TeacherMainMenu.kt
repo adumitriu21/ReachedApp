@@ -1,11 +1,10 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -44,7 +44,7 @@ class TeacherMainMenu : Fragment() {
         val teacher = arguments?.getParcelable<Teacher>("teacher")
         val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val attendanceDate = Date()
 
         attendanceBtn.setOnClickListener {
@@ -91,8 +91,10 @@ class TeacherMainMenu : Fragment() {
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireContext(), gso)
-        if (teacher != null) {
-            name.text = teacher.name
+
+        val user = Session.getUser(requireContext())
+        if (user != null) {
+            name.text = user.name
         }
         val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (acct != null) {
@@ -110,6 +112,7 @@ class TeacherMainMenu : Fragment() {
 
     private fun signOut() {
         gsc.signOut().addOnCompleteListener(requireActivity()) {
+            Session.endUserSession(requireContext())
             requireActivity().finish()
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }

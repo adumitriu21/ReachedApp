@@ -1,4 +1,4 @@
-package com.example.reachedapp.Views
+package com.example.reachedapp.views
 
 import android.app.AlertDialog
 import android.app.NotificationChannel
@@ -66,7 +66,7 @@ class TeacherAttendanceView : Fragment() {
         //display date
         dateTimeDisplay = view.findViewById(R.id.date)
         calendar = Calendar.getInstance()
-        dateFormat = SimpleDateFormat("MM/dd/yyyy")
+        dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.CANADA)
         date = dateFormat.format(calendar.time)
         dateTimeDisplay.text = date
         //display day of the week
@@ -79,7 +79,7 @@ class TeacherAttendanceView : Fragment() {
         studentRecyclerView.adapter = studentAdapter
         studentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val attendanceDate = Date()
 
 
@@ -159,7 +159,7 @@ class TeacherAttendanceView : Fragment() {
         // Populate the class list
         if (homeroomNum != null) {
             populateClassList(homeroomNum, attendanceDate, formatter)
-        };
+        }
 
         val submitBtn = view.findViewById<Button>(R.id.submitAttendance)
 
