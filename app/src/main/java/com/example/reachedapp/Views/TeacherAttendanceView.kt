@@ -182,7 +182,7 @@ class TeacherAttendanceView : Fragment() {
             builder.setPositiveButton("Yes"){dialogInterface, which ->
                 ref.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            attendanceRef.child(formatter.format(attendanceDate))
+                            attendanceRef.child(formatter.format(attendanceDate)).child(homeroomNum.toString())
                                 .child("IsSubmitted")
                                 .setValue(true)
                     }
@@ -284,7 +284,7 @@ class TeacherAttendanceView : Fragment() {
                         })
 
                     }
-                    attendanceRef.child(dateFormat.format(date))
+                    attendanceRef.child(dateFormat.format(date)).child(homeroom)
                         .child("IsSubmitted").setValue(false)
                     studentAdapter.setData(studentList)
                 }
