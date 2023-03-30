@@ -51,14 +51,28 @@
         android:layout_marginTop="255dp"
         android:layout_marginLeft="40dp" />
 
-    <Spinner
-        android:id="@+id/gradeSpinner"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="309dp"
-        android:layout_height="35dp"
+        android:layout_height="45dp"
         android:layout_marginTop="325dp"
         android:layout_marginLeft="40dp"
-        android:spinnerMode="dropdown"
-        android:background="@drawable/bg_button"/>
+        android:background="@drawable/bg_button">
+
+        <!-- Inside text input layout add
+              an auto complete text view
+                and make its input type to none-->
+        <AutoCompleteTextView
+            android:id="@+id/homeroomSelect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="none"
+            android:hint="Grade and Section Selection ..."
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <TextView
         android:layout_width="wrap_content"
