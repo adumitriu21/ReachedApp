@@ -50,42 +50,8 @@
                     android:layout_height="wrap_content"
                     android:text="2022-11-10" />
 
-
-
-
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <!-- Inside text input layout add
-                      an auto complete text view
-                        and make its input type to none-->
-                <AutoCompleteTextView
-                    android:id="@+id/homeroomSelect"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:inputType="none"
-                    android:hint="Grade and Section Selection ..."
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-        </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
