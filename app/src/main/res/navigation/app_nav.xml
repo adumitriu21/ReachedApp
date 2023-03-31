@@ -60,18 +60,12 @@
         <action
             android:id="@+id/action_parentMainMenu_to_homeFragment3"
             app:destination="@id/homeFragment3" />
-        <action
-            android:id="@+id/action_parentAttendanceView_to_parentMainMenu"
-            app:destination="@id/parentMainMenu" />
     </fragment>
     <fragment
         android:id="@+id/parentAttendanceView"
         android:name="com.example.reachedapp.views.ParentAttendanceView"
         android:label="fragment_parent_attendance_view"
         tools:layout="@layout/fragment_parent_attendance_view" >
-        <argument
-            android:name="parent?"
-            app:argType="com.example.reachedapp.Models.Parent"/>
         <action
             android:id="@+id/action_parentAttendanceView_to_parentMainMenu"
             app:destination="@id/parentMainMenu" />
