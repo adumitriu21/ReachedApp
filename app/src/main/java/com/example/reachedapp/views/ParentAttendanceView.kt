@@ -137,64 +137,56 @@ class ParentAttendanceView : Fragment() {
         submitBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.dialogTitle)
-            //set message for alert dialog
             builder.setMessage(R.string.reportAbsenceMsg)
             builder.setIcon(android.R.drawable.ic_dialog_alert)
-
-            //performing positive action
-            builder.setPositiveButton("Yes"){_, _ ->
-
+            builder.setPositiveButton("Yes") { _, _ ->
                 val selectedStud = studentAdapter.getSelectedStudents()
-                //if (selectedStud != null) {
-                    for (std in selectedStud) {
-                        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (std in selectedStud) {
+                    ref.orderByChild("name").equalTo(std).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                val s = dataSnapshot.children.first().getValue(Student::class.java)
+                                val attendanceRefDate = formatter.format(attendanceDate)
+                                val attendanceRefChild = attendanceRef.child(attendanceRefDate).child("Reported Absences").child(s?.classId ?: "").child(s?.name ?: "")
+                                attendanceRefChild.addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        if (snapshot.child("isSubmitted").value == null) {
+                                            attendanceRefChild.child("IsPresent").setValue(false)
+                                            attendanceRefChild.child("isSubmitted").setValue("True")
+                                            createChannel(getString(R.string.comment_notification_channel_id))
+                                            val title = "REACHED"
+                                            val message = "Absence report has been transmitted successfully to school secretary and teachers."
+                                            notificationManager.sendNotification(title, message, getString(R.string.comment_notification_channel_id), requireContext())
+                                            Toast.makeText(requireContext(), "Absence Reported Successfully!", Toast.LENGTH_LONG).show()
+                                            val bundle = bundleOf("parent" to parent)
+                                            val action = parent?.let { it1 -> ParentAttendanceViewDirections.actionParentAttendanceViewToParentMainMenu(it1) }
+                                            if (action != null) {
+                                                findNavController().navigate(action)
+                                            }
 
-                                for (dsp in dataSnapshot.children) {
-                                    val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.name == std) {
-                                        attendanceRef.child(formatter.format(attendanceDate))
-                                                .child("Reported Absences")
-                                                .child(s.classId)
-                                                .child(s.name)
-                                                .child("IsPresent")
-                                                .setValue(false)
+
+                                        } else {
+                                            Toast.makeText(requireContext(), "Attendance already submitted, select different date!", Toast.LENGTH_LONG).show()
+                                        }
                                     }
-                                }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        println("The read failed: " + error.code)
+                                    }
+                                })
                             }
+                        }
 
-
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                println("The read failed: " + databaseError.code)
-                            }
-                        })
-                    }
-                //}
-
-
-                createChannel(getString(R.string.comment_notification_channel_id))
-
-                val title = "REACHED"
-                val message = "Absence report has been transmitted successfully to school secretary and teachers."
-
-                notificationManager.sendNotification(
-                        title,
-                        message,
-                        getString(R.string.comment_notification_channel_id),
-                        requireContext()
-                )
-
-                Toast.makeText(requireContext(),"Absence Reported Successfully!",Toast.LENGTH_LONG).show()
-                val bundle = bundleOf("parent" to parent)
-                findNavController().navigate(R.id.action_parentAttendanceView_to_parentMainMenu, bundle)
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            println("The read failed: " + databaseError.code)
+                        }
+                    })
+                }
             }
-            //performing negative action
-            builder.setNegativeButton("No"){_, _ ->
-                Toast.makeText(requireContext(),"Cancelled Submit",Toast.LENGTH_LONG).show()
+            builder.setNegativeButton("No") { _, _ ->
+                Toast.makeText(requireContext(), "Cancelled Submit", Toast.LENGTH_LONG).show()
             }
-            // Create the AlertDialog
             val alertDialog: AlertDialog = builder.create()
-            // Set other dialog properties
             alertDialog.setCancelable(false)
             alertDialog.show()
         }
