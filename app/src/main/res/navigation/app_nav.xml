@@ -45,6 +45,7 @@
             app:destination="@id/adminMainMenu2" />
 
     </fragment>
+
     <fragment
         android:id="@+id/parentMainMenu"
         android:name="com.example.reachedapp.views.ParentMainMenu"

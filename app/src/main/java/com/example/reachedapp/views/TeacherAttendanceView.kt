@@ -95,50 +95,7 @@ class TeacherAttendanceView : Fragment() {
         * entry is created with all the Student's attendance status defaulted to present
         * */
 
-        /*
-        homeroomSelect.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, _, position, _ ->
-                val selectedHomeroom = parent.getItemAtPosition(position)
-                studentList.clear()
-                ref.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        for (dsp in dataSnapshot.children) {
-                            val s = dsp.getValue(Student::class.java)
-                            if (s != null && s.classId == selectedHomeroom.toString()) {
-                                studentList.add(s)
-                                attendanceRef.addListenerForSingleValueEvent(object :
-                                    ValueEventListener {
-                                    override fun onDataChange(attSnapshot: DataSnapshot) {
-                                        if (!attSnapshot.child(formatter.format(attendanceDate))
-                                                .child(s.classId.toString())
-                                                .child(s.name).hasChild("IsPresent")
-                                        ) {
-                                            attendanceRef.child(formatter.format(attendanceDate))
-                                                .child(s.classId.toString())
-                                                .child(s.classId)
-                                                .child("IsPresent")
-                                                .setValue(true)
-                                        }
-                                    }
 
-                                    override fun onCancelled(attError: DatabaseError) {
-                                        println("The read failed: " + attError.code)
-                                    }
-                                })
-
-                            }
-                            attendanceRef.child(formatter.format(attendanceDate))
-                                .child("IsSubmitted").setValue(false)
-                            studentAdapter.setData(studentList)
-                        }
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        println("The read failed: " + databaseError.code)
-                    }
-                })
-            }
-*/
         searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -179,34 +136,35 @@ class TeacherAttendanceView : Fragment() {
             builder.setIcon(android.R.drawable.ic_dialog_alert)
 
             //performing positive action
-            builder.setPositiveButton("Yes"){dialogInterface, which ->
-                ref.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            attendanceRef.child(formatter.format(attendanceDate))
-                                .child("IsSubmitted")
-                                .setValue(true)
-                    }
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        println("The read failed: " + databaseError.code)
-                    }
-                })
-                createChannel(getString(R.string.comment_notification_channel_id),
-                        "12345")
-                val title = "REACHED"
-                val message = "Absence report has been transmitted successfully to notify parents."
-                notificationManager.sendNotification(
-                        title,
-                        message,
-                        getString(R.string.comment_notification_channel_id),
-                        requireContext()
-                )
+            builder.setPositiveButton("Yes") { dialogInterface, which ->
+                // Set the IsSubmitted value directly under classId
+                if (homeroomNum != null) {
+                    attendanceRef.child(formatter.format(attendanceDate))
+                        .child(homeroomNum)
+                        .child("IsSubmitted")
+                        .setValue(true)
+                        .addOnSuccessListener {
+                            createChannel(getString(R.string.comment_notification_channel_id), "12345")
+                            val title = "REACHED"
+                            val message = "Absence report has been transmitted successfully to notify parents."
+                            notificationManager.sendNotification(
+                                title,
+                                message,
+                                getString(R.string.comment_notification_channel_id),
+                                requireContext()
+                            )
 
-                Toast.makeText(requireContext(),"Attendance Submitted",Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
+                            Toast.makeText(requireContext(), "Attendance Submitted", Toast.LENGTH_LONG).show()
+                            findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
+                        }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(requireContext(), "Error submitting attendance: ${exception.message}", Toast.LENGTH_LONG).show()
+                        }
+                }
             }
             //performing negative action
-            builder.setNegativeButton("No"){dialogInterface, which ->
-                Toast.makeText(requireContext(),"Cancelled Submit",Toast.LENGTH_LONG).show()
+            builder.setNegativeButton("No") { dialogInterface, which ->
+                Toast.makeText(requireContext(), "Cancelled Submit", Toast.LENGTH_LONG).show()
             }
             // Create the AlertDialog
             val alertDialog: AlertDialog = builder.create()
@@ -214,6 +172,7 @@ class TeacherAttendanceView : Fragment() {
             alertDialog.setCancelable(false)
             alertDialog.show()
         }
+
         studentRecyclerView.setOnClickListener {  }
         return view
     }
@@ -272,7 +231,7 @@ class TeacherAttendanceView : Fragment() {
                                 ) {
                                     attendanceRef.child(dateFormat.format(date))
                                         .child(s.classId)
-                                        .child(s.classId)
+                                        .child(s.name)
                                         .child("IsPresent")
                                         .setValue(true)
                                 }
@@ -284,7 +243,7 @@ class TeacherAttendanceView : Fragment() {
                         })
 
                     }
-                    attendanceRef.child(dateFormat.format(date))
+                    attendanceRef.child(dateFormat.format(date)).child(homeroom)
                         .child("IsSubmitted").setValue(false)
                     studentAdapter.setData(studentList)
                 }

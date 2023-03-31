@@ -64,17 +64,21 @@ class TeacherMainMenu : Fragment() {
                         dsp.key?.let { it1 -> datesList.add(it1) }
                     }
                     if (datesList.contains(currentDate)) {
-                        val checkSubmitted = dataSnapshot.child(currentDate).child("IsSubmitted")
-                        if (checkSubmitted.value == true) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Attendance already submitted, come back tomorrow!",
-                                Toast.LENGTH_LONG
-                            ).show()
+                        val checkSubmitted = teacher?.let { it1 ->
+                            dataSnapshot.child(currentDate).child(
+                                it1.homeroomNumber).child("IsSubmitted")
                         }
-                        else{
+                        if (checkSubmitted != null) {
+                            if (checkSubmitted.value == true) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Attendance already submitted, come back tomorrow!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else{
 
-                            findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
+                                findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
+                            }
                         }
                     } else {
                         findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
