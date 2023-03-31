@@ -15,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.Models.*
 import com.example.reachedapp.R
 import com.example.reachedapp.Util.Session
+
+import com.example.reachedapp.Util.MyFirebaseMessagingService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,6 +27,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+
+
 
 
 class HomeFragment : Fragment() {
@@ -127,6 +131,10 @@ class HomeFragment : Fragment() {
 
                     // Store user in session
                     Session.storeUser(requireContext(), user)
+
+                    // Update the device token in the database
+                    MyFirebaseMessagingService.sendRegistrationToServer(requireContext(), user)
+
 
                     // Redirect to appropriate menu based on user role
                     when (user) {

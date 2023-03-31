@@ -8,7 +8,8 @@ open class User(
     val name: String,
     val email: String,
     val password: String,
-    val userRole: UserRole
+    val userRole: UserRole,
+    var deviceToken: String? = null
     ) : Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
@@ -23,6 +24,7 @@ open class User(
         parcel.writeString(email)
         parcel.writeString(password)
         parcel.writeSerializable(userRole)
+
     }
 
     override fun describeContents(): Int {
@@ -53,8 +55,9 @@ class Parent(
         name: String = "",
         email: String = "",
         password: String = "",
-    var children: List<String> = emptyList()
-    ) : User(userId, name, email, password, UserRole.PARENT){
+    var children: List<String> = emptyList(),
+        deviceToken: String? = null // Add this line
+    ) : User(userId, name, email, password, UserRole.Parent, deviceToken){
 
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
@@ -64,7 +67,7 @@ class Parent(
             parcel.createStringArrayList()!!
     )
 
-    constructor() : this("", "", "", "", emptyList())
+    constructor() : this("", "", "", "", emptyList(), null)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
@@ -96,9 +99,10 @@ class Teacher(
         name: String = "",
         email: String = "",
         password: String = "",
-        var homeroomNumber: String = "" )
-
-    : User(userId, name, email, password, UserRole.TEACHER), Parcelable {
+        var homeroomNumber: String = "",
+        deviceToken: String? = null // Add this line
+)
+    : User(userId, name, email, password, UserRole.Teacher, deviceToken), Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             parcel.readString()!!,
@@ -107,7 +111,7 @@ class Teacher(
             parcel.readString()!!
 
     )
-    constructor() : this("", "", "", "", "")
+    constructor() : this("", "", "", "", "", null)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
@@ -141,16 +145,17 @@ class Admin(
     userId: String,
     name: String,
     email: String,
-    password: String
-    ) : User(userId, name, email, password, UserRole.ADMIN){
-    constructor() : this("", "", "", "")
+    password: String,
+    deviceToken: String? = null // Add this line
+    ) : User(userId, name, email, password, UserRole.Admin, deviceToken){
+    constructor() : this("", "", "", "", null)
 }
 
 enum class UserRole {
-    DEFAULT,
-    PARENT,
-    TEACHER,
-    ADMIN
+    Default,
+    Parent,
+    Teacher,
+    Admin
 }
 
 
