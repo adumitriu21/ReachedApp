@@ -212,48 +212,27 @@ class TeacherAttendanceView : Fragment() {
 
     }
 
-    private fun populateClassList(homeroom: String, date: Date, dateFormat: SimpleDateFormat ){
-
+    private fun populateClassList(homeroom: String, date: Date, dateFormat: SimpleDateFormat) {
         // Retrieve the list of all Student objects from your data source
-
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (dsp in dataSnapshot.children) {
                     val s = dsp.getValue(Student::class.java)
                     if (s != null && s.classId == homeroom) {
                         studentList.add(s)
-                        attendanceRef.addListenerForSingleValueEvent(object :
-                            ValueEventListener {
-                            override fun onDataChange(attSnapshot: DataSnapshot) {
-                                if (!attSnapshot.child(dateFormat.format(date))
-                                        .child(s.classId)
-                                        .child(s.name).hasChild("IsPresent")
-                                ) {
-                                    attendanceRef.child(dateFormat.format(date))
-                                        .child(s.classId)
-                                        .child(s.name)
-                                        .child("IsPresent")
-                                        .setValue(true)
-                                }
-                            }
-
-                            override fun onCancelled(attError: DatabaseError) {
-                                println("The read failed: " + attError.code)
-                            }
-                        })
-
+                        val attendanceRef = database.getReference("Attendance").child(dateFormat.format(date)).child(s.classId).child(s.studentId)
+                        attendanceRef.child("IsPresent").setValue(true)
                     }
-                    attendanceRef.child(dateFormat.format(date)).child(homeroom)
-                        .child("IsSubmitted").setValue(false)
-                    studentAdapter.setData(studentList)
                 }
+                database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted").setValue(true)
+                studentAdapter.setData(studentList)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 println("The read failed: " + databaseError.code)
             }
         })
-
     }
+
 
 }

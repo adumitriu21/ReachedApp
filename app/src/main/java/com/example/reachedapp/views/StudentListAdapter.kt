@@ -40,10 +40,10 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(attSnapshot: DataSnapshot) {
                 val attStat = attSnapshot.child(formatter.format(date)).child(currentStudent.classId)
-                        .child(currentStudent.name).child("IsPresent").value
+                        .child(currentStudent.studentId).child("IsPresent").value
                 checkBox.isChecked = attStat == true || attStat == null
                 if (!checkBox.isChecked) {
-                    absentStudents.add(currentStudent.name)
+                    absentStudents.add(currentStudent.studentId)
                 }
             }
             override fun onCancelled(attError: DatabaseError) {
@@ -54,14 +54,14 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         checkBox.setOnCheckedChangeListener{ _, _ ->
             if(checkBox.isChecked)
             {
-                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.name).child("IsPresent").setValue(true)
-                if(absentStudents.contains(currentStudent.name)) {
-                    absentStudents.remove(currentStudent.name)
+                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.studentId).child("IsPresent").setValue(true)
+                if(absentStudents.contains(currentStudent.studentId)) {
+                    absentStudents.remove(currentStudent.studentId)
                 }
             } else {
-                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.name).child("IsPresent").setValue(false)
-                if(!absentStudents.contains(currentStudent.name)) {
-                    absentStudents.add(currentStudent.name)
+                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.studentId).child("IsPresent").setValue(false)
+                if(!absentStudents.contains(currentStudent.studentId)) {
+                    absentStudents.add(currentStudent.studentId)
                 }
             }
 
