@@ -1,7 +1,9 @@
 package com.example.reachedapp.views
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,7 @@ import com.example.reachedapp.Util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class ParentMainMenu : Fragment() {
@@ -36,6 +39,7 @@ class ParentMainMenu : Fragment() {
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireContext(), gso)
+        getFCMToken()
 
         // Getting user from session
         val loggedInUser = Session.getUser(requireContext())
@@ -57,7 +61,24 @@ class ParentMainMenu : Fragment() {
         signOutBtn.setOnClickListener {
             signOut()
         }
+
+
         return view
+    }
+
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log the token and/or send it to your server
+            Log.d(TAG, "FCM registration token: $token")
+        }
     }
 
     private fun signOut() {
@@ -68,4 +89,6 @@ class ParentMainMenu : Fragment() {
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }
     }
+
+
 }

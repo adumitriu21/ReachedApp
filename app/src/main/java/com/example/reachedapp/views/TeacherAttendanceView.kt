@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.Models.Student
 import com.example.reachedapp.Models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.Util.NOTIFICATION_CHANNEL_ID
+import com.example.reachedapp.Util.NOTIFICATION_CHANNEL_NAME
 import com.example.reachedapp.sendNotification
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -186,9 +188,9 @@ class TeacherAttendanceView : Fragment() {
     private fun createChannel(channelId : String, channelName : String){
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O){
             val notificationChannel = NotificationChannel(
-                    channelId,
-                    channelName,
-                    NotificationManager.IMPORTANCE_HIGH
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 enableLights(true)
                 enableVibration(true)
@@ -197,6 +199,7 @@ class TeacherAttendanceView : Fragment() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }
+
 
     private  fun filter(e: String) {
         //Declare the array list that holds the filtered values
@@ -224,7 +227,7 @@ class TeacherAttendanceView : Fragment() {
                         attendanceRef.child("IsPresent").setValue(true)
                     }
                 }
-                database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted").setValue(true)
+                database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted").setValue(false)
                 studentAdapter.setData(studentList)
             }
 
