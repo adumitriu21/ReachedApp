@@ -9,6 +9,17 @@
     <color name="white">#FFFFFFFF</color>
     <color name="alice_white">#e2d1c3</color>
     <color name="lilia">#fdfcfb</color>
+    <color name="light_orange">#FFDAB9</color>
     <color name="gold">#f7911d</color>
+    <color name="dark_blue">#0B1622</color>
+    <color name="light_blue">#D3E7FF</color>
+    <color name="green">#28A745</color>
+    <color name="light_green">#E1F1DD</color>
+    <color name="pink">#F72F81</color>
+    <color name="light_pink">#FED4E8</color>
+    <color name="purple">#8B5BEF</color>
+    <color name="light_purple">#E9D8FD</color>
+    <color name="gray">#9B9B9B</color>
+    <color name="light_gray">#F1F1F1</color>
 
 </resources>
