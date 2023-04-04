@@ -70,7 +70,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String?, body: String?) {
-        // Create a notification channel for Android 8.0 (API level 26) and higher
+        // Create a notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notification Channel"
             val descriptionText = "Notification Channel for Reached App"

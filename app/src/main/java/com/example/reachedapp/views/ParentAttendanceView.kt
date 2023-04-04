@@ -38,7 +38,7 @@ class ParentAttendanceView : Fragment() {
     private lateinit var dateTV: TextView
     private lateinit var calendarView: CalendarView
     private var studentList: MutableList<Student> = ArrayList<Student>()
-    private var studentAdapter = StudentListAdapter()
+    private var studentAdapter = StudentListAdapter(isParentView = true)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,9 +154,9 @@ class ParentAttendanceView : Fragment() {
                                     val s = dsp.getValue(Student::class.java)
                                     if (s != null && s.name == std) {
                                         attendanceRef.child(formatter.format(attendanceDate))
-                                                .child("Reported Absences")
                                                 .child(s.classId)
-                                                .child(s.name)
+                                                .child("Reported Absences")
+                                                .child(s.studentId)
                                                 .child("IsPresent")
                                                 .setValue(false)
                                     }

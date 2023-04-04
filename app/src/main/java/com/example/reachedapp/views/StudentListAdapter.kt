@@ -15,7 +15,7 @@ import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
 
-class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHolder>() {
+class StudentListAdapter(private val isParentView: Boolean = false): RecyclerView.Adapter<StudentListAdapter.StudentViewHolder>() {
 
     private var studentList = emptyList<Student>()
     private val database = FirebaseDatabase.getInstance()
@@ -39,8 +39,15 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
 
         attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(attSnapshot: DataSnapshot) {
-                val attStat = attSnapshot.child(formatter.format(date)).child(currentStudent.classId)
+                val attStat = if (isParentView) {
+                    attSnapshot.child(currentStudent.classId)
+                        .child("Reported Absences")
+                        .child(currentStudent.studentId)
+                        .child("IsPresent").value
+                } else {
+                    attSnapshot.child(formatter.format(date)).child(currentStudent.classId)
                         .child(currentStudent.studentId).child("IsPresent").value
+                }
                 checkBox.isChecked = attStat == true || attStat == null
                 if (!checkBox.isChecked) {
                     absentStudents.add(currentStudent.studentId)
@@ -54,15 +61,51 @@ class StudentListAdapter: RecyclerView.Adapter<StudentListAdapter.StudentViewHol
         checkBox.setOnCheckedChangeListener{ _, _ ->
             if(checkBox.isChecked)
             {
-                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.studentId).child("IsPresent").setValue(true)
-                if(absentStudents.contains(currentStudent.studentId)) {
-                    absentStudents.remove(currentStudent.studentId)
+                if(isParentView){
+                    attendanceRef.child(formatter.format(date))
+                        .child(currentStudent.classId)
+                        .child("Reported Absences")
+                        .child(currentStudent.studentId)
+                        .child("IsPresent")
+                        .setValue(true)
+                    if(absentStudents.contains(currentStudent.studentId)) {
+                        absentStudents.remove(currentStudent.studentId)
+                    }
                 }
+                else{
+                    attendanceRef.child(formatter.format(date))
+                        .child(currentStudent.classId)
+                        .child(currentStudent.studentId)
+                        .child("IsPresent")
+                        .setValue(true)
+                    if(absentStudents.contains(currentStudent.studentId)) {
+                        absentStudents.remove(currentStudent.studentId)
+                    }
+                }
+
             } else {
-                attendanceRef.child(formatter.format(date)).child(currentStudent.classId).child(currentStudent.studentId).child("IsPresent").setValue(false)
-                if(!absentStudents.contains(currentStudent.studentId)) {
-                    absentStudents.add(currentStudent.studentId)
+                if(isParentView){
+                    attendanceRef.child(formatter.format(date))
+                        .child(currentStudent.classId)
+                        .child("Reported Absences")
+                        .child(currentStudent.studentId)
+                        .child("IsPresent")
+                        .setValue(false)
+                    if(!absentStudents.contains(currentStudent.studentId)) {
+                        absentStudents.add(currentStudent.studentId)
+                    }
                 }
+                else{
+                    attendanceRef.child(formatter.format(date))
+                        .child(currentStudent.classId)
+                        .child(currentStudent.studentId)
+                        .child("IsPresent")
+                        .setValue(false)
+                    if(!absentStudents.contains(currentStudent.studentId)) {
+                        absentStudents.add(currentStudent.studentId)
+                    }
+                }
+
             }
 
         }
