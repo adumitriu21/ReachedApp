@@ -130,10 +130,11 @@ class ParentAttendanceView : Fragment() {
 
 
         val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.US)
+
         studentRecyclerView.setOnClickListener {  }
 
-
         val submitBtn = view.findViewById<Button>(R.id.submitReport)
+
         submitBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.dialogTitle)
@@ -145,31 +146,23 @@ class ParentAttendanceView : Fragment() {
             builder.setPositiveButton("Yes"){_, _ ->
 
                 val selectedStud = studentAdapter.getSelectedStudents()
-                //if (selectedStud != null) {
-                    for (std in selectedStud) {
-                        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                                for (dsp in dataSnapshot.children) {
-                                    val s = dsp.getValue(Student::class.java)
-                                    if (s != null && s.name == std) {
-                                        attendanceRef.child(formatter.format(attendanceDate))
-                                                .child(s.classId)
-                                                .child("Reported Absences")
-                                                .child(s.studentId)
-                                                .child("IsPresent")
-                                                .setValue(false)
-                                    }
+                for (std in selectedStud) {
+                    ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            for (dsp in dataSnapshot.children) {
+                                val s = dsp.getValue(Student::class.java)
+                                if (s != null && s.studentId == std) {
+                                    studentAdapter.updateAttendance(false, isParentView = true, teacherNotified = true)
                                 }
                             }
+                        }
 
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            println("The read failed: " + databaseError.code)
+                        }
+                    })
+                }
 
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                println("The read failed: " + databaseError.code)
-                            }
-                        })
-                    }
-                //}
 
 
                 createChannel(getString(R.string.comment_notification_channel_id))

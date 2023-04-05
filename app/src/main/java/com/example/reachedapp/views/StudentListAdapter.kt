@@ -21,7 +21,7 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
     private val database = FirebaseDatabase.getInstance()
     private val attendanceRef = database.getReference("Attendance")
     private var absentStudents: MutableList<String> = ArrayList<String>()
-
+    private lateinit var currentStudent: Student
     class StudentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
@@ -30,7 +30,7 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-        val currentStudent = studentList[position]
+        currentStudent = studentList[position]
         val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val date = Date()
         holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.name
@@ -44,6 +44,10 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
                         .child("Reported Absences")
                         .child(currentStudent.studentId)
                         .child("IsPresent").value
+                    attSnapshot.child(currentStudent.classId)
+                        .child("Reported Absences")
+                        .child(currentStudent.studentId)
+                        .child("teacherNotified").value
                 } else {
                     attSnapshot.child(formatter.format(date)).child(currentStudent.classId)
                         .child(currentStudent.studentId).child("IsPresent").value
@@ -58,58 +62,9 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
             }
         })
 
-        checkBox.setOnCheckedChangeListener{ _, _ ->
-            if(checkBox.isChecked)
-            {
-                if(isParentView){
-                    attendanceRef.child(formatter.format(date))
-                        .child(currentStudent.classId)
-                        .child("Reported Absences")
-                        .child(currentStudent.studentId)
-                        .child("IsPresent")
-                        .setValue(true)
-                    if(absentStudents.contains(currentStudent.studentId)) {
-                        absentStudents.remove(currentStudent.studentId)
-                    }
-                }
-                else{
-                    attendanceRef.child(formatter.format(date))
-                        .child(currentStudent.classId)
-                        .child(currentStudent.studentId)
-                        .child("IsPresent")
-                        .setValue(true)
-                    if(absentStudents.contains(currentStudent.studentId)) {
-                        absentStudents.remove(currentStudent.studentId)
-                    }
-                }
-
-            } else {
-                if(isParentView){
-                    attendanceRef.child(formatter.format(date))
-                        .child(currentStudent.classId)
-                        .child("Reported Absences")
-                        .child(currentStudent.studentId)
-                        .child("IsPresent")
-                        .setValue(false)
-                    if(!absentStudents.contains(currentStudent.studentId)) {
-                        absentStudents.add(currentStudent.studentId)
-                    }
-                }
-                else{
-                    attendanceRef.child(formatter.format(date))
-                        .child(currentStudent.classId)
-                        .child(currentStudent.studentId)
-                        .child("IsPresent")
-                        .setValue(false)
-                    if(!absentStudents.contains(currentStudent.studentId)) {
-                        absentStudents.add(currentStudent.studentId)
-                    }
-                }
-
-            }
-
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            updateAttendance(isChecked, isParentView)
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -126,7 +81,32 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
         return absentStudents
     }
 
-    fun resetSelectedStudents() {
-        absentStudents.clear()
+    fun updateAttendance(isPresent: Boolean, isParentView: Boolean, teacherNotified: Boolean = false) {
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
+        val date = Date()
+        val attendancePath = if (isParentView) {
+            attendanceRef.child(formatter.format(date))
+                .child(currentStudent.classId)
+                .child("Reported Absences")
+                .child(currentStudent.studentId)
+
+
+        } else {
+            attendanceRef.child(formatter.format(date))
+                .child(currentStudent.classId)
+                .child(currentStudent.studentId)
+                .child("IsPresent")
+        }
+
+        attendancePath.child("IsPresent").setValue(isPresent)
+        attendancePath.child("TeacherNotified").setValue(teacherNotified)
+
+        if (isPresent) {
+            absentStudents.remove(currentStudent.studentId)
+        } else {
+            if (!absentStudents.contains(currentStudent.studentId)) {
+                absentStudents.add(currentStudent.studentId)
+            }
+        }
     }
 }
