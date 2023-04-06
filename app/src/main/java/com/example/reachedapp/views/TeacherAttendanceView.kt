@@ -113,11 +113,11 @@ class TeacherAttendanceView : Fragment() {
             }
         })
 
-        val homeroomNum = teacher?.homeroomNumber
+        val classId = teacher?.classId
 
         // Populate the class list
-        if (homeroomNum != null) {
-            populateClassList(homeroomNum, attendanceDate, formatter)
+        if (classId != null) {
+            populateClassList(classId, attendanceDate, formatter)
         }
 
         val submitBtn = view.findViewById<Button>(R.id.submitAttendance)
@@ -140,9 +140,9 @@ class TeacherAttendanceView : Fragment() {
             //performing positive action
             builder.setPositiveButton("Yes") { dialogInterface, which ->
                 // Set the IsSubmitted value directly under classId
-                if (homeroomNum != null) {
+                if (classId != null) {
                     attendanceRef.child(formatter.format(attendanceDate))
-                        .child(homeroomNum)
+                        .child(classId)
                         .child("IsSubmitted")
                         .setValue(true)
                         .addOnSuccessListener {

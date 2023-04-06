@@ -99,7 +99,7 @@ class Teacher(
         name: String = "",
         email: String = "",
         password: String = "",
-        var homeroomNumber: String = "",
+        var classId: String = "",
         deviceToken: String? = null // Add this line
 )
     : User(userId, name, email, password, UserRole.Teacher, deviceToken), Parcelable {
@@ -115,7 +115,7 @@ class Teacher(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
-        parcel.writeString(homeroomNumber)
+        parcel.writeString(classId)
     }
 
     override fun describeContents(): Int {

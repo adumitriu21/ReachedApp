@@ -152,8 +152,18 @@ class ParentAttendanceView : Fragment() {
                             for (dsp in dataSnapshot.children) {
                                 val s = dsp.getValue(Student::class.java)
                                 if (s != null && s.studentId == std) {
-                                    studentAdapter.updateAttendance(false, isParentView = true, teacherNotified = true)
-                                }
+                                    // Update the attendance data in the database
+                                    attendanceRef.child(formatter.format(attendanceDate))
+                                        .child(s.classId)
+                                        .child("Reported Absences")
+                                        .child(s.studentId)
+                                        .setValue(
+                                            mapOf(
+                                                "IsPresent" to false,
+                                                "TeacherNotified" to false
+                                            )
+                                        )
+                                    }
                             }
                         }
 

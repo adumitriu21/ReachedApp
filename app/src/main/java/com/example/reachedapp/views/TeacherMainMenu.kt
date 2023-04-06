@@ -66,7 +66,7 @@ class TeacherMainMenu : Fragment() {
                     if (datesList.contains(currentDate)) {
                         val checkSubmitted = teacher?.let { it1 ->
                             dataSnapshot.child(currentDate).child(
-                                it1.homeroomNumber).child("IsSubmitted")
+                                it1.classId).child("IsSubmitted")
                         }
                         if (checkSubmitted != null) {
                             if (checkSubmitted.value == true) {
