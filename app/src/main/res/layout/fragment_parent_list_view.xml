@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background"
+    tools:context=".views.ParentListView">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contacts"
+        android:textAllCaps="true"
+        android:textColor="@color/light_orange"
+        android:textStyle="bold"
+        android:textSize="35sp"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/parentsList"
+        tools:listitem="@layout/item_parents_list"
+        tools:itemCount="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

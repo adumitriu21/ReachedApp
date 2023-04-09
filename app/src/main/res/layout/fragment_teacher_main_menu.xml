@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WelcomeTeacher"
+        android:text="Hi Teacher - "
         android:layout_marginTop="200dp"
         android:layout_marginLeft="80dp"
         android:textColor="@color/black"
@@ -33,7 +33,7 @@
         android:id="@+id/teacherName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="name"
         android:layout_marginTop="200dp"
         android:layout_marginLeft="230dp"
         android:textColor="@color/black"

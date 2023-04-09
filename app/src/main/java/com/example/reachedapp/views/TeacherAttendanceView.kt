@@ -223,12 +223,15 @@ class TeacherAttendanceView : Fragment() {
                     val s = dsp.getValue(Student::class.java)
                     if (s != null && s.classId == homeroom) {
                         studentList.add(s)
+
                         val attendanceRef = database.getReference("Attendance").child(dateFormat.format(date)).child(s.classId).child(s.studentId)
                         attendanceRef.child("IsPresent").setValue(true)
                     }
                 }
                 database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted").setValue(false)
+                println(studentList)
                 studentAdapter.setData(studentList)
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
