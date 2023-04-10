@@ -1,7 +1,6 @@
 package com.example.reachedapp.data
 
-import com.example.reachedapp.Models.Admin
-import com.example.reachedapp.Models.Parent
+import com.example.reachedapp.models.Admin
 
 class AdminList {
 

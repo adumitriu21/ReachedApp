@@ -1,7 +1,6 @@
 package com.example.reachedapp.views
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +12,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
-import com.example.reachedapp.Models.Teacher
+import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
-import com.example.reachedapp.Util.Session
+import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

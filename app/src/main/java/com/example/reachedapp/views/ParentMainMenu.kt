@@ -13,9 +13,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
-import com.example.reachedapp.Models.Parent
+import com.example.reachedapp.models.Parent
 import com.example.reachedapp.R
-import com.example.reachedapp.Util.Session
+import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

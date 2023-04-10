@@ -1,4 +1,4 @@
-package com.example.reachedapp.Models
+package com.example.reachedapp.models
 
 import android.os.Parcel
 import android.os.Parcelable

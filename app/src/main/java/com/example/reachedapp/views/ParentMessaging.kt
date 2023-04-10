@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reachedapp.Models.Message
-import com.example.reachedapp.Models.Parent
-import com.example.reachedapp.Models.Teacher
+import com.example.reachedapp.models.Message
+import com.example.reachedapp.models.Parent
+import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

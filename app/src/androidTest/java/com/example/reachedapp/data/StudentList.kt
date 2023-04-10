@@ -1,6 +1,6 @@
 package com.example.reachedapp.data
 
-import com.example.reachedapp.Models.Student
+import com.example.reachedapp.models.Student
 
 /*
 * Class where all the hard coded student data resides

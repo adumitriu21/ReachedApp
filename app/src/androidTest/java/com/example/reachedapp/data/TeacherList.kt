@@ -1,6 +1,6 @@
 package com.example.reachedapp.data
 
-import com.example.reachedapp.Models.Teacher
+import com.example.reachedapp.models.Teacher
 
 class TeacherList {
     fun initializeTeacherList(): ArrayList<Teacher> {

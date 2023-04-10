@@ -1,4 +1,4 @@
-package com.example.reachedapp.Models
+package com.example.reachedapp.models
 
 data class Message(
     val sender: String = "",

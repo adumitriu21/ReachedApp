@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reachedapp.Models.Student
+import com.example.reachedapp.models.Student
 import com.example.reachedapp.R
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

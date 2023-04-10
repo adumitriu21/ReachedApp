@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.R
-import com.example.reachedapp.Util.Session
+import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

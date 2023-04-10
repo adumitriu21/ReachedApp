@@ -1,4 +1,4 @@
-package com.example.reachedapp.Util
+package com.example.reachedapp.util
 
 import android.Manifest
 import android.R
@@ -12,13 +12,12 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.reachedapp.Models.User
-import com.example.reachedapp.Models.UserRole
+import com.example.reachedapp.models.User
+import com.example.reachedapp.models.UserRole
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import org.json.JSONStringer
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

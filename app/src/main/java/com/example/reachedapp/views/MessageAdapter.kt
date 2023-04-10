@@ -1,13 +1,11 @@
 package com.example.reachedapp.views
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reachedapp.Models.Message
-import com.example.reachedapp.Models.Parent
+import com.example.reachedapp.models.Message
 import com.example.reachedapp.R
 
 class MessageAdapter () :

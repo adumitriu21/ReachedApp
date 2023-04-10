@@ -1,19 +1,14 @@
-package com.example.reachedapp.Controllers
+package com.example.reachedapp.controllers
 
 import android.content.Context
-import androidx.core.content.ContentProviderCompat.requireContext
-import com.example.reachedapp.Models.User
-import com.example.reachedapp.Util.MyFirebaseMessagingService
-import com.example.reachedapp.Util.Session
+import com.example.reachedapp.interfaces.AuthenticationCallback
+import com.example.reachedapp.models.User
+import com.example.reachedapp.util.MyFirebaseMessagingService
+import com.example.reachedapp.util.Session
 import com.google.firebase.auth.FirebaseAuth
 
-interface LoginCallback {
-    fun onLoginSuccess(user: User)
-    fun onLoginError()
-}
-
 class AuthController(private val auth: FirebaseAuth) {
-    fun authenticateUser(context: Context, user: User, callback: LoginCallback) {
+    fun authenticateUser(context: Context, user: User, callback: AuthenticationCallback) {
         auth.signInWithEmailAndPassword(user.email, user.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -28,7 +23,6 @@ class AuthController(private val auth: FirebaseAuth) {
                                 )
                             }
                         }
-
                     // Store user in session
                     Session.storeUser(context, user)
 
@@ -36,10 +30,10 @@ class AuthController(private val auth: FirebaseAuth) {
                     MyFirebaseMessagingService.sendRegistrationToServer(context, user)
 
                     // Call onLoginSuccess callback
-                    callback.onLoginSuccess(user)
+                    callback.onAuthenticationSuccess(user)
                 } else {
                     // Login failed, call onLoginError callback
-                    callback.onLoginError()
+                    callback.onAuthenticationFailure()
                 }
             }
     }

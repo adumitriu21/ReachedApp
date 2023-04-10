@@ -1,4 +1,4 @@
-package com.example.reachedapp.Models
+package com.example.reachedapp.models
 
 class Student(
     val studentId: String = "",

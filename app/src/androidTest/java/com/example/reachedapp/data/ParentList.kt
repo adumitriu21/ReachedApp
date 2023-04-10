@@ -1,6 +1,6 @@
 package com.example.reachedapp.data
 
-import com.example.reachedapp.Models.Parent
+import com.example.reachedapp.models.Parent
 
 class ParentList {
 

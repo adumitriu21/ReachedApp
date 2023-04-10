@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_teacher_main_menu" >
         <argument
             android:name="teacher"
-            app:argType="com.example.reachedapp.Models.Teacher" />
+            app:argType="com.example.reachedapp.models.Teacher" />
         <action
             android:id="@+id/action_teacherMainMenu_to_teacherAttendanceView"
             app:destination="@id/teacherAttendanceView" />
@@ -59,10 +59,10 @@
             app:destination="@id/teacherMessaging">
             <argument
                 android:name="teacher"
-                app:argType="com.example.reachedapp.Models.Teacher"/>
+                app:argType="com.example.reachedapp.models.Teacher"/>
             <argument
                 android:name="parent"
-                app:argType="com.example.reachedapp.Models.Parent"/>
+                app:argType="com.example.reachedapp.models.Parent"/>
         </action>
     </fragment>
 
@@ -76,10 +76,10 @@
             app:destination="@id/parentMessaging">
             <argument
                 android:name="teacher"
-                app:argType="com.example.reachedapp.Models.Teacher"/>
+                app:argType="com.example.reachedapp.models.Teacher"/>
             <argument
                 android:name="parent"
-                app:argType="com.example.reachedapp.Models.Parent"/>
+                app:argType="com.example.reachedapp.models.Parent"/>
         </action>
     </fragment>
 
@@ -90,7 +90,7 @@
         tools:layout="@layout/fragment_parent_main_menu" >
         <argument
             android:name="parent"
-            app:argType="com.example.reachedapp.Models.Parent"/>
+            app:argType="com.example.reachedapp.models.Parent"/>
         <action
             android:id="@+id/action_parentMainMenu_to_parentAttendanceView"
             app:destination="@id/parentAttendanceView" />
@@ -137,7 +137,7 @@
         tools:layout="@layout/fragment_admin_main_menu" >
         <argument
             android:name="admin"
-            app:argType="com.example.reachedapp.Models.Admin"/>
+            app:argType="com.example.reachedapp.models.Admin"/>
         <action
             android:id="@+id/action_adminMainMenu2_to_homeFragment3"
             app:destination="@id/homeFragment3" />

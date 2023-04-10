@@ -11,20 +11,19 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.reachedapp.Controllers.AuthController
-import com.example.reachedapp.Controllers.LoginCallback
-import com.example.reachedapp.Models.*
+import com.example.reachedapp.controllers.AuthController
+import com.example.reachedapp.interfaces.AuthenticationCallback
+import com.example.reachedapp.models.*
 import com.example.reachedapp.R
+import com.example.reachedapp.repositories.UserRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+
 class HomeFragment : Fragment() {
 
     private lateinit var gso: GoogleSignInOptions
@@ -33,11 +32,13 @@ class HomeFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private var database = FirebaseDatabase.getInstance()
     private lateinit var authController: AuthController
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
         authController = AuthController(auth)
+        userRepository = UserRepository(database)
 
     }
 
@@ -79,7 +80,7 @@ class HomeFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 // Launch a coroutine to wait for the database operation to complete
                 lifecycleScope.launch {
-                    val user = getUserFromDatabase( email)
+                    val user = userRepository.getUserFromDatabase( email)
                     if (user == null) {
                         // User not found, display an error message
                         Toast.makeText(
@@ -103,8 +104,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun authenticateUser(user: User) {
-        authController.authenticateUser(requireContext(), user, object : LoginCallback {
-            override fun onLoginSuccess(user: User) {
+        authController.authenticateUser(requireContext(), user, object : AuthenticationCallback {
+            override fun onAuthenticationSuccess(user: User) {
                 // Redirect to appropriate menu based on user role
                 when (user) {
                     is Teacher -> {
@@ -122,7 +123,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            override fun onLoginError() {
+            override fun onAuthenticationFailure() {
                 Toast.makeText(activity, "Login failed. Please try again.", Toast.LENGTH_SHORT).show()
             }
         })
@@ -130,49 +131,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    private suspend fun getUserFromDatabase(
 
-        email: String
-
-    ): Any? = withContext(Dispatchers.IO) {
-        var user: Any? = null
-        val usersRef = database.reference
-        try {
-            val teacherSnapshot = usersRef.child("Teacher").orderByChild("email").equalTo(email).get().await()
-            for (snapshot in teacherSnapshot.children) {
-                val teacher = snapshot.getValue(Teacher::class.java)
-                if (teacher != null) {
-                    user = teacher
-                    break
-                }
-            }
-
-            if (user == null) {
-                val parentSnapshot = usersRef.child("Parent").orderByChild("email").equalTo(email).get().await()
-                for (snapshot in parentSnapshot.children) {
-                    val parent = snapshot.getValue(Parent::class.java)
-                    if (parent != null) {
-                        user = parent
-                        break
-                    }
-                }
-            }
-
-            if (user == null) {
-                val adminSnapshot = usersRef.child("Admin").orderByChild("email").equalTo(email).get().await()
-                for (snapshot in adminSnapshot.children) {
-                    val admin = snapshot.getValue(Admin::class.java)
-                    if (admin != null) {
-                        user = admin
-                        break
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            // Handle exception
-        }
-        user
-    }
 
 
     private fun signIn() {
@@ -191,7 +150,7 @@ class HomeFragment : Fragment() {
                     if (email != null) {
                         // Launch a coroutine to wait for the database operation to complete
                         lifecycleScope.launch {
-                            val user = getUserFromDatabase(email)
+                            val user = userRepository.getUserFromDatabase(email)
                             if (user == null) {
                                 Toast.makeText(
                                     requireContext(),

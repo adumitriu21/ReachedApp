@@ -1,7 +1,7 @@
-package com.example.reachedapp.Util
+package com.example.reachedapp.util
 
 import android.content.Context
-import com.example.reachedapp.Models.User
+import com.example.reachedapp.models.User
 import com.google.gson.Gson
 import java.util.*
 

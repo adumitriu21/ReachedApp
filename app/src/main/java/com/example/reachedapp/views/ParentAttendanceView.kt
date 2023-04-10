@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reachedapp.Models.Parent
-import com.example.reachedapp.Models.Student
+import com.example.reachedapp.models.Parent
+import com.example.reachedapp.models.Student
 import com.example.reachedapp.R
 import com.example.reachedapp.sendNotification
 import com.google.firebase.database.DataSnapshot
