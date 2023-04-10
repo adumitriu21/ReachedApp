@@ -2,6 +2,7 @@ package com.example.reachedapp.controllers
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.reachedapp.interfaces.OnGoogleAuthListener
@@ -14,10 +15,9 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 
 
-class GoogleAuthController(private val context: Context) {
+class GoogleAuthController(private val context: Context, private val listener: OnGoogleAuthListener) {
 
     private var gsc: GoogleSignInClient
-    private lateinit var listener: OnGoogleAuthListener
 
     init {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -27,17 +27,11 @@ class GoogleAuthController(private val context: Context) {
         gsc = GoogleSignIn.getClient(context, gso)
     }
 
-    fun setOnGoogleAuthListener(listener: OnGoogleAuthListener) {
-        this.listener = listener
-    }
-
-
     fun signIn(fragment: Fragment) {
         listener?.onGoogleAuthStart()
         val signInIntent = gsc.signInIntent
         fragment.startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-
 
     fun signOut() {
         gsc.signOut().addOnCompleteListener { task: Task<Void?> ->
@@ -49,7 +43,7 @@ class GoogleAuthController(private val context: Context) {
         }
     }
 
-    fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+    fun handleSignInTask(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             if (account != null) {
@@ -62,4 +56,10 @@ class GoogleAuthController(private val context: Context) {
         }
     }
 
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInTask(task)
+        }
+    }
 }

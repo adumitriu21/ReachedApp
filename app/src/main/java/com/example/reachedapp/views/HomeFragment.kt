@@ -15,8 +15,11 @@ import com.example.reachedapp.controllers.AuthController
 import com.example.reachedapp.interfaces.AuthenticationCallback
 import com.example.reachedapp.models.*
 import com.example.reachedapp.R
+import com.example.reachedapp.controllers.GoogleAuthController
+import com.example.reachedapp.interfaces.OnGoogleAuthListener
 import com.example.reachedapp.repositories.UserRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -33,6 +36,7 @@ class HomeFragment : Fragment() {
     private var database = FirebaseDatabase.getInstance()
     private lateinit var authController: AuthController
     private lateinit var userRepository: UserRepository
+    private lateinit var googleAuthController: GoogleAuthController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +64,9 @@ class HomeFragment : Fragment() {
         val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
 
         googleBtn.setOnClickListener {
-            signIn()
+            googleAuthController.signIn(this)
         }
+
 
         return view
     }
@@ -101,6 +106,53 @@ class HomeFragment : Fragment() {
                 ).show()
             }
         }
+
+        googleAuthController = GoogleAuthController(requireContext(), object : OnGoogleAuthListener{
+            override fun onGoogleAuthStart() {
+                // Show any progress indicator if required
+            }
+
+            override fun onGoogleAuthSuccess(account: GoogleSignInAccount) {
+                val email = account.email
+                if (email != null) {
+                    lifecycleScope.launch {
+                        val user = userRepository.getUserFromDatabase(email)
+                        if (user == null) {
+                            Toast.makeText(
+                                requireContext(),
+                                "No user found for this Google account. Please try another account or log in with your email and password",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            authenticateUser(user as User)
+                        }
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to get email address from Google account. Please try another account or log in with your email and password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onGoogleAuthError() {
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to sign in with Google. Please try again",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onGoogleSignOutSuccess() {
+                // Handle sign-out success if required
+            }
+
+            override fun onGoogleSignOutError() {
+                // Handle sign-out error if required
+            }
+        })
+
     }
 
     private fun authenticateUser(user: User) {
@@ -139,51 +191,10 @@ class HomeFragment : Fragment() {
         startActivityForResult(signInIntent, 1000)
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1000) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                if (account != null) {
-                    val email = account.email
-                    if (email != null) {
-                        // Launch a coroutine to wait for the database operation to complete
-                        lifecycleScope.launch {
-                            val user = userRepository.getUserFromDatabase(email)
-                            if (user == null) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "No user found for this Google account. Please try another account or log in with your email and password",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                // User found, proceed with login
-                                authenticateUser(user as User)
-                            }
-                        }
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to get email address from Google account. Please try another account or log in with your email and password",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Failed to sign in with Google. Please try again",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: ApiException) {
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to sign in with Google. Please try again",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        googleAuthController.handleActivityResult(requestCode, resultCode, data)
     }
 
 }
