@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.interfaces.OnContactClickListener
 
 class ParentListAdapter(
-        private val isTeacherView: Boolean = false,
-        private val listener: OnItemClickListener,
-        private val teacher: Teacher
+    private val isTeacherView: Boolean = false,
+    private val listener: OnContactClickListener,
+    private val teacher: Teacher
 ) : RecyclerView.Adapter<ParentListAdapter.ViewHolder>() {
 
     private var parentList = emptyList<Parent>()

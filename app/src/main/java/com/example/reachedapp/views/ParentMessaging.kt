@@ -82,7 +82,7 @@ class ParentMessaging : Fragment() {
                 val date = Calendar.getInstance().time
                 val dateFormat = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
                 val formattedDate = dateFormat.format(date)
-                val message = Message(parent.name, messageText, formattedDate)
+                val message = Message(parent.name, parent.userId, messageText, formattedDate)
                 val reference = convoRef.child(convoId)
                 val messageId = reference.push().key
                 reference.child(messageId!!).setValue(message)

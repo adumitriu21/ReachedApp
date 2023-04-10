@@ -1,9 +1,9 @@
-package com.example.reachedapp.views
-
+package com.example.reachedapp.interfaces
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.models.Teacher
 
-interface OnItemClickListener {
+interface OnContactClickListener {
+
     fun onParentItemClick(parent: Parent, teacher: Teacher)
 
     fun onTeacherItemClick(teacher: Teacher, parent: Parent)

@@ -33,7 +33,7 @@ class MessageAdapter () :
         fun bind(message: Message) {
             messageTextView.text = message.message
             timeTextView.text = message.timestamp
-            senderTextView.text = message.sender
+            senderTextView.text = message.senderName
         }
     }
 

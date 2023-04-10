@@ -22,7 +22,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.launch
@@ -60,8 +59,6 @@ class HomeFragment : Fragment() {
             .requestEmail()
             .build()
         gsc = GoogleSignIn.getClient(requireActivity(), gso)
-
-        val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
 
         googleBtn.setOnClickListener {
             googleAuthController.signIn(this)
@@ -183,15 +180,7 @@ class HomeFragment : Fragment() {
 
     }
 
-
-
-
-    private fun signIn() {
-        val signInIntent = gsc.signInIntent
-        startActivityForResult(signInIntent, 1000)
-    }
-
-
+    @Deprecated(message = "This function is deprecated. Need to find replacement!")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         googleAuthController.handleActivityResult(requestCode, resultCode, data)
