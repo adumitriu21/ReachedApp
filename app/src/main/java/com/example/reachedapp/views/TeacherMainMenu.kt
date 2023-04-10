@@ -1,6 +1,7 @@
 package com.example.reachedapp.views
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ class TeacherMainMenu : Fragment() {
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
     private lateinit var signOutBtn: ImageView
+    private lateinit var messageButton: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -111,6 +113,13 @@ class TeacherMainMenu : Fragment() {
             signOut()
         }
 
+        messageButton = view.findViewById(R.id.message_parent_btn)
+
+        messageButton.setOnClickListener{
+            val bundle = bundleOf("teacher" to teacher)
+            findNavController().navigate(R.id.action_teacherMainMenu_to_parentListMenu, bundle)
+        }
+
         return view
     }
 
@@ -121,4 +130,5 @@ class TeacherMainMenu : Fragment() {
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }
     }
+
 }

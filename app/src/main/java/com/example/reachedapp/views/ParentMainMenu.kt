@@ -27,6 +27,7 @@ class ParentMainMenu : Fragment() {
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
     private lateinit var signOutBtn: ImageView
+    private lateinit var messageButton: ImageView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -60,6 +61,13 @@ class ParentMainMenu : Fragment() {
         }
         signOutBtn.setOnClickListener {
             signOut()
+        }
+
+        messageButton = view.findViewById(R.id.message_teacher_btn)
+
+        messageButton.setOnClickListener{
+            val bundle = bundleOf("parent" to parent)
+            findNavController().navigate(R.id.action_parentMainMenu_to_teacherListMenu, bundle)
         }
 
 

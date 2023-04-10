@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_teacherMainMenu_to_homeFragment3"
             app:destination="@id/homeFragment3" />
+        <action
+            android:id="@+id/action_teacherMainMenu_to_parentListMenu"
+            app:destination="@id/parentListMenu" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment3"
@@ -47,6 +50,40 @@
     </fragment>
 
     <fragment
+        android:id="@+id/parentListMenu"
+        android:name="com.example.reachedapp.views.ParentListView"
+        android:label="fragment_parent_list_view"
+        tools:layout="@layout/fragment_parent_list_view">
+        <action
+            android:id="@+id/action_parentListMenu_to_teacherMessaging"
+            app:destination="@id/teacherMessaging">
+            <argument
+                android:name="teacher"
+                app:argType="com.example.reachedapp.Models.Teacher"/>
+            <argument
+                android:name="parent"
+                app:argType="com.example.reachedapp.Models.Parent"/>
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/teacherListMenu"
+        android:name="com.example.reachedapp.views.TeacherListView"
+        android:label="fragment_teacher_list_view"
+        tools:layout="@layout/fragment_teacher_list_view">
+        <action
+            android:id="@+id/action_teacherListMenu_to_parentMessaging"
+            app:destination="@id/parentMessaging">
+            <argument
+                android:name="teacher"
+                app:argType="com.example.reachedapp.Models.Teacher"/>
+            <argument
+                android:name="parent"
+                app:argType="com.example.reachedapp.Models.Parent"/>
+        </action>
+    </fragment>
+
+    <fragment
         android:id="@+id/parentMainMenu"
         android:name="com.example.reachedapp.views.ParentMainMenu"
         android:label="fragment_parent_main_menu"
@@ -60,6 +97,9 @@
         <action
             android:id="@+id/action_parentMainMenu_to_homeFragment3"
             app:destination="@id/homeFragment3" />
+        <action
+            android:id="@+id/action_parentMainMenu_to_teacherListMenu"
+            app:destination="@id/teacherListMenu" />
     </fragment>
     <fragment
         android:id="@+id/parentAttendanceView"
@@ -78,6 +118,12 @@
         android:name="com.example.reachedapp.views.TeacherMessaging"
         android:label="fragment_teacher_messaging"
         tools:layout="@layout/fragment_teacher_messaging" >
+    </fragment>
+    <fragment
+        android:id="@+id/parentMessaging"
+        android:name="com.example.reachedapp.views.ParentMessaging"
+        android:label="fragment_parent_messaging"
+        tools:layout="@layout/fragment_parent_messaging" >
     </fragment>
     <fragment
         android:id="@+id/teacherProfileView"
