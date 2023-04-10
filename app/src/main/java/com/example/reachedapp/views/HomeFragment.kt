@@ -1,5 +1,4 @@
 package com.example.reachedapp.views
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,11 +11,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.reachedapp.Controllers.AuthController
+import com.example.reachedapp.Controllers.LoginCallback
 import com.example.reachedapp.Models.*
 import com.example.reachedapp.R
-import com.example.reachedapp.Util.Session
-
-import com.example.reachedapp.Util.MyFirebaseMessagingService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -27,10 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-
-
-
-
 class HomeFragment : Fragment() {
 
     private lateinit var gso: GoogleSignInOptions
@@ -38,11 +32,12 @@ class HomeFragment : Fragment() {
     private lateinit var googleBtn: ImageView
     private lateinit var auth: FirebaseAuth
     private var database = FirebaseDatabase.getInstance()
-
+    private lateinit var authController: AuthController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
+        authController = AuthController(auth)
 
     }
 
@@ -71,7 +66,6 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
         val loginBtn = view.findViewById<Button>(R.id.login_btn)
         val emailTxt = view.findViewById<EditText>(R.id.login_email)
@@ -83,8 +77,6 @@ class HomeFragment : Fragment() {
 
             // Check if email and password are not empty
             if (email.isNotEmpty() && password.isNotEmpty()) {
-
-
                 // Launch a coroutine to wait for the database operation to complete
                 lifecycleScope.launch {
                     val user = getUserFromDatabase( email)
@@ -96,7 +88,6 @@ class HomeFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-
                         // User found, proceed with login
                         authenticateUser(user as User)
                     }
@@ -112,56 +103,32 @@ class HomeFragment : Fragment() {
     }
 
     private fun authenticateUser(user: User) {
-        auth.signInWithEmailAndPassword(user.email, user.password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    // Login successful, start a session
-                    Session.startUserSession(requireContext(), 60)
-                    task.result.user?.getIdToken(true)
-                        ?.addOnCompleteListener { authTask ->
-                            run {
-                                if (authTask.isComplete) {
-                                    Session.storeUserToken(
-                                        requireContext(),
-                                        authTask.result.token.toString()
-                                    )
-                                }
-                            }
-                        }
-
-                    // Store user in session
-                    Session.storeUser(requireContext(), user)
-
-                    // Update the device token in the database
-                    MyFirebaseMessagingService.sendRegistrationToServer(requireContext(), user)
-
-
-                    // Redirect to appropriate menu based on user role
-                    when (user) {
-                        is Teacher -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(user)
-                            findNavController().navigate(action)
-                        }
-                        is Parent -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(user)
-                            findNavController().navigate(action)
-                        }
-                        is Admin -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragment3ToAdminMainMenu22(user)
-                            findNavController().navigate(action)
-                        }
+        authController.authenticateUser(requireContext(), user, object : LoginCallback {
+            override fun onLoginSuccess(user: User) {
+                // Redirect to appropriate menu based on user role
+                when (user) {
+                    is Teacher -> {
+                        val action = HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(user)
+                        findNavController().navigate(action)
                     }
-                } else {
-                    // Login failed, display an error message
-                    Toast.makeText(activity, "Login failed. Please try again.", Toast.LENGTH_SHORT)
-                        .show()
+                    is Parent -> {
+                        val action = HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(user)
+                        findNavController().navigate(action)
+                    }
+                    is Admin -> {
+                        val action = HomeFragmentDirections.actionHomeFragment3ToAdminMainMenu22(user)
+                        findNavController().navigate(action)
+                    }
                 }
             }
-    }
 
+            override fun onLoginError() {
+                Toast.makeText(activity, "Login failed. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+    }
 
     private suspend fun getUserFromDatabase(
 
@@ -204,7 +171,6 @@ class HomeFragment : Fragment() {
         } catch (e: Exception) {
             // Handle exception
         }
-
         user
     }
 
