@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.repositories.AttendanceRepository
 import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -28,13 +29,12 @@ import java.util.*
 
 class TeacherMainMenu : Fragment() {
 
-    private val database = FirebaseDatabase.getInstance()
-    private val attendanceRef = database.getReference("Attendance")
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
     private lateinit var signOutBtn: ImageView
     private lateinit var messageButton: ImageView
+    private lateinit var attendanceRepo: AttendanceRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,10 +44,9 @@ class TeacherMainMenu : Fragment() {
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
         val teacher = arguments?.getParcelable<Teacher>("teacher")
         val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
+        attendanceRepo = AttendanceRepository()
 
-        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
-        val attendanceDate = Date()
-
+        val isSubmitted = arguments?.getBoolean("isSubmitted") ?: false //TEMPORARY WORK AROUND
         attendanceBtn.setOnClickListener {
 
             /*verify if the attendance has previously been submitted. If it has been then a Toast
@@ -55,40 +54,30 @@ class TeacherMainMenu : Fragment() {
             In the even that there is no attendance entry with today's date, or that today's
             attendance has not been submitted, the Teacher will be redirected to the Teacher
             Attendance View screen*/
-            attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val datesList = arrayListOf<String>()
-                    val currentDate = formatter.format(attendanceDate)
+            if(isSubmitted){ //TEMPORARY WORK AROUND
+                Toast.makeText( //TEMPORARY WORK AROUND
+                    requireContext(), //TEMPORARY WORK AROUND
+                    "Attendance already submitted, come back tomorrow!", //TEMPORARY WORK AROUND
+                    Toast.LENGTH_LONG //TEMPORARY WORK AROUND
+                ).show() //TEMPORARY WORK AROUND
+            }else{
+            val teacher = arguments?.getParcelable<Teacher>("teacher")
+            attendanceRepo.isAttendanceSubmitted(teacher?.classId ?: "") { isSubmitted ->
+                if (isSubmitted) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Attendance already submitted, come back tomorrow!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
                     val bundle = bundleOf("teacher" to teacher)
-                    for (dsp in dataSnapshot.children) {
-                        dsp.key?.let { it1 -> datesList.add(it1) }
-                    }
-                    if (datesList.contains(currentDate)) {
-                        val checkSubmitted = teacher?.let { it1 ->
-                            dataSnapshot.child(currentDate).child(
-                                it1.classId).child("IsSubmitted")
-                        }
-                        if (checkSubmitted != null) {
-                            if (checkSubmitted.value == true) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Attendance already submitted, come back tomorrow!",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } else{
-
-                                findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
-                            }
-                        }
-                    } else {
-                        findNavController().navigate(R.id.action_teacherMainMenu_to_teacherAttendanceView, bundle)
-                    }
+                    findNavController().navigate(
+                        R.id.action_teacherMainMenu_to_teacherAttendanceView,
+                        bundle
+                    )
                 }
-                override fun onCancelled(databaseError: DatabaseError) {
-                    println("The read failed: " + databaseError.code)
-                }
-            })
+            }
+            }
         }
 
         name = view.findViewById(R.id.teacherName)
@@ -121,6 +110,8 @@ class TeacherMainMenu : Fragment() {
 
         return view
     }
+
+
 
     private fun signOut() {
         gsc.signOut().addOnCompleteListener(requireActivity()) {

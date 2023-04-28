@@ -85,7 +85,11 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
         val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val date = Date()
         val attendancePath = if (isParentView) {
-
+            attendanceRef.child(formatter.format(date))
+                .child(currentStudent.classId)
+                .child("Reported Absences")
+                .child(currentStudent.studentId)
+                .child("IsPresent")
         } else {
             attendanceRef.child(formatter.format(date))
                 .child(currentStudent.classId)
@@ -94,13 +98,16 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
         }
 
 
-
-        if (isPresent) {
-            absentStudents.remove(currentStudent.studentId)
-        } else {
-            if (!absentStudents.contains(currentStudent.studentId)) {
-                absentStudents.add(currentStudent.studentId)
+        attendancePath.setValue(isPresent).addOnSuccessListener {
+            if (isPresent) {
+                absentStudents.remove(currentStudent.studentId)
+            } else {
+                if (!absentStudents.contains(currentStudent.studentId)) {
+                    absentStudents.add(currentStudent.studentId)
+                }
             }
+        }.addOnFailureListener {
+            // Handle failure
         }
     }
 }

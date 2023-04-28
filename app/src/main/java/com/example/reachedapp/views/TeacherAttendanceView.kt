@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -83,6 +84,7 @@ class TeacherAttendanceView : Fragment() {
 
         val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val attendanceDate = Date()
+        var isSubmitted = false
 
 
 
@@ -149,6 +151,7 @@ class TeacherAttendanceView : Fragment() {
                             createChannel(getString(R.string.comment_notification_channel_id), "12345")
                             val title = "REACHED"
                             val message = "Absence report has been transmitted successfully to notify parents."
+                            isSubmitted = true
                             notificationManager.sendNotification(
                                 title,
                                 message,
@@ -157,7 +160,8 @@ class TeacherAttendanceView : Fragment() {
                             )
 
                             Toast.makeText(requireContext(), "Attendance Submitted", Toast.LENGTH_LONG).show()
-                            findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu)
+                            val bundle = bundleOf("teacher" to teacher, "isSubmitted" to isSubmitted) //TEMPORARY WORK AROUND
+                            findNavController().navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu, bundle)
                         }
                         .addOnFailureListener { exception ->
                             Toast.makeText(requireContext(), "Error submitting attendance: ${exception.message}", Toast.LENGTH_LONG).show()
@@ -228,7 +232,7 @@ class TeacherAttendanceView : Fragment() {
                         attendanceRef.child("IsPresent").setValue(true)
                     }
                 }
-                database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted").setValue(false)
+                database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted")
                 println(studentList)
                 studentAdapter.setData(studentList)
 
