@@ -14,10 +14,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.controllers.GoogleAuthController
 import com.example.reachedapp.interfaces.AttendanceStatusListener
+import com.example.reachedapp.interfaces.OnGoogleAuthListener
 import com.example.reachedapp.repositories.AttendanceRepository
 import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class TeacherMainMenu : Fragment() {
+class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
 
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
@@ -36,6 +39,8 @@ class TeacherMainMenu : Fragment() {
     private lateinit var signOutBtn: ImageView
     private lateinit var messageButton: ImageView
     private lateinit var attendanceRepo: AttendanceRepository
+    private lateinit var googleAuthController: GoogleAuthController
+
 
 
 
@@ -48,6 +53,11 @@ class TeacherMainMenu : Fragment() {
         val teacher = arguments?.getParcelable<Teacher>("teacher")
         val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
         attendanceRepo = AttendanceRepository()
+
+        // Initialize GoogleAuthController
+        context?.let {
+            googleAuthController = GoogleAuthController(it, this)
+        }
 
         val isSubmitted = arguments?.getBoolean("isSubmitted") ?: false //TEMPORARY WORK AROUND
         attendanceBtn.setOnClickListener {
@@ -101,7 +111,7 @@ class TeacherMainMenu : Fragment() {
         }
 
         signOutBtn.setOnClickListener {
-            signOut()
+            googleAuthController.signOut(requireActivity())
         }
 
         messageButton = view.findViewById(R.id.message_parent_btn)
@@ -115,13 +125,24 @@ class TeacherMainMenu : Fragment() {
     }
 
 
+    override fun onGoogleAuthStart() {
+        // Handle onGoogleAuthStart event
+    }
 
-    private fun signOut() {
-        gsc.signOut().addOnCompleteListener(requireActivity()) {
-            Session.endUserSession(requireContext())
-            requireActivity().finish()
-            startActivity(Intent(requireContext(), MainActivity::class.java))
-        }
+    override fun onGoogleAuthSuccess(account: GoogleSignInAccount) {
+        // Handle onGoogleAuthSuccess event
+    }
+
+    override fun onGoogleAuthError() {
+        // Handle onGoogleAuthError event
+    }
+
+    override fun onGoogleSignOutSuccess() {
+        // Handle onGoogleSignOutSuccess event
+    }
+
+    override fun onGoogleSignOutError() {
+        // Handle onGoogleSignOutError event
     }
 
 }

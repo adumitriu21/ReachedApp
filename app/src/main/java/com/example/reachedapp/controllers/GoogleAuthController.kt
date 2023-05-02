@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.reachedapp.MainActivity
 import com.example.reachedapp.interfaces.OnGoogleAuthListener
 import com.example.reachedapp.util.RC_SIGN_IN
+import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -15,7 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 
 
-class GoogleAuthController(private val context: Context, private val listener: OnGoogleAuthListener) {
+class GoogleAuthController(private val appContext: Context, private val listener: OnGoogleAuthListener) {
 
     private var gsc: GoogleSignInClient
 
@@ -24,7 +26,7 @@ class GoogleAuthController(private val context: Context, private val listener: O
             .requestEmail()
             .build()
 
-        gsc = GoogleSignIn.getClient(context, gso)
+        gsc = GoogleSignIn.getClient(appContext, gso)
     }
 
     fun signIn(fragment: Fragment) {
@@ -33,9 +35,12 @@ class GoogleAuthController(private val context: Context, private val listener: O
         fragment.startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    fun signOut() {
+    fun signOut(activity: Activity) {
         gsc.signOut().addOnCompleteListener { task: Task<Void?> ->
             if (task.isSuccessful) {
+                Session.endUserSession(activity)
+                activity.finish()
+                activity.startActivity(Intent(activity, MainActivity::class.java))
                 listener.onGoogleSignOutSuccess()
             } else {
                 listener.onGoogleSignOutError()
