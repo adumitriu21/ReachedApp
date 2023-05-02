@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.interfaces.AttendanceStatusListener
 import com.example.reachedapp.repositories.AttendanceRepository
 import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -35,6 +36,8 @@ class TeacherMainMenu : Fragment() {
     private lateinit var signOutBtn: ImageView
     private lateinit var messageButton: ImageView
     private lateinit var attendanceRepo: AttendanceRepository
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

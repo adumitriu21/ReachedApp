@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.models.Student
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.repositories.AttendanceRepository
 import com.example.reachedapp.util.NOTIFICATION_CHANNEL_ID
 import com.example.reachedapp.util.NOTIFICATION_CHANNEL_NAME
 import com.example.reachedapp.sendNotification
@@ -46,6 +47,7 @@ class TeacherAttendanceView : Fragment() {
     private var studentList: MutableList<Student> = ArrayList<Student>()
     private var studentAdapter = StudentListAdapter()
     private lateinit var studentRecyclerView : RecyclerView
+    private lateinit var attendanceRepo: AttendanceRepository
     //private val homeroom = arrayOf("107", "108")
 
     override fun onCreateView(
@@ -64,7 +66,7 @@ class TeacherAttendanceView : Fragment() {
         val homeroomSelect = view.findViewById<AutoCompleteTextView>(R.id.homeroomSelect)
         homeroomSelect.threshold = 1 //will start working from first character
         homeroomSelect.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
-*/
+*/      attendanceRepo = AttendanceRepository()
         val teacher = arguments?.getParcelable<Teacher>("teacher")
         //display date
         dateTimeDisplay = view.findViewById(R.id.date)
@@ -143,10 +145,7 @@ class TeacherAttendanceView : Fragment() {
             builder.setPositiveButton("Yes") { dialogInterface, which ->
                 // Set the IsSubmitted value directly under classId
                 if (classId != null) {
-                    attendanceRef.child(formatter.format(attendanceDate))
-                        .child(classId)
-                        .child("IsSubmitted")
-                        .setValue(true)
+                    attendanceRepo.onAttendanceSubmitted(classId)
                         .addOnSuccessListener {
                             createChannel(getString(R.string.comment_notification_channel_id), "12345")
                             val title = "REACHED"
