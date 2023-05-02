@@ -28,8 +28,7 @@ import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
-    private lateinit var gso: GoogleSignInOptions
-    private lateinit var gsc: GoogleSignInClient
+
     private lateinit var googleBtn: ImageView
     private lateinit var auth: FirebaseAuth
     private var database = FirebaseDatabase.getInstance()
@@ -52,18 +51,10 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        ///////google oauth ////////////////
         googleBtn = view.findViewById(R.id.google_btn)
-
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-        gsc = GoogleSignIn.getClient(requireActivity(), gso)
-
         googleBtn.setOnClickListener {
             googleAuthController.signIn(this)
         }
-
 
         return view
     }
@@ -92,7 +83,7 @@ class HomeFragment : Fragment() {
                         ).show()
                     } else {
                         // User found, proceed with login
-                        authenticateUser(user as User)
+                        authenticateUser(user as User, password)
                     }
                 }
             } else {
@@ -111,6 +102,7 @@ class HomeFragment : Fragment() {
 
             override fun onGoogleAuthSuccess(account: GoogleSignInAccount) {
                 val email = account.email
+
                 if (email != null) {
                     lifecycleScope.launch {
                         val user = userRepository.getUserFromDatabase(email)
@@ -121,7 +113,7 @@ class HomeFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            authenticateUser(user as User)
+                            authenticateUserWithGoogle(user as User)
                         }
                     }
                 } else {
@@ -152,8 +144,36 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun authenticateUser(user: User) {
-        authController.authenticateUser(requireContext(), user, object : AuthenticationCallback {
+    private fun authenticateUser(user: User, password: String) {
+        authController.authenticateUser(requireContext(), user, password, object : AuthenticationCallback {
+            override fun onAuthenticationSuccess(user: User) {
+                // Redirect to appropriate menu based on user role
+                when (user) {
+                    is Teacher -> {
+                        val action = HomeFragmentDirections.actionHomeFragment3ToTeacherMainMenu(user)
+                        findNavController().navigate(action)
+                    }
+                    is Parent -> {
+                        val action = HomeFragmentDirections.actionHomeFragment3ToParentMainMenu(user)
+                        findNavController().navigate(action)
+                    }
+                    is Admin -> {
+                        val action = HomeFragmentDirections.actionHomeFragment3ToAdminMainMenu22(user)
+                        findNavController().navigate(action)
+                    }
+                }
+            }
+
+            override fun onAuthenticationFailure() {
+                Toast.makeText(activity, "Login failed. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+    }
+
+    private fun authenticateUserWithGoogle(user: User) {
+        authController.authWithGoogle(requireContext(), user, object : AuthenticationCallback {
             override fun onAuthenticationSuccess(user: User) {
                 // Redirect to appropriate menu based on user role
                 when (user) {
