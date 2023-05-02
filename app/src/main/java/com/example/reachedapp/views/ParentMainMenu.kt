@@ -9,58 +9,54 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.reachedapp.MainActivity
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.R
+import com.example.reachedapp.controllers.GoogleAuthController
+import com.example.reachedapp.interfaces.OnGoogleAuthListener
 import com.example.reachedapp.util.Session
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class ParentMainMenu : Fragment() {
-    private lateinit var gso: GoogleSignInOptions
-    private lateinit var gsc: GoogleSignInClient
+class ParentMainMenu : Fragment(), OnGoogleAuthListener {
     private lateinit var name: TextView
     private lateinit var signOutBtn: ImageView
     private lateinit var messageButton: ImageView
+    private lateinit var googleAuthController: GoogleAuthController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_parent_main_menu, container, false)
-        val parent = arguments?.getParcelable<Parent>("parent")
-
         name = view.findViewById(R.id.name)
-        signOutBtn = view.findViewById(R.id.signout)
+        //get parent object from arguments
+        val parent = arguments?.getParcelable<Parent>("parent")
+        if (parent != null) {
+            name.text = parent.name //set display name
+        }
+        // Initialize GoogleAuthController
+        context?.let {
+            googleAuthController = GoogleAuthController(it, this)
+        }
 
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        gsc = GoogleSignIn.getClient(requireContext(), gso)
+        signOutBtn = view.findViewById(R.id.signout)
         getFCMToken()
 
-        // Getting user from session
-        val loggedInUser = Session.getUser(requireContext())
-        if (loggedInUser != null) {
-            name.text = loggedInUser.name
-        }
-
-        val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
-        if (acct != null) {
-            val personName = acct.displayName
-            val personEmail = acct.email
-
-        }
         val bundle = bundleOf("parent" to parent)
         val markAttendanceBtn = view.findViewById<ImageView>(R.id.mark_attendance_btn)
         markAttendanceBtn.setOnClickListener{
             findNavController().navigate(R.id.action_parentMainMenu_to_parentAttendanceView, bundle)
         }
         signOutBtn.setOnClickListener {
-            signOut()
+            googleAuthController.signOut(requireActivity())
         }
 
         messageButton = view.findViewById(R.id.message_teacher_btn)
@@ -89,14 +85,23 @@ class ParentMainMenu : Fragment() {
         }
     }
 
-    private fun signOut() {
-        gsc.signOut().addOnCompleteListener(requireActivity()) {
-           // Clear the session
-            Session.endUserSession(requireContext())
-            requireActivity().finish()
-            startActivity(Intent(requireContext(), MainActivity::class.java))
-        }
+    override fun onGoogleAuthStart() {
+        // Handle onGoogleAuthStart event
     }
 
+    override fun onGoogleAuthSuccess(account: GoogleSignInAccount) {
+        // Handle onGoogleAuthSuccess event
+    }
 
+    override fun onGoogleAuthError() {
+        // Handle onGoogleAuthError event
+    }
+
+    override fun onGoogleSignOutSuccess() {
+        Toast.makeText(requireContext(), "Successfully signed out!", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onGoogleSignOutError() {
+        Toast.makeText(requireContext(), "Error Signing Out!", Toast.LENGTH_SHORT).show()
+    }
 }

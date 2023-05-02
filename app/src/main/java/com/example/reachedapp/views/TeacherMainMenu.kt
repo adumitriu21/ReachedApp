@@ -51,6 +51,11 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_main_menu, container, false)
         val teacher = arguments?.getParcelable<Teacher>("teacher")
+        name = view.findViewById(R.id.teacherName)
+        if (teacher != null) {
+            name.text = teacher.name
+        }
+
         val attendanceBtn = view.findViewById<ImageView>(R.id.take_attendance_btn)
         attendanceRepo = AttendanceRepository()
 
@@ -58,6 +63,8 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
         context?.let {
             googleAuthController = GoogleAuthController(it, this)
         }
+
+
 
         val isSubmitted = arguments?.getBoolean("isSubmitted") ?: false //TEMPORARY WORK AROUND
         attendanceBtn.setOnClickListener {
@@ -74,7 +81,7 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
                     Toast.LENGTH_LONG //TEMPORARY WORK AROUND
                 ).show() //TEMPORARY WORK AROUND
             }else{
-            val teacher = arguments?.getParcelable<Teacher>("teacher")
+
             attendanceRepo.isAttendanceSubmitted(teacher?.classId ?: "") { isSubmitted ->
                 if (isSubmitted) {
                     Toast.makeText(
@@ -93,22 +100,11 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
             }
         }
 
-        name = view.findViewById(R.id.teacherName)
+
         signOutBtn = view.findViewById(R.id.signout)
 
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        gsc = GoogleSignIn.getClient(requireContext(), gso)
 
-        val user = Session.getUser(requireContext())
-        if (user != null) {
-            name.text = user.name
-        }
-        val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
-        if (acct != null) {
-            val personName = acct.displayName
-            val personEmail = acct.email
 
-        }
 
         signOutBtn.setOnClickListener {
             googleAuthController.signOut(requireActivity())
@@ -138,11 +134,11 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
     }
 
     override fun onGoogleSignOutSuccess() {
-        // Handle onGoogleSignOutSuccess event
+        Toast.makeText(requireContext(), "Successfully signed out!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onGoogleSignOutError() {
-        // Handle onGoogleSignOutError event
+        Toast.makeText(requireContext(), "Error Signing Out!", Toast.LENGTH_SHORT).show()
     }
 
 }
