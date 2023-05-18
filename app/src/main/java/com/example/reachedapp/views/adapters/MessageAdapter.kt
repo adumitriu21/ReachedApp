@@ -1,4 +1,4 @@
-package com.example.reachedapp.views
+package com.example.reachedapp.views.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,7 @@ class MessageAdapter () :
 
     private var messageList = emptyList<Message>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_messages, parent, false)
         return ViewHolder(view)
     }

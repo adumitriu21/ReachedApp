@@ -23,7 +23,6 @@ class AdminMainMenu : Fragment() {
         private lateinit var name: TextView
         private lateinit var signOutBtn: ImageView
 
-
         override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
@@ -33,13 +32,10 @@ class AdminMainMenu : Fragment() {
                 signOutBtn = view.findViewById(R.id.signout)
                 gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
                 gsc = GoogleSignIn.getClient(requireContext(), gso)
-
                 signOutBtn.setOnClickListener {
                         signOut()
                 }
-
                 return view
-
         }
 
         // This method is called after the view is created, so you can access the UI elements of the layout here.
@@ -50,9 +46,6 @@ class AdminMainMenu : Fragment() {
                 val textView = view.findViewById<TextView>(R.id.name)
 
                 //textView.text = "Your name"
-
-
-
 
         }
 

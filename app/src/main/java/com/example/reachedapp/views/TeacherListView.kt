@@ -14,6 +14,7 @@ import com.example.reachedapp.interfaces.OnContactClickListener
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.views.adapters.TeacherListAdapter
 
 class TeacherListView : Fragment(), OnContactClickListener {
     private lateinit var recyclerView: RecyclerView
