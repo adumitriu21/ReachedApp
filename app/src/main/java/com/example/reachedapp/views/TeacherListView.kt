@@ -9,100 +9,55 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reachedapp.controllers.TeacherListController
+import com.example.reachedapp.interfaces.OnContactClickListener
 import com.example.reachedapp.models.Parent
-import com.example.reachedapp.models.Student
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
-import com.example.reachedapp.interfaces.OnContactClickListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import java.util.ArrayList
 
-class TeacherListView: Fragment(), OnContactClickListener {
+class TeacherListView : Fragment(), OnContactClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var teacherAdapter: TeacherListAdapter
-    private lateinit var parent: Parent
-    private val database = FirebaseDatabase.getInstance()
-    val studentsRef = database.getReference("Student")
-    val parentsRef = database.getReference("Parent")
-    val teachersRef = database.getReference("Teacher")
-    private var teachersList: MutableList<Teacher> = ArrayList<Teacher>()
-
-
+    private lateinit var teacherListController: TeacherListController
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_teacher_list_view, container, false)
 
+        // Create an instance of TeacherListController with this fragment as the listener
+        teacherListController = TeacherListController(this)
+
+        // Get the Parent object passed as an argument from the previous fragment
         val parent = arguments?.getParcelable<Parent>("parent") ?: return view
 
+        // Initialize the TeacherListAdapter with the listener and parent object
         teacherAdapter = TeacherListAdapter(listener = this, parent = parent)
+
         recyclerView = view.findViewById<RecyclerView>(R.id.teachersList)
         recyclerView.adapter = teacherAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-
-        studentsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                teachersList.clear()
-                val studentClassIds = mutableListOf<String>()
-
-                for (dsp in dataSnapshot.children) {
-                    val s = dsp.getValue(Student::class.java)
-                    if (s != null && s.parentId == parent.userId) {
-                        studentClassIds.add(s.classId)
-                    }
+        // Fetch teachers by parent using the TeacherListController
+        teacherListController.fetchTeachersByParent(parent,
+                onSuccess = { teachers ->
+                    teacherAdapter.setData(teachers)
+                    teacherAdapter.notifyDataSetChanged()
+                },
+                onError = { error ->
+                    println(error)
                 }
-                println(studentClassIds)
-                for (classId in studentClassIds) {
-                    teachersRef.addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            for (data in snapshot.children) {
-                                val t = data.getValue(Teacher::class.java)
-                                if (t != null && t.classId == classId)
-                                {
-                                    teachersList.add(t)
-                                }
-                            }
-
-                            teacherAdapter.setData(teachersList)
-                            teacherAdapter.notifyDataSetChanged()
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            println("The read failed: " + error.code)
-                        }
-                    })
-                    }
-                }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("The read failed: " + databaseError.code)
-            }
-        })
-
+        )
         return view
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
-
-    override fun onParentItemClick(parent: Parent, teacher: Teacher) {
-
-    }
-
     override fun onTeacherItemClick(teacher: Teacher, parent: Parent) {
+        // Handle click event for a teacher item
+        // Navigate to the parent messaging fragment passing the parent and teacher objects as arguments
         val bundle = bundleOf("teacher" to teacher, "parent" to parent)
         findNavController().navigate(R.id.action_teacherListMenu_to_parentMessaging, bundle)
     }
-
-
+    override fun onParentItemClick(parent: Parent, teacher: Teacher) {
+        // Handle click event for a parent item
+    }
 }
