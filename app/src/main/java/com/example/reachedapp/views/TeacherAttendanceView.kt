@@ -26,16 +26,20 @@ class TeacherAttendanceView : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_teacher_attendance_view, container, false)
 
+        // Initialize the views
         dateTimeDisplay = view.findViewById(R.id.date)
         dayOfWeek = view.findViewById(R.id.day)
         searchBar = view.findViewById(R.id.searchByName)
         studentRecyclerView = view.findViewById(R.id.studentsList)
         submitBtn = view.findViewById(R.id.submitAttendance)
 
+        // Retrieve the teacher object passed as an argument
         val teacher = arguments?.getParcelable<Teacher>("teacher")
 
+        // Create an instance of TeacherAttendanceController and initialize it
         controller = TeacherAttendanceController(requireContext(), findNavController(), teacher, this)
         controller.initialize()
 

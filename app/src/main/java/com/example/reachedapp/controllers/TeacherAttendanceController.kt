@@ -42,9 +42,11 @@ class TeacherAttendanceController(
     private val studentAdapter = StudentListAdapter()
 
     fun initialize() {
+        // Set current date and day of the week in the view
         view.dateTimeDisplay.text = getCurrentDate()
         view.dayOfWeek.text = getCurrentDayOfWeek()
 
+        // Listen for text changes in the search bar and filter the student list accordingly
         view.searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -55,46 +57,66 @@ class TeacherAttendanceController(
             override fun afterTextChanged(editable: Editable?) {}
         })
 
+        // Set the attendance date and formatter
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
+        val attendanceDate = Date()
+
+        // Retrieve the classId from the teacher object and populate the class list if classId is not null
         val classId: String = teacher?.classId ?: ""
         if (classId != null) {
-            populateClassList(classId)
+            populateClassList(classId, attendanceDate, formatter)
         }
 
+        // Set the student adapter and layout manager for the recycler view
         view.studentRecyclerView.adapter = studentAdapter
         view.studentRecyclerView.layoutManager = LinearLayoutManager(context)
 
+        // Set a click listener for the submit button to show a confirmation dialog
         view.submitBtn.setOnClickListener {
             showConfirmationDialog(classId)
         }
 
     }
 
+    // Function to get the current date in MM/dd/yyyy format
     private fun getCurrentDate(): String {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.CANADA)
         return dateFormat.format(calendar.time)
     }
 
+    // Function to get the current day of the week
     private fun getCurrentDayOfWeek(): String {
         return LocalDate.now().dayOfWeek.name
     }
 
+    // Function to filter the student list based on the search query
     private fun filterStudents(query: String) {
         val filteredStudents = studentList.filter { student ->
             student.name.lowercase().contains(query.lowercase())
         }
+        // Set the filtered student data in the student adapter
         studentAdapter.setData(filteredStudents)
     }
 
-    private fun populateClassList(homeroom: String) {
+    // Function to populate the class list based on the homeroom and attendance date
+    private fun populateClassList(homeroom: String, date: Date, dateFormat: SimpleDateFormat) {
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (dsp in dataSnapshot.children) {
                     val student = dsp.getValue(Student::class.java)
                     if (student != null && student.classId == homeroom) {
+                        // Add the student to the student list
                         studentList.add(student)
+
+                        // Set the attendance of the student as present in the database
+                        val attendanceRef = database.getReference("Attendance").child(dateFormat.format(date)).child(student.classId).child(student.studentId)
+                        attendanceRef.child("IsPresent").setValue(true)
                     }
                 }
+                // Set the "IsSubmitted" field for the attendance of the homeroom on the specific date
+                database.getReference("Attendance").child(dateFormat.format(date)).child(homeroom).child("IsSubmitted")
+                // Set the student list data in the student adapter
                 studentAdapter.setData(studentList)
             }
 
@@ -104,16 +126,19 @@ class TeacherAttendanceController(
         })
     }
 
+    // Function to show the confirmation dialog for submitting the attendance
     private fun showConfirmationDialog(classId: String) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.dialogTitle)
         builder.setMessage(R.string.dialogMessage)
         builder.setIcon(android.R.drawable.ic_dialog_alert)
 
+        // If the user confirms, submit the attendance
         builder.setPositiveButton("Yes") { dialogInterface, which ->
             submitAttendance(classId)
         }
 
+        // If the user cancels, show a toast message
         builder.setNegativeButton("No") { dialogInterface, which ->
             Toast.makeText(context, "Cancelled Submit", Toast.LENGTH_LONG).show()
         }
@@ -123,10 +148,14 @@ class TeacherAttendanceController(
         alertDialog.show()
     }
 
+    // Function to submit the attendance
     private fun submitAttendance(classId: String) {
         attendanceRepo.onAttendanceSubmitted(classId)
                 .addOnSuccessListener {
+                    // Create a notification channel
                     createNotificationChannel()
+
+                    // Send a notification to notify parents about the absence report
                     val title = "REACHED"
                     val message = "Absence report has been transmitted successfully to notify parents."
                     val notificationManager = ContextCompat.getSystemService(
@@ -139,8 +168,9 @@ class TeacherAttendanceController(
                             NOTIFICATION_CHANNEL_ID,
                             context
                     )
-
                     Toast.makeText(context, "Attendance Submitted", Toast.LENGTH_LONG).show()
+
+                    // Navigate back to the teacher main menu with the teacher object
                     val bundle = bundleOf("teacher" to teacher)
                     navController.navigate(R.id.action_teacherAttendanceView_to_teacherMainMenu, bundle)
                 }
@@ -153,6 +183,7 @@ class TeacherAttendanceController(
                 }
     }
 
+    // Function to create a notification channel for high importance notifications
     private fun createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val notificationManager =
