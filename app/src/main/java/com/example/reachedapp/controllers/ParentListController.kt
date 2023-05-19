@@ -10,11 +10,13 @@ import com.google.firebase.database.ValueEventListener
 
 class ParentListController(private val listener: OnContactClickListener) {
 
+    private val database = FirebaseDatabase.getInstance()
+
     // Reference to the "Parent" node in the Firebase Realtime Database
-    private val parentsRef = FirebaseDatabase.getInstance().getReference("Parent")
+    private val parentsRef = database.getReference("Parent")
 
     // Reference to the "Student" node in the Firebase Realtime Database
-    private val studentsRef = FirebaseDatabase.getInstance().getReference("Student")
+    private val studentsRef = database.getReference("Student")
 
     /**
      * Fetches parents associated with a specific class ID.

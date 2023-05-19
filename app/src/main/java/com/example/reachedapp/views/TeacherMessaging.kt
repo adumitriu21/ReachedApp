@@ -14,6 +14,7 @@ import com.example.reachedapp.models.Message
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.views.adapters.MessageAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

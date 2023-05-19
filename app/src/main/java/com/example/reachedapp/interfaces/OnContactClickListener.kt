@@ -7,4 +7,5 @@ interface OnContactClickListener {
     fun onParentItemClick(parent: Parent, teacher: Teacher)
 
     fun onTeacherItemClick(teacher: Teacher, parent: Parent)
+
 }

@@ -14,6 +14,7 @@ import com.example.reachedapp.models.Message
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
+import com.example.reachedapp.views.adapters.MessageAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -42,7 +43,6 @@ class ParentMessaging : Fragment() {
         println(teacher.name)
         val convoId = teacher.userId + parent.userId
         val reference = convoRef.child(convoId)
-
 
         messageAdapter = MessageAdapter()
         recyclerView = view.findViewById(R.id.recycler_gchat)

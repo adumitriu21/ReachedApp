@@ -1,4 +1,4 @@
-package com.example.reachedapp.views
+package com.example.reachedapp.views.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,39 +10,38 @@ import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
 import com.example.reachedapp.interfaces.OnContactClickListener
 
-class ParentListAdapter(
-    private val isTeacherView: Boolean = false,
+class TeacherListAdapter(
     private val listener: OnContactClickListener,
-    private val teacher: Teacher
-) : RecyclerView.Adapter<ParentListAdapter.ViewHolder>() {
+    private val parent: Parent
+) : RecyclerView.Adapter<TeacherListAdapter.ViewHolder>() {
 
-    private var parentList = emptyList<Parent>()
+    private var teacherList = emptyList<Teacher>()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    listener.onParentItemClick(parentList[position], teacher)
+                    listener.onTeacherItemClick(teacherList[position], parent)
                 }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_parents_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_teachers_list, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentParent = parentList[position]
-        holder.itemView.findViewById<TextView>(R.id.parentNameTextView).text = currentParent.name
+        val currentTeacher = teacherList[position]
+        holder.itemView.findViewById<TextView>(R.id.teacherNameTextView).text = currentTeacher.name
     }
 
-    override fun getItemCount(): Int = parentList.size
+    override fun getItemCount(): Int = teacherList.size
 
-    fun setData(parent: List<Parent>) {
-        this.parentList = parent
+    fun setData(teacher: List<Teacher>) {
+        this.teacherList = teacher
         notifyDataSetChanged()
     }
 }

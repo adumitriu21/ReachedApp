@@ -1,6 +1,5 @@
 package com.example.reachedapp.views
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,38 +10,20 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.reachedapp.MainActivity
 import com.example.reachedapp.models.Teacher
 import com.example.reachedapp.R
 import com.example.reachedapp.controllers.GoogleAuthController
-import com.example.reachedapp.interfaces.AttendanceStatusListener
 import com.example.reachedapp.interfaces.OnGoogleAuthListener
 import com.example.reachedapp.repositories.AttendanceRepository
-import com.example.reachedapp.util.Session
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
 
-    private lateinit var gso: GoogleSignInOptions
-    private lateinit var gsc: GoogleSignInClient
     private lateinit var name: TextView
     private lateinit var signOutBtn: ImageView
     private lateinit var messageButton: ImageView
     private lateinit var attendanceRepo: AttendanceRepository
     private lateinit var googleAuthController: GoogleAuthController
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,8 +44,6 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
         context?.let {
             googleAuthController = GoogleAuthController(it, this)
         }
-
-
 
         val isSubmitted = arguments?.getBoolean("isSubmitted") ?: false //TEMPORARY WORK AROUND
         attendanceBtn.setOnClickListener {
@@ -99,12 +78,7 @@ class TeacherMainMenu : Fragment(), OnGoogleAuthListener {
             }
             }
         }
-
-
         signOutBtn = view.findViewById(R.id.signout)
-
-
-
 
         signOutBtn.setOnClickListener {
             googleAuthController.signOut(requireActivity())

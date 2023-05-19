@@ -1,7 +1,6 @@
 package com.example.reachedapp.views
 
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,18 +12,12 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.reachedapp.MainActivity
 import com.example.reachedapp.models.Parent
 import com.example.reachedapp.R
 import com.example.reachedapp.controllers.GoogleAuthController
 import com.example.reachedapp.interfaces.OnGoogleAuthListener
-import com.example.reachedapp.util.Session
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.messaging.FirebaseMessaging
-
 
 class ParentMainMenu : Fragment(), OnGoogleAuthListener {
     private lateinit var name: TextView
@@ -65,7 +58,6 @@ class ParentMainMenu : Fragment(), OnGoogleAuthListener {
             val bundle = bundleOf("parent" to parent)
             findNavController().navigate(R.id.action_parentMainMenu_to_teacherListMenu, bundle)
         }
-
 
         return view
     }
