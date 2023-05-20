@@ -37,6 +37,7 @@ class ParentListView : Fragment(), OnContactClickListener {
         // Initialize the ParentListAdapter with the listener and teacher object
         parentAdapter = ParentListAdapter(listener = this, teacher = teacher)
 
+        // Initialize and configure the recycler view
         recyclerView = view.findViewById(R.id.parentsList)
         recyclerView.adapter = parentAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

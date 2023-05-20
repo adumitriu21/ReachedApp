@@ -21,7 +21,6 @@ class TeacherAttendanceView : Fragment() {
     lateinit var searchBar: EditText
     lateinit var studentRecyclerView: RecyclerView
     lateinit var submitBtn: Button
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?

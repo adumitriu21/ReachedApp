@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 // Launch a coroutine to wait for the database operation to complete
                 lifecycleScope.launch {
-                    val user = userRepository.getUserFromDatabase( email)
+                    val user = userRepository.getUserFromDatabase(email)
                     if (user == null) {
                         // User not found, display an error message
                         Toast.makeText(
@@ -196,7 +196,6 @@ class HomeFragment : Fragment() {
 
 
     }
-
     @Deprecated(message = "This function is deprecated. Need to find replacement!")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
