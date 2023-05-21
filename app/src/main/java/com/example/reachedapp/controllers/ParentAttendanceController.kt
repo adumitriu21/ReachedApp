@@ -65,7 +65,7 @@ class ParentAttendanceController(
             studentRecyclerView: RecyclerView,
             submitBtn: Button
     ) {
-        val format = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+        val format = SimpleDateFormat("dd MMMM yyyy", Locale.US)
         val currentDate = Date()
         attendanceDate = currentDate
         calendarView.minDate = currentDate.time

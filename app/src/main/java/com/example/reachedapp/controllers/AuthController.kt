@@ -13,19 +13,53 @@ class AuthController(private val auth: FirebaseAuth) {
     fun authenticateUser(context: Context, user: User, password: String?,  callback: AuthenticationCallback) {
         if (password != null) {
             auth.signInWithEmailAndPassword(user.email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Login successful
+                            Session.startUserSession(context, 60)
+                            task.result?.user?.getIdToken(true)
+                                    ?.addOnCompleteListener { authTask ->
+                                        if (authTask.isSuccessful) {
+                                            Session.storeUserToken(
+                                                    context,
+                                                    authTask.result?.token.toString()
+                                            )
+                                        }
+                                    }
+                            // Store user in session
+                            Session.storeUser(context, user)
+
+                            // Update the device token in the database
+                            MyFirebaseMessagingService.sendRegistrationToServer(context, user)
+
+                            // Call onLoginSuccess callback
+                            callback.onAuthenticationSuccess(user)
+                        } else {
+                            // Login failed, call onLoginError callback
+                            val exception = task.exception
+                            if (exception != null) {
+                                callback.onAuthenticationFailure()
+                            }
+                        }
+                    }
+        }
+    }
+
+    fun authWithGoogle(context: Context, user: User, callback: AuthenticationCallback) {
+        auth.signInWithEmailAndPassword(user.email, user.password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         // Login successful
                         Session.startUserSession(context, 60)
                         task.result?.user?.getIdToken(true)
-                            ?.addOnCompleteListener { authTask ->
-                                if (authTask.isSuccessful) {
-                                    Session.storeUserToken(
-                                        context,
-                                        authTask.result?.token.toString()
-                                    )
+                                ?.addOnCompleteListener { authTask ->
+                                    if (authTask.isSuccessful) {
+                                        Session.storeUserToken(
+                                                context,
+                                                authTask.result?.token.toString()
+                                        )
+                                    }
                                 }
-                            }
                         // Store user in session
                         Session.storeUser(context, user)
 
@@ -42,40 +76,6 @@ class AuthController(private val auth: FirebaseAuth) {
                         }
                     }
                 }
-        }
-    }
-
-    fun authWithGoogle(context: Context, user: User, callback: AuthenticationCallback) {
-        auth.signInWithEmailAndPassword(user.email, user.password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Login successful
-                    Session.startUserSession(context, 60)
-                    task.result?.user?.getIdToken(true)
-                        ?.addOnCompleteListener { authTask ->
-                            if (authTask.isSuccessful) {
-                                Session.storeUserToken(
-                                    context,
-                                    authTask.result?.token.toString()
-                                )
-                            }
-                        }
-                    // Store user in session
-                    Session.storeUser(context, user)
-
-                    // Update the device token in the database
-                    MyFirebaseMessagingService.sendRegistrationToServer(context, user)
-
-                    // Call onLoginSuccess callback
-                    callback.onAuthenticationSuccess(user)
-                } else {
-                    // Login failed, call onLoginError callback
-                    val exception = task.exception
-                    if (exception != null) {
-                        callback.onAuthenticationFailure()
-                    }
-                }
-            }
     }
 
 }

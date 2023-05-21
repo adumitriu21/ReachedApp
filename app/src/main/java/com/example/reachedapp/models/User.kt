@@ -3,6 +3,7 @@ package com.example.reachedapp.models
 import android.os.Parcel
 import android.os.Parcelable
 
+
 open class User(
     val userId: String,
     val name: String,
