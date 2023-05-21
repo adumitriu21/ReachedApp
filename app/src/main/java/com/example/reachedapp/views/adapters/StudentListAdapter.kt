@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reachedapp.models.Student
 import com.example.reachedapp.R
+import com.example.reachedapp.controllers.AttendanceController
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -62,9 +63,11 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
             }
         })
 
+        val attendanceController = AttendanceController(attendanceRef)
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            updateAttendance(isChecked, isParentView)
+            attendanceController.updateAttendance(currentStudent, isChecked, isParentView, teacherNotified = false, absentStudents)
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -81,33 +84,4 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
         return absentStudents
     }
 
-    fun updateAttendance(isPresent: Boolean, isParentView: Boolean, teacherNotified: Boolean = false) {
-        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
-        val date = Date()
-        val attendancePath = if (isParentView) {
-            attendanceRef.child(formatter.format(date))
-                .child(currentStudent.classId)
-                .child("Reported Absences")
-                .child(currentStudent.studentId)
-                .child("IsPresent")
-        } else {
-            attendanceRef.child(formatter.format(date))
-                .child(currentStudent.classId)
-                .child(currentStudent.studentId)
-                .child("IsPresent")
-        }
-
-
-        attendancePath.setValue(isPresent).addOnSuccessListener {
-            if (isPresent) {
-                absentStudents.remove(currentStudent.studentId)
-            } else {
-                if (!absentStudents.contains(currentStudent.studentId)) {
-                    absentStudents.add(currentStudent.studentId)
-                }
-            }
-        }.addOnFailureListener {
-            // Handle failure
-        }
-    }
 }
