@@ -170,7 +170,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun authenticateUserWithGoogle(user: User) {
-        authController.authWithGoogle(requireContext(), user, object : AuthenticationCallback {
+        authController.authenticateUser(requireContext(), user, password = user.password, object : AuthenticationCallback {
             override fun onAuthenticationSuccess(user: User) {
                 // Redirect to appropriate menu based on user role
                 when (user) {
