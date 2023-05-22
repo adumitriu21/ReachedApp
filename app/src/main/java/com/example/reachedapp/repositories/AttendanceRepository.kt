@@ -38,6 +38,30 @@ class AttendanceRepository {
         })
     }
 
+    fun fetchAttendanceData(classId: String, date: String, callback: (DataSnapshot) -> Unit) {
+        val attendanceDataRef = attendanceRef.child(date).child(classId)
+        attendanceDataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                callback(snapshot)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
+    }
+
+    fun updateAttendanceStatus(classId: String, date: String, isPresent: Boolean, callback: () -> Unit) {
+        val attendanceStatusRef = attendanceRef.child(date).child(classId).child("IsPresent")
+        attendanceStatusRef.setValue(isPresent).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback()
+            } else {
+                // Handle error
+            }
+        }
+    }
+
     fun setAttendanceStatusListener(listener: AttendanceStatusListener) {
         attendanceStatusListener = listener
     }

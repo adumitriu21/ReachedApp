@@ -22,7 +22,7 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
     private val database = FirebaseDatabase.getInstance()
     private val attendanceRef = database.getReference("Attendance")
     private var absentStudents: MutableList<String> = ArrayList<String>()
-    // private lateinit var currentStudent: Student
+
     class StudentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
@@ -38,32 +38,16 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
 
         val checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
 
-        attendanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(attSnapshot: DataSnapshot) {
-                val attStat = if (isParentView) {
-                    attSnapshot.child(currentStudent.classId)
-                        .child("Reported Absences")
-                        .child(currentStudent.studentId)
-                        .child("IsPresent").value
-                    attSnapshot.child(currentStudent.classId)
-                        .child("Reported Absences")
-                        .child(currentStudent.studentId)
-                        .child("teacherNotified").value
-                } else {
-                    attSnapshot.child(formatter.format(date)).child(currentStudent.classId)
-                        .child(currentStudent.studentId).child("IsPresent").value
-                }
-                checkBox.isChecked = attStat == true || attStat == null
-                if (!checkBox.isChecked) {
-                    absentStudents.add(currentStudent.studentId)
-                }
-            }
-            override fun onCancelled(attError: DatabaseError) {
-                println("The read failed: " + attError.code)
-            }
-        })
-
         val attendanceController = AttendanceController(attendanceRef)
+
+        attendanceController.fetchAttendanceData(
+            currentStudent,
+            isParentView,
+            date,
+            formatter,
+            checkBox,
+            absentStudents
+        )
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             attendanceController.updateAttendance(currentStudent, isChecked, isParentView, teacherNotified = false, absentStudents)
         }
