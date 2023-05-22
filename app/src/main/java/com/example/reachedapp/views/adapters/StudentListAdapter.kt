@@ -22,7 +22,7 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
     private val database = FirebaseDatabase.getInstance()
     private val attendanceRef = database.getReference("Attendance")
     private var absentStudents: MutableList<String> = ArrayList<String>()
-    private lateinit var currentStudent: Student
+    // private lateinit var currentStudent: Student
     class StudentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
@@ -31,7 +31,7 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-        currentStudent = studentList[position]
+        val currentStudent = studentList[position]
         val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
         val date = Date()
         holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.name
