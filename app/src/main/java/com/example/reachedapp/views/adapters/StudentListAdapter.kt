@@ -19,8 +19,7 @@ import java.util.*
 class StudentListAdapter(private val isParentView: Boolean = false): RecyclerView.Adapter<StudentListAdapter.StudentViewHolder>() {
 
     private var studentList = emptyList<Student>()
-    private val database = FirebaseDatabase.getInstance()
-    private val attendanceRef = database.getReference("Attendance")
+    private val attendanceController = AttendanceController()
     private var absentStudents: MutableList<String> = ArrayList<String>()
 
     class StudentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -32,24 +31,18 @@ class StudentListAdapter(private val isParentView: Boolean = false): RecyclerVie
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
         val currentStudent = studentList[position]
-        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA)
-        val date = Date()
         holder.itemView.findViewById<TextView>(R.id.student_name).text = currentStudent.name
 
         val checkBox = holder.itemView.findViewById<CheckBox>(R.id.attendance_check)
 
-        val attendanceController = AttendanceController(attendanceRef)
+        attendanceController.fetchAttendanceData(currentStudent, isParentView) { isPresent ->
+            checkBox.isChecked = isPresent
+            if (!isPresent) absentStudents.add(currentStudent.studentId)
+        }
 
-        attendanceController.fetchAttendanceData(
-            currentStudent,
-            isParentView,
-            date,
-            formatter,
-            checkBox,
-            absentStudents
-        )
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            attendanceController.updateAttendance(currentStudent, isChecked, isParentView, teacherNotified = false, absentStudents)
+            attendanceController.updateAttendance(currentStudent, isChecked, isParentView, teacherNotified = false)
+            if (isChecked) absentStudents.remove(currentStudent.studentId) else absentStudents.add(currentStudent.studentId)
         }
 
     }

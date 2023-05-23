@@ -1,5 +1,6 @@
 package com.example.reachedapp.repositories
 import com.example.reachedapp.interfaces.AttendanceStatusListener
+import com.example.reachedapp.models.Student
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -38,11 +39,23 @@ class AttendanceRepository {
         })
     }
 
-    fun fetchAttendanceData(classId: String, date: String, callback: (DataSnapshot) -> Unit) {
-        val attendanceDataRef = attendanceRef.child(date).child(classId)
-        attendanceDataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+    fun fetchAttendanceData(currentStudent: Student, isParentView: Boolean, callback: (Boolean) -> Unit) {
+        val attendancePath = if (isParentView) {
+            attendanceRef.child(currentStudent.classId)
+                .child("Reported Absences")
+                .child(currentStudent.studentId)
+                .child("IsPresent")
+        } else {
+            attendanceRef.child(currentDate)
+                .child(currentStudent.classId)
+                .child(currentStudent.studentId)
+                .child("IsPresent")
+        }
+
+        attendancePath.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                callback(snapshot)
+                val isPresent = snapshot.getValue(Boolean::class.java) ?: true
+                callback(isPresent)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -51,14 +64,23 @@ class AttendanceRepository {
         })
     }
 
-    fun updateAttendanceStatus(classId: String, date: String, isPresent: Boolean, callback: () -> Unit) {
-        val attendanceStatusRef = attendanceRef.child(date).child(classId).child("IsPresent")
-        attendanceStatusRef.setValue(isPresent).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                callback()
-            } else {
-                // Handle error
-            }
+
+    fun updateAttendance(student: Student, isPresent: Boolean, isParentView: Boolean, teacherNotified: Boolean = false) {
+        val attendancePath = if (isParentView) {
+            attendanceRef.child(currentDate)
+                .child(student.classId)
+                .child("Reported Absences")
+                .child(student.studentId)
+                .child("IsPresent")
+        } else {
+            attendanceRef.child(currentDate)
+                .child(student.classId)
+                .child(student.studentId)
+                .child("IsPresent")
+        }
+
+        attendancePath.setValue(isPresent).addOnFailureListener {
+            // Handle failure
         }
     }
 
